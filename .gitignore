@@ -1,0 +1,12 @@
+lcmodule/.config
+.config
+cov_data
+cov_inter
+target/
+autogen/
+*Debug/
+*Release/
+*.ncb
+*.sln
+*.suo
+*.user
