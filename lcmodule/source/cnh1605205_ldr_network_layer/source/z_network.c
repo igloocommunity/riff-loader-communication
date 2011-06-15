@@ -23,9 +23,8 @@
 #include "r_z_network.h"
 #include "r_z_protocol.h"
 #include "r_debug.h"
-//#include "r_debug_macro.h"
 #include "r_communication_service.h"
-#include "t_z_protocol.h"
+#include "r_critical_section.h"
 
 #ifdef  WIN32
 #include <windows.h>
@@ -54,6 +53,8 @@ ErrorCode_e Z_Network_Initialize(Communication_t *Communication_p)
 
     memset(Z_NETWORK(Communication_p), 0, sizeof(Z_NetworkContext_t));
 
+    Z_NETWORK(Communication_p)->Outbound.TxCriticalSection = Do_CriticalSection_Create();
+
     /* Simulate a finished read to get the inbound state-machine going. */
     Z_Network_ReadCallback(NULL, 0, Communication_p);
 
@@ -62,6 +63,7 @@ ErrorCode_e Z_Network_Initialize(Communication_t *Communication_p)
 
 ErrorCode_e Z_Network_Shutdown(const Communication_t *const Communication_p)
 {
+    Do_CriticalSection_Destroy(&(Z_NETWORK(Communication_p)->Outbound.TxCriticalSection));
 
     return E_SUCCESS;
 }
@@ -122,11 +124,9 @@ ErrorCode_e Z_Network_TransmiterHandler(Communication_t *Communication_p, Z_Send
     uint8  Size = SendingContent_p->Size;
     Z_Outbound_t *Out_p = &(Z_NETWORK(Communication_p)->Outbound);
 
-    if (Out_p->InLoad) {
+    if (!Do_CriticalSection_Enter(Out_p->TxCriticalSection)) {
         return E_SUCCESS;
     }
-
-    Out_p->InLoad = TRUE;
 
     switch (Out_p->State) {
     case Z_SEND_IDLE:
@@ -151,7 +151,7 @@ ErrorCode_e Z_Network_TransmiterHandler(Communication_t *Communication_p, Z_Send
 
     }
 
-    Out_p->InLoad = FALSE;
+    Do_CriticalSection_Leave(Out_p->TxCriticalSection);
 
     return E_SUCCESS;
 }

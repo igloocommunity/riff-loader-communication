@@ -325,18 +325,20 @@ typedef struct {
 
 /** Structure for initialization and manipulation of protocol family */
 typedef struct FamilyDescriptor_s {
-    ErrorCode_e(*FamilyInit_fn)(Communication_t *Communication_p);
     /**< Pointer to Interface function for protocol family initialization. */
-    ErrorCode_e(*FamilyShutdown_fn)(Communication_t *Communication_p);
+    ErrorCode_e(*FamilyInit_fn)(Communication_t *Communication_p);
     /**< Pointer to Interface function for protocol family de-initialization. */
-    ErrorCode_e(*Process_fn)(Communication_t *Communication_p);
+    ErrorCode_e(*FamilyShutdown_fn)(Communication_t *Communication_p);
     /**< Pointer to Pooling function in curren protocol family. */
-    ErrorCode_e(*Send_fn)(Communication_t *Communication_p, void *InputData_p);
+    ErrorCode_e(*Process_fn)(Communication_t *Communication_p);
     /**< Pointer to function for sending packets.*/
-    ErrorCode_e(*SetProtocolTimeouts_fn)(Communication_t *Communication_p, void *TimeoutData_p);
+    ErrorCode_e(*Send_fn)(Communication_t *Communication_p, void *InputData_p);
     /**< Pointer to function for setting communication timeouts for current protocol family. */
-    ErrorCode_e(*GetProtocolTimeouts_fn)(Communication_t *Communication_p, void *TimeoutData_p);
+    ErrorCode_e(*SetProtocolTimeouts_fn)(Communication_t *Communication_p, void *TimeoutData_p);
     /**< Pointer to function for getting communication timeouts from current protocol family. */
+    ErrorCode_e(*GetProtocolTimeouts_fn)(Communication_t *Communication_p, void *TimeoutData_p);
+    /**< Pointer to function for stopping the transmition pool after sending the specified number of packets. */
+    ErrorCode_e(*CancelReceiver_fn)(Communication_t *Communication_p, uint8 PacketsBeforeTransferStop);
 } FamilyDescriptor_t;
 
 /** @} */

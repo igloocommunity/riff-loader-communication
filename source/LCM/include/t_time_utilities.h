@@ -28,6 +28,8 @@ typedef struct {
     HandleFunction_t HandleFunction_p; /**< Callback function*/
     void            *Data_p;           /**< Pointer to data. */
     void            *Param_p;          /**< Extra parameters. */
+    uint32           Set_Time;         /**< Used for debugging purposes only. */
+    uint32           Set_System_Time;  /**< Used for debugging purposes only. */
 } Timer_t;
 
 /**

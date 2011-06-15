@@ -26,6 +26,7 @@
 #include "r_communication_service.h"
 #include "r_debug.h"
 #include "r_debug_macro.h"
+#include "r_critical_section.h"
 
 #ifdef  WIN32
 #include <windows.h>
@@ -63,6 +64,7 @@ static void Protrom_QueueCallback(const void *const Queue_p, void *Param_p);
 ErrorCode_e Protrom_Network_Initialize(Communication_t *Communication_p)
 {
     memset(PROTROM_NETWORK(Communication_p), 0, sizeof(Protrom_NetworkContext_t));
+    PROTROM_NETWORK(Communication_p)->Outbound.TxCriticalSection = Do_CriticalSection_Create();
 
     /* Simulate a finished read to get the inbound state-machine going. */
     Protrom_Network_ReadCallback(NULL, 0, Communication_p);
@@ -96,6 +98,8 @@ ErrorCode_e Protrom_Network_Shutdown(const Communication_t *const Communication_
 
     (void)QUEUE(Communication_p, Fifo_SetCallback_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Inbound_p, QUEUE_NONEMPTY, NULL, NULL);
     (void)QUEUE(Communication_p, Fifo_SetCallback_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Inbound_p, QUEUE_EMPTY, NULL, NULL);
+
+    Do_CriticalSection_Destroy(&(PROTROM_NETWORK(Communication_p)->Outbound.TxCriticalSection));
 
     return E_SUCCESS;
 }
@@ -141,6 +145,9 @@ void Protrom_Network_ReadCallback(const void *Data_p, const uint32 Length, void 
 
         case PROTROM_RECEIVE_PAYLOAD:
             ReturnValue = Protrom_Network_ReceivePayload(Communication_p);
+            if((PROTROM_NETWORK(Communication_p)->Inbound.StopTransfer) && (0 == PROTROM_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop)) {
+                PROTROM_NETWORK(Communication_p)->Inbound.ReqData = 0;
+            }
             break;
 
         default:
@@ -231,18 +238,20 @@ void Protrom_Network_WriteCallback(const void *Data_p, const uint32 Length, void
 {
     Communication_t *Communication_p = (Communication_t *)Param_p;
     Protrom_Outbound_t *Out_p = &(PROTROM_NETWORK(Communication_p)->Outbound);
+    if (Out_p->State == PROTROM_SENDING_PAYLOAD) {
+        if (NULL != Out_p->Packet_p) {
+            if (NULL != Out_p->Packet_p->Buffer_p) {
+                free(Out_p->Packet_p->Buffer_p);
+            }
 
-    if (NULL != Out_p->Packet_p) {
-        if (NULL != Out_p->Packet_p->Buffer_p) {
-            free(Out_p->Packet_p->Buffer_p);
+            free(Out_p->Packet_p);
+            Out_p->Packet_p = NULL;
         }
-
-        free(Out_p->Packet_p);
-        Out_p->Packet_p = NULL;
+        Out_p->State = PROTROM_SEND_IDLE;
     }
-
-    Out_p->State = PROTROM_SEND_IDLE;
-
+    else if (Out_p->State == PROTROM_SENDING_HEADER) {
+        Out_p->State = PROTROM_SEND_PAYLOAD;
+    }
     /* check for more stuff to send. */
     (void)Protrom_Network_TransmiterHandler(Communication_p);
 }
@@ -314,13 +323,11 @@ static ErrorCode_e Protrom_Network_ReceivePayload(Communication_t *Communication
 
 static ErrorCode_e Protrom_Network_TransmiterHandler(Communication_t *Communication_p)
 {
-    Protrom_Outbound_t *Out_p = &(PROTROM_NETWORK(Communication_p)->Outbound);
+    volatile Protrom_Outbound_t *Out_p = &(PROTROM_NETWORK(Communication_p)->Outbound);
 
-    if (Out_p->InLoad) {
+    if (!Do_CriticalSection_Enter(Out_p->TxCriticalSection)) {
         return E_SUCCESS;
     }
-
-    Out_p->InLoad = TRUE;
 
     switch (Out_p->State) {
     case PROTROM_SEND_IDLE:
@@ -328,31 +335,40 @@ static ErrorCode_e Protrom_Network_TransmiterHandler(Communication_t *Communicat
 
         if (NULL != Out_p->Packet_p) {
             /* get next packet for transmiting */
-            Out_p->State = PROTROM_SEND_PACKET;
+            Out_p->State = PROTROM_SEND_HEADER;
         } else {
             break;
         }
 
         /* FALLTHROUGH */
 
-    case PROTROM_SEND_PACKET:
-        Out_p->State = PROTROM_SENDING_PACKET;
+    case PROTROM_SEND_HEADER:
+        Out_p->State = PROTROM_SENDING_HEADER;
 
         if (E_SUCCESS != Communication_p->CommunicationDevice_p->Write(Out_p->Packet_p->Buffer_p,
-                PROTROM_HEADER_LENGTH + Out_p->Packet_p->Header.PayloadLength + PROTROM_CRC_LENGTH,
+                PROTROM_HEADER_LENGTH, Protrom_Network_WriteCallback, Communication_p)) {
+            Out_p->State = PROTROM_SEND_HEADER;
+            break;
+        }
+
+    case PROTROM_SENDING_HEADER:
+        break;
+    case PROTROM_SEND_PAYLOAD:
+        Out_p->State = PROTROM_SENDING_PAYLOAD;
+        if (E_SUCCESS != Communication_p->CommunicationDevice_p->Write(Out_p->Packet_p->Buffer_p + PROTROM_HEADER_LENGTH,
+                Out_p->Packet_p->Header.PayloadLength + PROTROM_CRC_LENGTH,
                 Protrom_Network_WriteCallback, Communication_p)) {
-            Out_p->State = PROTROM_SEND_PACKET;
+            Out_p->State = PROTROM_SEND_PAYLOAD;
             break;
         }
 
         /* FALLTHROUGH */
-
-    case PROTROM_SENDING_PACKET:
+    case PROTROM_SENDING_PAYLOAD:
         break;
 
     }
 
-    Out_p->InLoad = FALSE;
+    Do_CriticalSection_Leave(Out_p->TxCriticalSection);
 
     return E_SUCCESS;
 }

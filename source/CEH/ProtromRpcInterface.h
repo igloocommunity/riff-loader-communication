@@ -67,11 +67,8 @@ public:
 
     ErrorCode_e Do_CEH_Callback(CommandData_t *pCmdData);
 
-    void CancelDeviceOnResult(CommunicationDevice_t *commDevice);
 private:
     uint8 *PROTROM_Payload;
-    bool cancelDeviceOnResult_;
-    CommunicationDevice_t *commDevice_;
     CmdResult *cmdResult_;
     LcmInterface *lcmInterface_;
 };

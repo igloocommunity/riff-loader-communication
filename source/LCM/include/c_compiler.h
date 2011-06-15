@@ -4,7 +4,6 @@
 * License terms: 3-clause BSD license
 *
 ******************************************************************************/
-
 #ifndef _C_COMPILER_H
 #define _C_COMPILER_H
 
@@ -25,14 +24,7 @@
 *
 * REVISION HISTORY:
 *
-* $Log: \KIRND_FuncBlocks_Utilities_003\cnh1606432\dependencies\Utils\c_compiler.h $
- *
- *    Version: ...\cnh1606432\cnh1606432_r1\7 18 Nov 2009 10:18 (GMT) qsjomik
- * Overwrite merge.
- * Compiled with _INTERCEPTCALLBACKS pre-compiler directive.
- * Stability, Multi-Dut and storing BufferVector updates.
- * Updated for LCM R1B.
- * R1A027.
+* $Log: \LD_FuncBlocks_012\cnh160692_exec_pltf_srv_swbp\inc\c_compiler.h $
  *
  *    Version: ...\cnh160692_r1a_dev\3 12 Mar 2002 14:21 (GMT) QCSSTZI
  * rename p_compiler to c_compiler.
@@ -89,10 +81,15 @@
 #define COMPILER_ARM_ARM /* Preferred */
 #define COMPILER_ARM
 #define ARM
+#elif defined(__GNUC__)
+#ifdef __arm__
+#define COMPILER_GCC_ARM
+#elif defined(__linux__)
+/* TARGET IS LINUX */
+#define COMPILER_GCC
+#endif
 #elif defined(__IAR_SYSTEMS_ASM__)
 #elif defined(_lint)
-#elif defined(__GNUC__)
-#define COMPILER_GNUC
 #else
 #error Unknown compiler
 #endif

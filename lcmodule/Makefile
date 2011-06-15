@@ -59,6 +59,7 @@ LIBSRC :=${TRANSPORT_PATH}/source/bulk_protocol.c\
 	${LCM_CNH_PATH}/source/z_family.c\
 	${LCM_CNH_PATH}/source/r15_family.c\
 	${LCM_CNH_PATH}/source/a2_family.c\
+	${LCM_PATH}/source/cnh1605551_ldr_utilities/critical_section/critical_section_linux.c\
 	${LCM_PATH}/source/serialization.c
 
 LIBOBJ_x32 := $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(notdir $(LIBSRC:.c=.o)))
@@ -75,6 +76,7 @@ INCLUDES := -I. \
 	-I ${LCM_CNH_PATH}/include/\
 	-I ${TIME_UTILITIES_PATH}/include/\
 	-I ${UTILITIES_PATH}/include/\
+	-I ${LCM_PATH}/source/cnh1605551_ldr_utilities/critical_section/\
 	-I ${UTILITIES_PATH}/communication_abstraction/\
 	-I ${BUFFERS_PATH}/include/\
 	-I ${SECURITY_ALGORITHMS_PATH}/include/\
@@ -114,6 +116,10 @@ $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: ${LCM_CNH_PATH}/source/%.c  $(AUTOGEN_FIL
 	@mkdir -p $(dir $@)
 	$(CC) $(INCLUDES) $(CFLAGS) -c -m32 $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
 
+$(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: ${LCM_PATH}/source/cnh1605551_ldr_utilities/critical_section/%.c  $(AUTOGEN_FILES)
+	@mkdir -p $(dir $@)
+	$(CC) $(INCLUDES) $(CFLAGS) -c -m32 $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
+
 $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: ${LCM_PATH}/source/%.c  $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CC) $(INCLUDES) $(CFLAGS) -c -m32 $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
@@ -127,6 +133,10 @@ $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: ${NETWORK_PATH}/source/%.c  $(AUTOGEN_FIL
 	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
 
 $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: ${LCM_CNH_PATH}/source/%.c  $(AUTOGEN_FILES)
+	@mkdir -p $(dir $@)
+	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
+
+$(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: ${LCM_PATH}/source/cnh1605551_ldr_utilities/critical_section/%.c  $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
 

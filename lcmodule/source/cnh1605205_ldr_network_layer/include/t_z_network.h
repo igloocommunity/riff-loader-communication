@@ -17,6 +17,7 @@
  * Includes
  ******************************************************************************/
 #include "t_communication_service.h"
+#include "t_critical_section.h"
 #include "t_z_header.h"
 
 /*******************************************************************************
@@ -60,8 +61,8 @@ typedef struct {
 typedef struct {
     /**< State of the state machine for handling outgoing Z packets. */
     Z_OutboundState_t State;
-    /**< Boolean value for controling re-entry in transmiter fucntion. */
-    boolean           InLoad;
+    /**< Synchronization object to avoid parallel access in transmitter function. */
+    CriticalSection_t TxCriticalSection;
 } Z_Outbound_t;
 
 

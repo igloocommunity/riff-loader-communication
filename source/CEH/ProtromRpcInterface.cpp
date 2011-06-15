@@ -9,10 +9,8 @@
 ProtromRpcInterface::ProtromRpcInterface(CmdResult *CmdResult, LcmInterface *LcmInterface)
 {
     PROTROM_Payload = new uint8[0x10000];
-    cancelDeviceOnResult_ = false;
     cmdResult_ = CmdResult;
     lcmInterface_ = LcmInterface;
-    commDevice_ = NULL;
 }
 
 ProtromRpcInterface::~ProtromRpcInterface()
@@ -239,10 +237,6 @@ ErrorCode_e ProtromRpcInterface::DoneRPC_PROTROM_ResultImpl(CommandData_t CmdDat
     // skip PDU type
     Payload_p++;
 
-    if (cancelDeviceOnResult_) {
-        commDevice_->Cancel(lcmInterface_->getLCMContext());
-    }
-
     return E_SUCCESS;
 }
 
@@ -265,8 +259,3 @@ ErrorCode_e ProtromRpcInterface::DoneRPC_PROTROM_ReadyToReceiveImpl(CommandData_
     return E_SUCCESS;
 }
 
-void ProtromRpcInterface::CancelDeviceOnResult(CommunicationDevice_t *commDevice)
-{
-    cancelDeviceOnResult_ = true;
-    commDevice_ = commDevice;
-}

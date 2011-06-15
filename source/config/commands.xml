@@ -336,6 +336,33 @@
       <value type="buffer" length="iDataSize" name="SIMLockKeysData_p">Data buffer with all SIMLock keys.</value>
       </output>
     </command>
+
+    <command number="15" name="System Start Communication Relay" ADbg="false" source="PC" supportedcmdtype="longrunning">
+      <interface type="loader" name="StartCommRelay"/>
+      <documentation>
+        The Loader shuts down the global communication and enters in a Relay working mode.
+      </documentation>
+      <input>
+        <value type="uint32" name="HostDeviceId">Communication device number of the relay input (host device).</value>
+        <value type="uint32" name="TargetDeviceId">Communication device number of the relay ouptut (target device).</value>
+        <value type="uint32" name="ControlDeviceId">Communication device number for the loader commands (control device).</value>
+      </input>
+      <output>
+      </output>
+      <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
+       <value ref="A1"/>
+       <value ref="CA"/>
+      </authentication>
+      <permissions>
+       <value ref="ServiceModeLevel"/>
+       <value ref="FlashModeLevel"/>
+       <value ref="AdvanceServiceModeLevel"/>
+       <value ref="ProductionModeLevel"/>
+       <value ref="LimitedProductionModeLevel"/>
+       <value ref="VeryLimitedProductionModeLevel"/>
+      </permissions>
+    </command>
+
   </group>
 
   <group number="2" name="Flash application">

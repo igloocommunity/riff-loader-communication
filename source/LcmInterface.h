@@ -24,7 +24,7 @@ typedef ErrorCode_e(*CommunicationSetFamily_t)(Communication_t *Communication_p,
 typedef ErrorCode_e(*CommunicationSend_t)(Communication_t *Communication_p, void *InputData_p);
 typedef ErrorCode_e(*CommunicationSetProtocolTimeouts_t)(Communication_t *Communication_p, void *TimeoutData_p);
 typedef ErrorCode_e(*CommunicationGetProtocolTimeouts_t)(Communication_t *Communication_p, void *TimeoutData_p);
-typedef ErrorCode_e(*CommunicationCancelReceiver_t)(Communication_t *Communication_p, uint8 PacketsBeforeTransferStop); 
+typedef ErrorCode_e(*CommunicationCancelReceiver_t)(Communication_t *Communication_p, uint8 PacketsBeforeTransferStop);
 
 typedef ErrorCode_e(*R15CommandSend_t)(Communication_t *Communication_p, CommandData_t *CmdData_p);
 typedef ErrorCode_e(*R15CommandResetSessionCounters_t)(const Communication_t *const Communication_p);
@@ -50,7 +50,7 @@ typedef struct {
     CommunicationSend_t                 Send_Fn;
     CommunicationSetProtocolTimeouts_t  SetProtocolTimeouts_Fn;
     CommunicationGetProtocolTimeouts_t  GetProtocolTimeouts_Fn;
-    CommunicationCancelReceiver_t       CancelReceiver_Fn; 
+    CommunicationCancelReceiver_t       CancelReceiver_Fn;
 } CommunicationInterface_t;
 
 typedef struct {

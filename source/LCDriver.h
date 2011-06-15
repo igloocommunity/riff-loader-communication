@@ -412,6 +412,15 @@ extern "C"
     LCDRIVER_API int __cdecl System_SwitchCommunicationDevice(LCDContext Context, uint32 uiDevice, uint32 uiDeviceParam);
 
     /// <summary>
+    /// The Loader shuts down the global communication and enters in a Relay working mode.
+    /// </summary>
+    /// <param name="HostDeviceId">Communication device number of the relay input (host device).</param>
+    /// <param name="TargetDeviceId">Communication device number of the relay ouptut (target device).</param>
+    /// <param name="ControlDeviceId">Communication device number for the loader commands (control device).</param>
+    /// <returns>Status of the command.</returns>
+    LCDRIVER_API int __cdecl System_StartCommRelay(LCDContext Context, uint32 HostDeviceId, uint32 TargetDeviceId, uint32 ControlDeviceId);
+
+    /// <summary>
     /// This command is used to initiate a flashing session. The type argument is
     /// used to select the type of file to process and Length parameter
     /// defines the total size of the file.

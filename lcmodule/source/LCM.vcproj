@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="LCM"
 	ProjectGUID="{E06F2763-9680-40F7-99CB-4065B1157B67}"
 	RootNamespace="LCM"
@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)autogen&quot;;&quot;$(ProjectDir)cnh1606344_ldr_communication_module\config&quot;;&quot;$(ProjectDir)legacy_compatibility&quot;;&quot;$(ProjectDir)cnh1606344_ldr_communication_module\include&quot;;&quot;$(ProjectDir)cnh1605721_ldr_security_algorithms\include&quot;;&quot;$(ProjectDir)cnh1605720_ldr_time_utilities\include&quot;;&quot;$(ProjectDir)cnh1605551_ldr_utilities\include&quot;;&quot;$(ProjectDir)cnh1605205_ldr_network_layer\include&quot;;&quot;$(ProjectDir)cnh1605204_ldr_transport_layer\include&quot;;&quot;$(ProjectDir)cnh1605203_ldr_communication_buffer\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)autogen&quot;;&quot;$(ProjectDir)cnh1606344_ldr_communication_module\config&quot;;&quot;$(ProjectDir)legacy_compatibility&quot;;&quot;$(ProjectDir)cnh1606344_ldr_communication_module\include&quot;;&quot;$(ProjectDir)cnh1605721_ldr_security_algorithms\include&quot;;&quot;$(ProjectDir)cnh1605720_ldr_time_utilities\include&quot;;&quot;$(ProjectDir)cnh1605551_ldr_utilities\include&quot;;&quot;$(ProjectDir)cnh1605205_ldr_network_layer\include&quot;;&quot;$(ProjectDir)cnh1605204_ldr_transport_layer\include&quot;;&quot;$(ProjectDir)cnh1605203_ldr_communication_buffer\include&quot;;&quot;$(ProjectDir)cnh1605551_ldr_utilities\critical_section&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;LCM_EXPORTS;PRINT_A_"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
@@ -121,7 +121,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)autogen&quot;;&quot;$(ProjectDir)cnh1606344_ldr_communication_module\config&quot;;&quot;$(ProjectDir)legacy_compatibility&quot;;&quot;$(ProjectDir)cnh1606344_ldr_communication_module\include&quot;;&quot;$(ProjectDir)cnh1605721_ldr_security_algorithms\include&quot;;&quot;$(ProjectDir)cnh1605720_ldr_time_utilities\include&quot;;&quot;$(ProjectDir)cnh1605551_ldr_utilities\include&quot;;&quot;$(ProjectDir)cnh1605205_ldr_network_layer\include&quot;;&quot;$(ProjectDir)cnh1605204_ldr_transport_layer\include&quot;;&quot;$(ProjectDir)cnh1605203_ldr_communication_buffer\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)autogen&quot;;&quot;$(ProjectDir)cnh1606344_ldr_communication_module\config&quot;;&quot;$(ProjectDir)legacy_compatibility&quot;;&quot;$(ProjectDir)cnh1606344_ldr_communication_module\include&quot;;&quot;$(ProjectDir)cnh1605721_ldr_security_algorithms\include&quot;;&quot;$(ProjectDir)cnh1605720_ldr_time_utilities\include&quot;;&quot;$(ProjectDir)cnh1605551_ldr_utilities\include&quot;;&quot;$(ProjectDir)cnh1605205_ldr_network_layer\include&quot;;&quot;$(ProjectDir)cnh1605204_ldr_transport_layer\include&quot;;&quot;$(ProjectDir)cnh1605203_ldr_communication_buffer\include&quot;;&quot;$(ProjectDir)cnh1605551_ldr_utilities\critical_section&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LCM_EXPORTS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -295,6 +295,14 @@
 					RelativePath=".\cnh1605551_ldr_utilities\source\serialization.c"
 					>
 				</File>
+				<Filter
+					Name="critical_section"
+					>
+					<File
+						RelativePath=".\cnh1605551_ldr_utilities\critical_section\critical_section_win32.c"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -302,6 +310,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
 			<Filter
 				Name="cnh1606344_ldr_communication_module"
 				>
@@ -521,6 +533,18 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="critical_section"
+					>
+					<File
+						RelativePath=".\cnh1605551_ldr_utilities\critical_section\r_critical_section.h"
+						>
+					</File>
+					<File
+						RelativePath=".\cnh1605551_ldr_utilities\critical_section\t_critical_section.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="cnh1605720_ldr_time_utilities"
@@ -586,7 +610,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating command_ids.h..."
-						CommandLine="java -classpath ..\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)autogen\command_ids.h&quot; -PARAM target lcm&#x0D;&#x0A;"
+						CommandLine="java -classpath ..\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)autogen\command_ids.h&quot; -PARAM target lcm"
 						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
 						Outputs="autogen\command_ids.h"
 					/>
@@ -646,7 +670,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Generating error_codes.h..."
-						CommandLine="java -classpath &quot;..\tools\xalan-j_2_7_1\xalan.jar&quot; org.apache.xalan.xslt.Process -in &quot;$(InputDir)error_codes.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)autogen\error_codes.h&quot;&#x0D;&#x0A;"
+						CommandLine="java -classpath &quot;..\tools\xalan-j_2_7_1\xalan.jar&quot; org.apache.xalan.xslt.Process -in &quot;$(InputDir)error_codes.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)autogen\error_codes.h&quot;"
 						AdditionalDependencies="$(InputDir)error_codes.xml"
 						Outputs="autogen\error_codes.h"
 					/>

@@ -27,6 +27,7 @@
 #include "r_r15_header.h"
 #include "r_bulk_protocol.h"
 #include "r_command_protocol.h"
+#include "r_critical_section.h"
 
 #ifdef  CFG_ENABLE_MEASUREMENT_TOOL
 #include "r_measurement_tool.h"
@@ -82,10 +83,10 @@ static PacketMeta_t *R15_Network_GetAvailableMetaPacket(void);
 ErrorCode_e R15_Network_Initialize(Communication_t *Communication_p)
 {
     memset(R15_NETWORK(Communication_p), 0, sizeof(R15_NetworkContext_t));
+    R15_NETWORK(Communication_p)->Outbound.TxCriticalSection = Do_CriticalSection_Create();
 
     /* Simulate a finished read to get the inbound state-machine going. */
     R15_Network_ReadCallback(NULL, 0, Communication_p);
-    R15_NETWORK(Communication_p)->Outbound.InLoad = FALSE;
 #ifdef  CFG_ENABLE_LOADER_TYPE
     (void)QUEUE(Communication_p, Fifo_SetCallback_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Outbound_p, QUEUE_NONEMPTY, R15_QueueOutCallback, Communication_p);
     (void)QUEUE(Communication_p, Fifo_SetCallback_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Inbound_p, QUEUE_NONEMPTY, R15_QueueInCallback, Communication_p);
@@ -130,6 +131,8 @@ ErrorCode_e R15_Network_Shutdown(const Communication_t *const Communication_p)
     while (!QUEUE(Communication_p, Fifo_IsEmpty_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Inbound_p)) {
         ReturnValue = R15_Network_PacketRelease(Communication_p, (PacketMeta_t *)QUEUE(Communication_p, FifoDequeue_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Inbound_p));
     }
+
+    Do_CriticalSection_Destroy(&(R15_NETWORK(Communication_p)->Outbound.TxCriticalSection));
 
 ErrorExit:
     return ReturnValue;
@@ -266,11 +269,9 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
     uint32 ExtHdrLen = 0;
     uint32 Aligned_Length = 0;
 
-    if (Out_p->InLoad) {
-        return E_SUCCESS;
+    if (!Do_CriticalSection_Enter(Out_p->TxCriticalSection)) {
+        return ReturnValue;
     }
-
-    Out_p->InLoad = TRUE;
 
     switch (Out_p->State) {
     case SEND_IDLE:
@@ -362,7 +363,7 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
         }
     }
 
-    Out_p->InLoad = FALSE;
+    Do_CriticalSection_Leave(Out_p->TxCriticalSection);
 
     return ReturnValue;
 }

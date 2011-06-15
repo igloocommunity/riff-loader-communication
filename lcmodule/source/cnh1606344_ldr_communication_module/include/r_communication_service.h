@@ -54,7 +54,7 @@
 #define OBJECT_HASH(x) x->HashDevice_p->Object_p
 #define OBJECT_CEH_CALL(x) x->Object_p
 
-extern Communication_t* GlobalCommunication_p;
+extern Communication_t *GlobalCommunication_p;
 
 extern Communication_t DebugCommunication;
 
@@ -184,7 +184,7 @@ extern "C"
      * @retval E_INVALID_INPUT_PARAMTERS In case when communicaiton is not Singleton
      *                                   and Communication_p is NULL pointer.
      */
-    LCM_API ErrorCode_e Do_Communication_GetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t** CommunicationDevice_pp);
+    LCM_API ErrorCode_e Do_Communication_GetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t **CommunicationDevice_pp);
 
     /**
      * Function for setting the communication device for the given LCM instance.
@@ -200,17 +200,17 @@ extern "C"
      * @retval E_INVALID_INPUT_PARAMTERS In case when communicaiton is not Singleton
      *                                   and Communication_p is NULL pointer.
      */
-    LCM_API ErrorCode_e Do_Communication_SetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t* CommunicationDevice_p);
+    LCM_API ErrorCode_e Do_Communication_SetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t *CommunicationDevice_p);
 
-	/*
- * Cancek Receiving new packets
- *
- * @param [in] Communication_p  Communication module context.
- * @param [in] PacketsBeforeReceiverStop  Number of packets to be send before stopping the receiver.
- *
- * @retval  E_SUCCESS If all packets are successfully handled. A
- *                    protocol family dependant error code otherwise.
- */
+    /*
+     * Cancek Receiving new packets
+     *
+     * @param [in] Communication_p  Communication module context.
+     * @param [in] PacketsBeforeReceiverStop  Number of packets to be send before stopping the receiver.
+     *
+     * @retval  E_SUCCESS If all packets are successfully handled. A
+     *                    protocol family dependant error code otherwise.
+     */
     LCM_API ErrorCode_e Do_Communication_Cancel_Receiver(Communication_t *Communication_p, uint8 PacketsBeforeReceiverStop);
 
 #ifdef __cplusplus

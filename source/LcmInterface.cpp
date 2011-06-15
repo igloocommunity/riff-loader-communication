@@ -75,7 +75,7 @@ int LcmInterface::LoadLCMLibrary()
     Communication.Send_Fn                   = (CommunicationSend_t)GetProcAddress(m_hDLL, "Do_Communication_Send");
     Communication.SetProtocolTimeouts_Fn    = (CommunicationSetProtocolTimeouts_t)GetProcAddress(m_hDLL, "Do_Communication_SetProtocolTimeouts");
     Communication.GetProtocolTimeouts_Fn    = (CommunicationGetProtocolTimeouts_t)GetProcAddress(m_hDLL, "Do_Communication_GetProtocolTimeouts");
-	Communication.CancelReceiver_Fn         = (CommunicationCancelReceiver_t)GetProcAddress(m_hDLL, "Do_Communication_Cancel_Receiver");
+    Communication.CancelReceiver_Fn         = (CommunicationCancelReceiver_t)GetProcAddress(m_hDLL, "Do_Communication_Cancel_Receiver");
 
     R15Command.Send_Fn                  = (R15CommandSend_t)GetProcAddress(m_hDLL, "Do_R15_Command_Send");
     R15Command.ResetSessionCounters_Fn  = (R15CommandResetSessionCounters_t)GetProcAddress(m_hDLL, "Do_R15_Command_ResetSessionCounters");
@@ -192,7 +192,7 @@ ErrorCode_e LcmInterface::CommunicationShutdown()
 
 ErrorCode_e LcmInterface::CommunicationCancelReceiver(uint8 PacketsBeforeReceiverStop)
 {
-	return Communication.CancelReceiver_Fn(m_pCommunication, PacketsBeforeReceiverStop);
+    return Communication.CancelReceiver_Fn(m_pCommunication, PacketsBeforeReceiverStop);
 }
 ErrorCode_e LcmInterface::CommandSend(CommandData_t *CmdData_p)
 {

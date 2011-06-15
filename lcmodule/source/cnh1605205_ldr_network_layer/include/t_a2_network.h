@@ -17,6 +17,7 @@
  * Includes
  ******************************************************************************/
 #include "t_communication_service.h"
+#include "t_critical_section.h"
 #include "t_a2_header.h"
 
 /*******************************************************************************
@@ -151,8 +152,8 @@ typedef struct {
     A2_OutboundState_t State;
     /** Temporary pointer for handling PROTROM packet.*/
     A2_PacketMeta_t    *Packet_p;
-    /**< Boolean value for controlling re-entry in transmitter function. */
-    boolean            InLoad;
+    /** Synchronization object to avoid parallel access in transmitter function. */
+    CriticalSection_t  TxCriticalSection;
     /** Error flag, purposed for error handling.*/
     ErrorCode_e        LCM_Error;
 } A2_Outbound_t;

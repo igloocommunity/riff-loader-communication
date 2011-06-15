@@ -27,6 +27,7 @@
 #include "r_communication_service.h"
 #include "r_debug.h"
 #include "r_debug_macro.h"
+#include "r_critical_section.h"
 
 #ifdef  WIN32
 #include <windows.h>
@@ -70,7 +71,7 @@ ErrorCode_e A2_Network_Initialize(Communication_t *Communication_p)
 
     /* Simulate a finished read to get the inbound state-machine going. */
     A2_Network_ReadCallback(NULL, 0, Communication_p);
-    A2_NETWORK(Communication_p)->Outbound.InLoad = FALSE;
+    A2_NETWORK(Communication_p)->Outbound.TxCriticalSection = Do_CriticalSection_Create();
 
 #ifdef  CFG_ENABLE_LOADER_TYPE
     (void)QUEUE(Communication_p, Fifo_SetCallback_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Outbound_p, QUEUE_NONEMPTY, A2_QueueCallback, Communication_p);
@@ -113,6 +114,8 @@ ErrorCode_e A2_Network_Shutdown(const Communication_t *const Communication_p)
     while (!QUEUE(Communication_p, Fifo_IsEmpty_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Inbound_p)) {
         ReturnValue = A2_Network_PacketRelease(Communication_p, (A2_PacketMeta_t *)QUEUE(Communication_p, FifoDequeue_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Inbound_p));
     }
+
+    Do_CriticalSection_Destroy(&(A2_NETWORK(Communication_p)->Outbound.TxCriticalSection));
 
 ErrorExit:
     return ReturnValue;
@@ -476,11 +479,9 @@ ErrorCode_e A2_Network_TransmiterHandler(Communication_t *Communication_p)
     ErrorCode_e ReturnValue = E_SUCCESS;
     A2_Outbound_t *Out_p = &(A2_NETWORK(Communication_p)->Outbound);
 
-    if (Out_p->InLoad) {
-        return E_SUCCESS;
+    if(!Do_CriticalSection_Enter(Out_p->TxCriticalSection)) {
+        return ReturnValue;
     }
-
-    Out_p->InLoad = TRUE;
 
     switch (Out_p->State) {
     case A2_SEND_IDLE:
@@ -541,7 +542,7 @@ ErrorCode_e A2_Network_TransmiterHandler(Communication_t *Communication_p)
         break;
     }
 
-    Out_p->InLoad = FALSE;
+    Do_CriticalSection_Leave(Out_p->TxCriticalSection);
 
     return ReturnValue;
 }

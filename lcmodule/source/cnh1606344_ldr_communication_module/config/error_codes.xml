@@ -563,6 +563,14 @@
     <value number="2755" name="E_HSI_BSC_ERROR_TRANSMIT" fatal="true" short="Transmit buffer is not provided.">Reset loader.Report if problem still exist.</value>
 
     <!--
+    * Communication Relay Error Codes
+    * Communication Relay Fatal 2800-2849
+    * Communication Relay Non-Fatal 2850-2899
+    -->
+    <value number="2850" name="E_CR_INVALID_STATE" fatal="false" short="Invalid state for commnication relay detected.">Wrong value passed as state for the communication relay and hence it can't be used. Try setting some of predifined communication relay states.</value>
+    <value number="2851" name="E_CR_NOT_RUNNING" fatal="false" short="Communication Relay is not running.">Communication relay is set in error state or it is not configured properly. Check the relay state. If error occured restart the loader, otherwise try reconfiguring the relay.</value>
+
+    <!--
     * Security Library Fatal 4000-4050
     * Security Library non-fatal 4051-4250
     -->

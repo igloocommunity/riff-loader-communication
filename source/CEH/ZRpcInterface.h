@@ -29,8 +29,9 @@ public:
     ErrorCode_e Do_CEH_Callback(CommandData_t *pCmdData);
 
 private:
-    //Payload variable for z-protocol
+    //Payload variables for z-protocol
     uint8 *Z_Payload;
+    uint8 *Z_Payload_SetBaudrate;
     CmdResult *cmdResult_;
     LcmInterface *lcmInterface_;
 };

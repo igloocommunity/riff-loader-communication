@@ -124,6 +124,13 @@ ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_System_SwitchCommunicationDeviceImpl
     return E_SUCCESS;
 }
 
+ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_System_StartCommRelayImpl(uint16 Session, ErrorCode_e Status)
+{
+    cmdResult_->GeneralResponse_Session = Session;
+
+    return E_SUCCESS;
+}
+
 ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_Flash_ProcessFileImpl(uint16 Session, ErrorCode_e Status)
 {
     cmdResult_->GeneralResponse_Session = Session;

@@ -61,13 +61,14 @@ public:
     int Do_System_Shutdown();
     int Do_System_SupportedCommands(TSupportedCmd *pCmdList, int *piCmdListSize);
     int Do_System_CollectData(int iType, int *piSize, char *pData);
-    int Do_System_ExecuteSoftware(const uint32 ExecuteMode,const char *pchDevicePath, int iUseBulk);
+    int Do_System_ExecuteSoftware(const uint32 ExecuteMode, const char *pchDevicePath, int iUseBulk);
     int Do_System_Authenticate(int iType, int *piSize, unsigned char *puchdata);
     int Done_System_GetControlKeys(TSIMLockKeys *pSIMLockKeys);
     int Done_System_GetControlKeysData(int iDataSize, unsigned char *pSIMLockKeysData);
     int Done_System_AuthenticationChallenge(int iDataSize, unsigned char *puchChallengeData);
     int Do_System_SetSystemTime(uint32 EpochTime);
     int Do_System_SwitchCommunicationDevice(uint32 Device, uint32 DeviceParam);
+    int Do_System_StartCommRelay(uint32 HostDeviceId, uint32 TargetDeviceId, uint32 ControlDeviceId);
 
     int Do_Flash_ProcessFile(const char *pchPath, const char *pchType, int iUseBulk, int iDeleteBuffers);
     int Do_Flash_ListDevices(TDevices *pDevices, int *piDeviceSize);

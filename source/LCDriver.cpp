@@ -282,6 +282,13 @@ LCDRIVER_API int __cdecl System_SwitchCommunicationDevice(LCDContext Context, ui
     return Context->m_pObject->Do_System_SwitchCommunicationDevice(uiDevice, uiDevice);
 }
 
+LCDRIVER_API int __cdecl System_StartCommRelay(LCDContext Context, uint32 HostDeviceId, uint32 TargetDeviceId, uint32 ControlDeviceId)
+{
+    VERIFY_CONTEXT_STARTED(Context);
+
+    return Context->m_pObject->Do_System_StartCommRelay(HostDeviceId, TargetDeviceId, ControlDeviceId);
+}
+
 LCDRIVER_API int __cdecl Flash_ProcessFile(LCDContext Context, const char *pchPath, const char *pchType, int iUseBulk, int iDeleteBuffers)
 {
     VERIFY_CONTEXT_STARTED(Context);

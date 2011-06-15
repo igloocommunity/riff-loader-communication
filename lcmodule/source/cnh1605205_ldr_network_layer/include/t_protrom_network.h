@@ -17,6 +17,7 @@
  * Includes
  ******************************************************************************/
 #include "t_communication_service.h"
+#include "t_critical_section.h"
 #include "t_protrom_header.h"
 
 /*******************************************************************************
@@ -39,8 +40,10 @@ typedef enum {
 /** Defined state of the transmitter */
 typedef enum {
     PROTROM_SEND_IDLE,       /**< Transmiter idle state.*/
-    PROTROM_SEND_PACKET,     /**< Transmiter send packet. */
-    PROTROM_SENDING_PACKET   /**< Transmiter is in process sending packet.*/
+    PROTROM_SEND_HEADER,     /**< Transmiter send header. */
+    PROTROM_SEND_PAYLOAD,    /**< Transmiter send payload. */
+    PROTROM_SENDING_HEADER,  /**< Transmiter is in process sending header.*/
+    PROTROM_SENDING_PAYLOAD  /**< Transmiter is in process sending payload.*/
 } Protrom_OutboundState_t;
 
 /** Structure for the packet meta data type. */
@@ -84,8 +87,8 @@ typedef struct {
     Protrom_OutboundState_t State;
     /** Temporary pointer for handling PROTROM packet.*/
     Protrom_Packet_t        *Packet_p;
-    /**< Boolean value for controling re-entry in transmiter fucntion. */
-    boolean                 InLoad;
+    /**< Synchronization object to avoid parallel access in transmitter function. */
+    CriticalSection_t       TxCriticalSection;
 } Protrom_Outbound_t;
 
 

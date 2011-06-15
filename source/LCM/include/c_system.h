@@ -2,8 +2,8 @@
 #define INCLUSION_GUARD_C_SYSTEM_H
 
 /*************************************************************************
- * Copyright (C) ST-Ericsson SA 2011
- * License terms: 3-clause BSD license
+* Copyright (C) ST-Ericsson SA 2011
+* License terms: 3-clause BSD license
 **************************************************************************
 *
 * DESCRIPTION:

@@ -178,7 +178,7 @@ typedef uint8 boolean;
 * Portable bitfield definitions
 *******************************************/
 
-#if defined(COMPILER_IAR_AVR) || defined(COMPILER_IAR_ARM) || defined(_WIN32) || defined(COMPILER_ARM_ARM) || defined(COMPILER_GNUC)
+#if defined(COMPILER_IAR_AVR) || defined(COMPILER_IAR_ARM) || defined(_WIN32) || defined(COMPILER_ARM_ARM) || defined(COMPILER_GNUC) || defined(COMPILER_GCC) || defined(COMPILER_GCC_ARM)
 /** Type definition to be used when implementing bit-fields that should hold
  * signed values.
  */

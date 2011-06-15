@@ -16,6 +16,7 @@
  * Includes
  ******************************************************************************/
 #include "t_communication_service.h"
+#include "t_critical_section.h"
 #include "t_r15_header.h"
 #include "t_time_utilities.h"
 
@@ -273,8 +274,8 @@ typedef struct {
     R15_OutboundState_t State;
     /** Temporary pointer for handling PROTROM packet.*/
     PacketMeta_t        *Packet_p;
-    /**< Boolean value for controling re-entry in transmiter fucntion. */
-    boolean             InLoad;
+    /**< Synchronization object to avoid parallel access in transmitter function. */
+    CriticalSection_t   TxCriticalSection;
     /** Error flag, purposed for error handling.*/
     ErrorCode_e         LCM_Error;
 } R15_Outbound_t;

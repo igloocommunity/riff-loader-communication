@@ -17,7 +17,6 @@
  * Includes
  ******************************************************************************/
 #include "t_basicdefinitions.h"
-#include "command_ids.h"
 
 /*******************************************************************************
  * Types, constants
@@ -81,7 +80,7 @@ typedef struct {
 typedef struct {
     uint16    SessionState;  /**< Session and state for command header */
     uint8     Command;       /**< Specified command */
-    GroupId_e CommandGroup;  /**< Specified command group */
+    uint8     CommandGroup;  /**< Specified command group */
 } CommandExtendedHeader_t;
 
 /**

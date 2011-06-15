@@ -100,13 +100,6 @@ XSL_LOCAL_PATH := $(LOCAL_PATH)
 PRIVATE_CLASSPATH := $(LOCAL_PATH)/lcmodule/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process
 
 include $(CLEAR_VARS)
-LOCAL_MODULE_NAME := libSecurityAlgorithms.a
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := STATIC_LIBRARY
-LOCAL_PREBUILT_LIBS:= \
-	source/security_algorithms/ARM/$(LOCAL_MODULE_NAME)
-include $(BUILD_MULTI_PREBUILT)
-include $(CLEAR_VARS)
 
 LOCAL_MODULE := liblcdriver
 LOCAL_MODULE_TAGS := optional
@@ -160,7 +153,7 @@ LOCAL_SRC_FILES := \
 	source/utilities/Logger.cpp\
 	source/utilities/MemMappedFile.cpp\
 	source/utilities/CaptiveThreadObject.cpp\
-  source/utilities/BulkHandler.cpp\
+	source/utilities/BulkHandler.cpp\
 	source/CEH/ProtromRpcInterface.cpp\
 	source/CEH/commands_impl.cpp\
 	source/CEH/a2_commands_impl.cpp\
@@ -182,7 +175,9 @@ LOCAL_SRC_FILES := \
 	source/api_wrappers/linux/CEventObject.cpp\
 	source/api_wrappers/linux/CWaitableObjectCollection.cpp\
 	source/api_wrappers/linux/OS.cpp\
-	source/LCDriverInterface.cpp
+	source/LCDriverInterface.cpp\
+	source/security_algorithms/SecurityAlgorithms.cpp\
+	source/security_algorithms/sha/sha2.cpp
 
 LOCAL_C_INCLUDES := \
 	$(TOP)/external/stlport/stlport\
@@ -195,13 +190,13 @@ LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/source/LCM/include\
 	$(LOCAL_PATH)/source/security_algorithms\
 	$(LOCAL_PATH)/source/CEH\
+	$(LOCAL_PATH)/source/security_algorithms/sha\
 	$(LOCAL_AUTO_DIR)
 
-LOCAL_CFLAGS := -Wall -fPIC -fvisibility=hidden -fno-strict-aliasing -DLCDRIVER_EXPORTS
+LOCAL_CFLAGS := -Wall -fPIC -fvisibility=hidden -fno-strict-aliasing -DLCDRIVER_EXPORTS -DLITTLE_ENDIAN=1234 -DBIG_ENDIAN=4321 -DBYTE_ORDER=LITTLE_ENDIAN
 
 LOCAL_SHARED_LIBRARIES := libc libdl libstlport
 
-LOCAL_WHOLE_STATIC_LIBRARIES := libSecurityAlgorithms
 LOCAL_PRELINK_MODULE := false
 
 include $(BUILD_SHARED_LIBRARY)
@@ -263,6 +258,7 @@ LOCAL_SRC_FILES := \
 	lcmodule/source/cnh1606344_ldr_communication_module/source/z_family.c\
 	lcmodule/source/cnh1606344_ldr_communication_module/source/r15_family.c\
 	lcmodule/source/cnh1606344_ldr_communication_module/source/a2_family.c\
+	lcmodule/source/cnh1605551_ldr_utilities/critical_section/critical_section_linux.c\
 	lcmodule/source/serialization.c
 
 LOCAL_C_INCLUDES := \
@@ -272,6 +268,7 @@ LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/lcmodule/source/cnh1606344_ldr_communication_module/include/\
 	$(LOCAL_PATH)/lcmodule/source/cnh1605720_ldr_time_utilities/include/\
 	$(LOCAL_PATH)/lcmodule/source/cnh1605551_ldr_utilities/include/\
+	$(LOCAL_PATH)/lcmodule/source/cnh1605551_ldr_utilities/critical_section/\
 	$(LOCAL_PATH)/lcmodule/source/cnh1605551_ldr_utilities/communication_abstraction/\
 	$(LOCAL_PATH)/lcmodule/source/cnh1605203_ldr_communication_buffer/include/\
 	$(LOCAL_PATH)/lcmodule/source/cnh1605721_ldr_security_algorithms/include/\

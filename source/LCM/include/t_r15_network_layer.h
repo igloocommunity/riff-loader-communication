@@ -16,6 +16,7 @@
  * Includes
  ******************************************************************************/
 #include "t_communication_service.h"
+#include "t_critical_section.h"
 #include "t_r15_header.h"
 #include "t_time_utilities.h"
 
@@ -55,9 +56,9 @@
 
 #else
 /** Acknowledge packet time(mS) out value */
-#define ACK_TIMEOUT_IN_MS       (1000)
+#define ACK_TIMEOUT_IN_MS       (5000)
 /** Default time(mS) out for receiving bulk command */
-#define BULK_COMMAND_RECEIVING_TIMEOUT  (1000)
+#define BULK_COMMAND_RECEIVING_TIMEOUT  (5000)
 /** Default time(mS) out for receiving bulk data. This value is set for UART on 115200kbps! */
 #define BULK_DATA_RECEIVING_TIMEOUT   (120000)
 #endif
@@ -151,7 +152,8 @@ typedef enum {
     RECEIVE_HEADER,          /**< State for receiving Header.*/
     RECEIVE_EXTENDED_HEADER, /**< State for receiving Extended Header.*/
     RECEIVE_PAYLOAD,         /**< State for receiving Payload.*/
-    RECEIVE_ERROR            /**< State for error handling.*/
+    RECEIVE_ERROR,           /**< State for error handling.*/
+    RECEIVE_IDLE             /**< State for receiver idle.*/
 } R15_InboundState_t;
 
 /** Defined state of the transmitter */
@@ -257,6 +259,10 @@ typedef struct {
     R15_Header_t       Header;
     /** Poiter to meta data for allocated buffer for handling R15 packet.*/
     PacketMeta_t       *Packet_p;
+    /** Number of packets before receiver is stoped. */
+    uint8               PacketsBeforeReceiverStop;
+    /** Indicator for stopping the receiver. */
+    boolean             StopTransfer;
     /** Error flag, purposed for error handling.*/
     ErrorCode_e         LCM_Error;
 } R15_Inbound_t;
@@ -268,8 +274,8 @@ typedef struct {
     R15_OutboundState_t State;
     /** Temporary pointer for handling PROTROM packet.*/
     PacketMeta_t        *Packet_p;
-    /**< Boolean value for controling re-entry in transmiter fucntion. */
-    boolean             InLoad;
+    /**< Synchronization object to avoid parallel access in transmitter function. */
+    CriticalSection_t   TxCriticalSection;
     /** Error flag, purposed for error handling.*/
     ErrorCode_e         LCM_Error;
 } R15_Outbound_t;

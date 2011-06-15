@@ -636,32 +636,33 @@ int CLCDriverMethods::Do_System_ExecuteSoftware(const uint32 ExecuteMode, const 
 
     VERIFY_SUCCESS(IsMainThreadAlive());
 
-	if (1 == ExecuteMode) {
-		VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_ExecuteSoftware(uiSessionOut, ExecuteMode, pchDevicePath, 0));
+    if (1 == ExecuteMode) {
+        VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_ExecuteSoftware(uiSessionOut, ExecuteMode, pchDevicePath, 0));
 
-	} else if (2 == ExecuteMode) {
-				if (iUseBulk) {
-					m_pLcmInterface->BulkSetCallbacks((void *)BulkCommandReqCallback, (void *)BulkDataReqCallback, (void *)BulkDataEndOfDumpCallback);
-					VERIFY_SUCCESS(m_pBuffers->AllocateBulkFile(pchDevicePath));
-					uint64 uiLength = m_pBuffers->GetBulkFileLength();
-					m_uiBulkLength = uiLength;
-					m_uiBulkTransferred = 0;
-					VERIFY_SUCCESS(m_pBulkHandler->Send(pchDevicePath));
+    } else if (2 == ExecuteMode) {
+        if (iUseBulk) {
+            m_pLcmInterface->BulkSetCallbacks((void *)BulkCommandReqCallback, (void *)BulkDataReqCallback, (void *)BulkDataEndOfDumpCallback);
+            VERIFY_SUCCESS(m_pBuffers->AllocateBulkFile(pchDevicePath));
+            uint64 uiLength = m_pBuffers->GetBulkFileLength();
+            m_uiBulkLength = uiLength;
+            m_uiBulkTransferred = 0;
+            VERIFY_SUCCESS(m_pBulkHandler->Send(pchDevicePath));
 
-					VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_ExecuteSoftware(uiSessionOut, ExecuteMode, BULK_PATH, uiLength));
-					//VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_SYSTEM, COMMAND_SYSTEM_EXECUTESOFTWARE));
-				} else {
-					// TEMPORARY ONLY - QSJOMIK: CURRENTLY WE CANNOT KNOW THE SIZE OF FILE ON AN ME MEMORY CARD IF USEBULK=0 - DO WE NEED A PARAMETER??
-					VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_ExecuteSoftware(uiSessionOut, ExecuteMode, pchDevicePath, 0));
-					//VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_SYSTEM, COMMAND_SYSTEM_EXECUTESOFTWARE));
-				}
+            VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_ExecuteSoftware(uiSessionOut, ExecuteMode, BULK_PATH, uiLength));
+            //VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_SYSTEM, COMMAND_SYSTEM_EXECUTESOFTWARE));
+        } else {
+            // TEMPORARY ONLY - QSJOMIK: CURRENTLY WE CANNOT KNOW THE SIZE OF FILE ON AN ME MEMORY CARD IF USEBULK=0 - DO WE NEED A PARAMETER??
+            VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_ExecuteSoftware(uiSessionOut, ExecuteMode, pchDevicePath, 0));
+            //VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_SYSTEM, COMMAND_SYSTEM_EXECUTESOFTWARE));
+        }
 
-				// reset session counters for this instance of the lcm
-				m_pLcmInterface->CommandResetSessionCounters();
-			} else {
-				ReturnValue = INVALID_EXECUTION_MODE;
-			}
-	//}
+        // reset session counters for this instance of the lcm
+        m_pLcmInterface->CommandResetSessionCounters();
+    } else {
+        ReturnValue = INVALID_EXECUTION_MODE;
+    }
+
+    //}
 
 ErrorExit:
 
@@ -814,6 +815,33 @@ int CLCDriverMethods::Do_System_SwitchCommunicationDevice(uint32 Device, uint32 
     VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_SwitchCommunicationDevice(uiSessionOut, Device, DeviceParam));
 
     VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_SYSTEM, COMMAND_SYSTEM_SWITCHCOMMUNICATIONDEVICE));
+
+ErrorExit:
+    return ReturnValue;
+}
+
+/// <summary>
+/// The Loader shuts down the global communication and enters in a Relay working mode.
+/// </summary>
+/// <param name="HostDeviceId">
+/// Communication device number of the relay input (host device).
+/// </param>
+/// <param name="TargetDeviceId">
+/// Communication device number of the relay ouptut (target device).
+/// </param>
+/// <param name="ControlDeviceId">
+/// Communication device number for the loader commands (control device).
+/// </param>
+/// <returns>Status of the command.</returns>
+int CLCDriverMethods::Do_System_StartCommRelay(uint32 HostDeviceId, uint32 TargetDeviceId, uint32 ControlDeviceId)
+{
+    uint16 uiSessionOut = 0;
+    int ReturnValue = E_SUCCESS;
+
+    VERIFY_SUCCESS(IsMainThreadAlive());
+    VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_StartCommRelay(uiSessionOut, HostDeviceId, TargetDeviceId, ControlDeviceId));
+
+    VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_SYSTEM, COMMAND_SYSTEM_STARTCOMMRELAY));
 
 ErrorExit:
     return ReturnValue;
@@ -1407,7 +1435,7 @@ int CLCDriverMethods::Do_OTP_StoreSecureObject(const char *pchSourcePath, int iD
     VERIFY_SUCCESS(IsMainThreadAlive());
 
     if (iUseBulk) {
-		m_pLcmInterface->BulkSetCallbacks((void *)BulkCommandReqCallback, (void *)BulkDataReqCallback, (void *)BulkDataEndOfDumpCallback);
+        m_pLcmInterface->BulkSetCallbacks((void *)BulkCommandReqCallback, (void *)BulkDataReqCallback, (void *)BulkDataEndOfDumpCallback);
 
         VERIFY_SUCCESS(m_pBuffers->AllocateBulkFile(pchSourcePath));
         m_uiBulkLength = m_pBuffers->GetBulkFileLength();
@@ -2201,7 +2229,6 @@ int CLCDriverMethods::Do_PROTROM_DownloadLoader(const char *pchPath, int iPLOffs
     }
 
     if (!iContinueProtRom) {
-        m_pProtromRpcFunctions->CancelDeviceOnResult(m_pCommunicationDevice);
         m_pLcmInterface->CommunicationCancelReceiver(2);
     }
 
@@ -2434,6 +2461,7 @@ int CLCDriverMethods::WaitForEvent(uint32 event, int Group, int Command)
     if (REMOVE_SUCCESS == result) {
         switch (receivedEvent->event & event) {
         case EVENT_GR_RECEIVED:
+
             if (receivedEvent->group == Group &&
                     receivedEvent->command == Command) {
                 m_pLogger->log("WaitForEvent: General Response received. Number = %d", receivedEvent->command);
@@ -2448,6 +2476,7 @@ int CLCDriverMethods::WaitForEvent(uint32 event, int Group, int Command)
 
             break;
         case EVENT_CMD_RECEIVED:
+
             if ((receivedEvent->group == Group && receivedEvent->command == Command) ||
                     (Group == GROUP_SYSTEM && Command == COMMAND_SYSTEM_AUTHENTICATE)) {
                 m_pLogger->log("WaitForEvent: Expected command received");

@@ -136,16 +136,16 @@ uint8 *MemMappedFile::AllocateFileData(uint64 offset, uint64 size)
         return 0;
     }
 
-	uint32 alignedSize = (static_cast<uint32>(size) + (alignmentLength_ - 1)) & (~(alignmentLength_ - 1));
+    uint32 alignedSize = (static_cast<uint32>(size) + (alignmentLength_ - 1)) & (~(alignmentLength_ - 1));
 
     if (isMapped_) {
         if (size_ < offset + alignedSize) {
             uint8 *data = new uint8[alignedSize];
             memcpy(data, mappedData_ + offset, static_cast<size_t>(size));
             return data;
-	    } else {
+        } else {
             return mappedData_ + offset;
-		}
+        }
     } else {
         // file is not memory mapped fall back to plain read
         uint32 readSize = static_cast<uint32>(size);
@@ -192,7 +192,8 @@ uint8 *MemMappedFile::AllocateFileData(uint64 offset, uint64 size)
 
 void MemMappedFile::ReleaseFileData(uint8 *data, uint64 offset, uint64 size)
 {
-	uint32 alignedSize = (static_cast<uint32>(size) + (alignmentLength_ - 1)) & (~(alignmentLength_ - 1));
+    uint32 alignedSize = (static_cast<uint32>(size) + (alignmentLength_ - 1)) & (~(alignmentLength_ - 1));
+
     if (!isMapped_ || size_ < offset + alignedSize) {
         delete[] data;
     }

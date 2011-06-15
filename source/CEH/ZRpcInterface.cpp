@@ -8,6 +8,7 @@
 ZRpcInterface::ZRpcInterface(CmdResult *CmdResult, LcmInterface *LcmInterface)
 {
     Z_Payload = 0;
+    Z_Payload_SetBaudrate = 0;
     cmdResult_ = CmdResult;
     lcmInterface_ = LcmInterface;
 
@@ -18,6 +19,7 @@ ZRpcInterface::~ZRpcInterface()
 {
     delete Z_IndataBuffer;
     delete[] Z_Payload;
+    delete[] Z_Payload_SetBaudrate;
 }
 
 ErrorCode_e ZRpcInterface::Do_CEH_Callback(CommandData_t *CmdData_p)
@@ -98,13 +100,18 @@ ErrorCode_e ZRpcInterface::DoRPC_Z_SetBaudrate(int Baudrate)
         Z_Payload = 0;
     }
 
-    Z_Payload = new uint8[3];
+    Z_Payload = new uint8[2];
 
-    Z_Payload[0] = 0x02;
+    Z_Payload[0] = 0x01;
     Z_Payload[1] = 'S';
-    Z_Payload[2] = Rate;
 
     Result = lcmInterface_->CommunicationSend(Z_Payload);
+
+    Z_Payload_SetBaudrate = new uint8[2];
+    Z_Payload_SetBaudrate[0] = 0x01;
+    Z_Payload_SetBaudrate[1] = Rate;
+
+    Result = lcmInterface_->CommunicationSend(Z_Payload_SetBaudrate);
 
     return Result;
 }
