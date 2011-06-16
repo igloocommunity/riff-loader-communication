@@ -29,7 +29,7 @@
 #include "r_debug_macro.h"
 #include "r_communication_service.h"
 #include "t_security_algorithms.h"
-#include "r_memmory_utils.h"
+#include "r_memory_utils.h"
 
 #ifdef  CFG_ENABLE_MEASUREMENT_TOOL
 #include "r_measurement_tool.h"

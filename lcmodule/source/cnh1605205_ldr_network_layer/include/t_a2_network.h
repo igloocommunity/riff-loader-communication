@@ -98,7 +98,7 @@ typedef struct A2_PacketMeta {
                                                    corresponding buffer used in
                                                    the packet. */
     A2_Header_t      Header;                      /**< Structure of the header. */
-    uint32           Resend;                      /**< Resend counter. */
+    uint32           Resend;                      /**< Re-send counter. */
     Timer_t          *Timer_p;                    /**< Timer data used for
                                                    sending/receiving packet. */
     uint8            *Payload_p;                  /**< Pointer to the payload data
@@ -137,7 +137,7 @@ typedef struct {
     A2_Header_t       Header;
     /** Pointer to meta data for allocated buffer for handling A2 packet.*/
     A2_PacketMeta_t   *Packet_p;
-    /** Number of packets before receiver is stoped. */
+    /** Number of packets before receiver is stopped. */
     uint8             PacketsBeforeReceiverStop;
     /** Indicator for stopping the receiver. */
     boolean           StopTransfer;
@@ -148,7 +148,7 @@ typedef struct {
 /** A2_Outbound_t*/
 /** Structure for handling outgoing A2 packets.*/
 typedef struct {
-    /**< State of the state machine for handling outgoing A2 packets. */
+    /** State of the state machine for handling outgoing A2 packets. */
     A2_OutboundState_t State;
     /** Temporary pointer for handling PROTROM packet.*/
     A2_PacketMeta_t    *Packet_p;

@@ -57,7 +57,6 @@
 extern Communication_t *GlobalCommunication_p;
 
 extern Communication_t DebugCommunication;
-
 /*******************************************************************************
  * Declaration of functions
  ******************************************************************************/
@@ -73,13 +72,17 @@ extern "C"
      * and communication device descriptor, a new instance of the
      * communication module is created and bound to use the provided devices.
      *
-     * @param [in,out] Communication_p       Communication module context.
+     * @param [in]     Object_p              Instance which will use initialized communication.
+     * @param [in,out] Communication_pp      Communication module context.
      * @param [in]     Family                Initial protocol family.
      * @param [in]     HashDevice_p          The device to use for checksum
      *                                       calculations and verifications.
-     * @param [in]    *CommunicationDevice_p The device to use for network
+     * @param [in]     CommunicationDevice_p The device to use for network
      *                                       transmission.
      * @param [in]     CommandCallback_p     Collback function for command handling.
+     * @param [in]     Buffers_p             Pointer to buffer handling functions.
+     * @param [in]     Timers_p              Pointer to timers handling functions.
+     * @param [in]     Queue_p               Pointer to queue handling functions.
      *
      * @retval  E_SUCCESS If the module instance is successfully
      *                    initialized. A protocol family dependant error
@@ -203,7 +206,7 @@ extern "C"
     LCM_API ErrorCode_e Do_Communication_SetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t *CommunicationDevice_p);
 
     /*
-     * Cancek Receiving new packets
+     * Cancel Receiving new packets
      *
      * @param [in] Communication_p  Communication module context.
      * @param [in] PacketsBeforeReceiverStop  Number of packets to be send before stopping the receiver.

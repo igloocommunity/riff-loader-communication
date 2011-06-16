@@ -398,7 +398,7 @@ int CLCDriverMethods::Do_Initialize(void **ppInstance)
     }
 
     VERIFY_SUCCESS(m_pLcmInterface->CommunicationInitialize(this, m_CurrentProtocolFamily, m_pHashDevice, m_pCommunicationDevice, m_CurrentCEHCallback, &BufferFunctions, &TimerFunctions, &QueueFunctions));
-    *ppInstance = m_pLcmInterface->getLCMContext();
+    *ppInstance = m_pCommunicationDevice;
 
     // Create main thread
     if (m_pTimer) {
@@ -725,7 +725,7 @@ int CLCDriverMethods::Done_System_GetControlKeys(TSIMLockKeys *pSIMLockKeys)
                    pSIMLockKeys->pchPCKLock, pSIMLockKeys->pchESLCKLock,
                    pSIMLockKeys->pchNLCKUnLock, pSIMLockKeys->pchNSLCKUnLock,
                    pSIMLockKeys->pchSPLCKUnLock, pSIMLockKeys->pchCLCKUnLock,
-                   pSIMLockKeys->pchPCKLock, pSIMLockKeys->pchESLCKUnLock));
+                   pSIMLockKeys->pchPCKUnLock, pSIMLockKeys->pchESLCKUnLock));
     VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_SYSTEM, COMMAND_SYSTEM_AUTHENTICATE));
 
 ErrorExit:
@@ -2147,7 +2147,7 @@ int CLCDriverMethods::Do_Z_Exit_Z_Protocol()
 
     VERIFY_SUCCESS(IsMainThreadAlive());
 
-    m_pCommunicationDevice->Cancel(m_pLcmInterface->getLCMContext());
+    m_pCommunicationDevice->Cancel(m_pCommunicationDevice);
 
     //Send exit z-protocol command.
     VERIFY_SUCCESS(m_pZRpcFunctions->DoRPC_Z_Exit_Z_Protocol());

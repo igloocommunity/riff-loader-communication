@@ -36,7 +36,9 @@
  ******************************************************************************/
 #include "t_basicdefinitions.h"
 #include "t_serialization.h"
+#if defined(CFG_ENABLE_LOADER_SERIALIZATION)
 #include "command_ids.h"
+#endif
 
 /*******************************************************************************
  * Declaration of functions
@@ -320,9 +322,19 @@ void skip_block(void **data_pp,
  */
 char *skip_str(void **data_pp);
 
-
 /**
- * @brief Get directory entries length...TODO: should be explained.
+ * @brief Serialize device entries.
+ *
+ * @param [out] data_pp            Pointer of serialized data for device entries.
+ * @param [in]  source_p           Source.
+ * @param [in]  length             length of source string.
+ * @return      void.
+ */
+void insert_string(char **data_pp, const char *source_p, uint32 length);
+
+#if defined(CFG_ENABLE_LOADER_SERIALIZATION)
+/**
+ * @brief Get directory entries length.
  *
  * @param [out] source_p              Source.
  * @param [in]  DirectoryEntriesCount Entry counter.
@@ -332,9 +344,9 @@ uint32 get_directory_entries_len(const DirEntry_t *source_p,
                                  uint32 DirectoryEntriesCount);
 
 /**
- * @brief Serialize directory entries...TODO: should be explained.
+ * @brief Serialize directory entries.
  *
- * @param [out] data_pp      /...TODO: should be explained.
+ * @param [out] data_pp      Pointer of serialized data for directory entries.
  * @param [in]  source_p     Source.
  * @param [in]  DirectoryEntriesCount Entry counter.
  * @return      void.
@@ -344,7 +356,7 @@ void serialize_directory_entries(void **data_pp,
                                  uint32 DirectoryEntriesCount);
 
 /**
- * @brief Get device entry length...TODO: should be explained.
+ * @brief Get device entry length.
  *
  * @param [out] source_p           Source.
  * @param [in]  DeviceEntriesCount Entry counter.
@@ -354,9 +366,9 @@ uint32 get_device_entries_len(const ListDevice_t *source_p,
                               uint32 DeviceEntriesCount);
 
 /**
- * @brief Serialize device entries...TODO: should be explained.
+ * @brief Serialize device entries.
  *
- * @param [out] data_pp            /...TODO: should be explained.
+ * @param [out] data_pp            Pointer of serialized data for device entries.
  * @param [in]  source_p           Source.
  * @param [in]  DeviceEntriesCount Entry counter.
  * @return      void.
@@ -364,16 +376,7 @@ uint32 get_device_entries_len(const ListDevice_t *source_p,
 void serialize_device_entries(void **data_pp,
                               const ListDevice_t *source_p,
                               uint32 DeviceEntriesCount);
-
-/**
- * @brief Serialize device entries...TODO: should be explained.
- *
- * @param [out] data_pp            /...TODO: should be explained.
- * @param [in]  source_p           Source.
- * @param [in]  length             length of source string.
- * @return      void.
- */
-void insert_string(char **data_pp, const char *source_p, uint32 length);
+#endif
 
 /** @} */
 /** @} */

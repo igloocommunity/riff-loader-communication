@@ -8,7 +8,7 @@
 /**
  * @addtogroup ldr_utilities
  * @{
- *   @addtogroup memmory_utils
+ *   @addtogroup memory_utils
  *   @{
  */
 
@@ -52,9 +52,8 @@ if (NULL != (Buffer)) \
  * variable ReturnValue to appropriate error code and send the function to error
  * label.
  *
- * @param [in] x           Variable for alignemend check.
+ * @param [in] x           Variable for alignment check.
  *
- * @sigbased No - Macro
  */
 #define IS_ALIGNED(x)  if(((x) & 3)) \
                        { \

@@ -9,7 +9,8 @@
  *  @{
  *    @addtogroup a2_family
  *    @{
- *      @addtogroup ldr_transport_layer
+ *      @addtogroup ldr_transport_layer A2 Transport Layer
+ *
  *      @{
  */
 
@@ -41,7 +42,7 @@ ErrorCode_e A2_Transport_Poll(Communication_t *Communication_p);
  * @param [in]  Communication_p The communication context
  *                              structure to receive information
  *                              about this module instance.
- * @param [in]  InputData_p     Pointer to the input data.
+ * @param [in]  InputDataIn_p   Pointer to the input data.
  *
  * @retval E_SUCCESS                        After successful execution.
  * @retval E_FAILED_TO_ALLOCATE_COMM_BUFFER Failed to allocate communication

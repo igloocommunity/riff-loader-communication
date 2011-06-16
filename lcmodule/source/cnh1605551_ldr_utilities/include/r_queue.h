@@ -61,12 +61,12 @@ void Do_Fifo_Destroy(void *Object_p, void **const Queue_pp);
  *       reentrant across different queues, but enqueueing on the same queue is
  *       not necessarily reentrant.
  *
- * @param [in] Object_p       - Pointer to LCM instance context.
- * @param [in] Queue_p        - The queue to append to.
- * @param [in] Value_p        - The value to enqueue.
+ * @param [in] Object_p         Pointer to LCM instance context.
+ * @param [in] Queue_p          The queue to append to.
+ * @param [in] Value_p          The value to enqueue.
  * @return     E_SUCCESS - The function completed successfully.
  *
- * @return     E_FAILED_TO_STORE_IN_FIFO - Faliled to store data in fifo.
+ * @return     E_FAILED_TO_STORE_IN_FIFO - Failed to store data in fifo.
  */
 ErrorCode_e Do_Fifo_Enqueue(void *Object_p,
                             void *const Queue_p,
@@ -174,8 +174,8 @@ void Do_RFifo_Create(void *Object_p,
 /**
  * @brief Releases any resources associated with the specified queue structure.
  *
- * @param [in]     Object_p - Pointer to LCM instance context.
- * @param [in,out] Queue_pp - Pointer to the queue structure to destroy.
+ * @param [in]     Object_p  Pointer to LCM instance context.
+ * @param [in,out] Queue_pp  Pointer to the queue structure to destroy.
  */
 void Do_RFifo_Destroy(void *Object_p, void **const Queue_pp);
 
@@ -184,10 +184,10 @@ void Do_RFifo_Destroy(void *Object_p, void **const Queue_pp);
  *
  * Enqueueing function of a re-entrant, interrupt-safe FIFO queue.
  *
- * @param [in]    Object_p       - Pointer to LCM instance context.
- * @param [in]    Queue_p        - The queue to append to.
- * @param [in]    Value_p        - The value to enqueue.
- * @return        E_SUCCESS - The function completed successfully.
+ * @param [in]    Object_p        Pointer to LCM instance context.
+ * @param [in]    Queue_p         The queue to append to.
+ * @param [in]    Value_p         The value to enqueue.
+ * @return        E_SUCCESS  The function completed successfully.
  *
  * @return        E_FAILED_TO_STORE_IN_FIFO - Faliled to store data in fifo.
  */
@@ -226,7 +226,7 @@ void *Do_RFifo_Dequeue(void *Object_p, void *const Queue_p);
  *                        function should be called each time the queue has
  *                        transitioned from an empty to a non-empty state.
  * @param [in] Callback   The function to call when the specified event occurs
- *                        or NULL to unregister a previously registered func.
+ *                        or NULL to unregister a previously registered functions.
  * @param [in] Param_p    Parameter to pass to the callback function.
  * @return                The previously registered callback function for this
  *                        type.

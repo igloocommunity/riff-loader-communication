@@ -56,10 +56,7 @@ extern "C"
      * Set the LCM in A2 Speedflash Mode.
      *
      * @param [in] Communication_p  Communication module context.
-     * @param [in] State            State of the speedflash (TRUE - on, FALSE - off).
      *
-     * @retval  E_SUCCESS           After successful execution.
-     * @retval
      */
     LCM_API void Do_A2_Speedflash_Start(Communication_t *Communication_p);
 
@@ -73,7 +70,6 @@ extern "C"
      * @param [in] BufferSize       Size of the speedflash sub-blocks.
      *
      * @retval  E_SUCCESS                  After successful execution.
-     * @retval
      */
     LCM_API ErrorCode_e Do_A2_Speedflash_WriteBlock(Communication_t *Communication_p, const void *Buffer, const uint32 BufferSize);
 #ifdef __cplusplus

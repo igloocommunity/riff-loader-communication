@@ -9,7 +9,9 @@
  *  @{
  *    @addtogroup a2_family
  *    @{
- *      @addtogroup a2_protocol
+ *      @addtogroup a2_protocol A2 Protocol
+ *      Functionalities for handling A2 commands.
+ *
  *      @{
  */
 

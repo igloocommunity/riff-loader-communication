@@ -63,9 +63,9 @@ void R15_SerializeHeader(void *Data_p, const R15_Header_t *Header_p);
 /**
  * Deserialize the extended header stored in network format to a structure.
  *
- * @param [out] Header_p  Pointer to the extended header structure where the
- *                        header data should be placed.
- * @param [in]  Data_p    Pointer to the buffer with received header.
+ * @param [out] ExtendedHeader_p  Pointer to the extended header structure where the
+ *                                header data should be placed.
+ * @param [in]  Data_p            Pointer to the buffer with received header.
  *
  * @return none.
  */

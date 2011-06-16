@@ -7,7 +7,11 @@
 /**
  *  @addtogroup ldr_communication_serv
  *  @{
- *    @addtogroup a2_family
+ *    @addtogroup a2_family A2 protocol family
+ *    The A2 family include only one protocol, A2 protocol, used for
+ *    communication between the ME and PC tool. This module includes
+ *    A2 transport layer and A2 network layer for handling A2 protocol.
+ *
  *    @{
  */
 

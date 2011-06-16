@@ -21,7 +21,7 @@
 #include "r_r15_network_layer.h"
 #include "r_communication_service.h"
 #include "r_basicdefinitions.h"
-#include "r_memmory_utils.h"
+#include "r_memory_utils.h"
 
 #ifdef CFG_ENABLE_A2_FAMILY
 #include "r_a2_family.h"
@@ -60,7 +60,7 @@ static FamilyDescriptor_t ProtocolFamilies[] = {
         A2_Transport_Send,
         NULL,
         NULL,
-		A2_CancelReceiver
+        A2_CancelReceiver
 #else
         NULL,
         NULL,
@@ -104,7 +104,7 @@ static FamilyDescriptor_t ProtocolFamilies[] = {
 #define MAX_FAMILY (sizeof(ProtocolFamilies) / sizeof(ProtocolFamilies[0]))
 
 /*******************************************************************************
- * Delaration of internal functions
+ * Declaration of internal functions
  ******************************************************************************/
 
 static BuffersInterface_t *CreateBufferInterfaceHelpper(BuffersInterface_t *Buffers_p);
@@ -120,23 +120,27 @@ FamilyDescriptor_t *GetFamily(Family_t Family);
  * Definition of external functions
  ******************************************************************************/
 
-/*
+/**
  * Initialize an instance of the communication module.
  *
  * Given the initial family, already initialized hash device descriptor
  * and communication device descriptor, a new instance of the
  * communication module is created and bound to use the provided devices.
  *
- * @param [in,out] Communication_p       Communication module context.
+ * @param [in]     Object_p              Instance which will use initialized communication.
+ * @param [in,out] Communication_pp      Communication module context.
  * @param [in]     Family                Initial protocol family.
  * @param [in]     HashDevice_p          The device to use for checksum
  *                                       calculations and verifications.
- * @param [in]    *CommunicationDevice_p The device to use for network
+ * @param [in]     CommunicationDevice_p The device to use for network
  *                                       transmission.
- * @param [in]     CommandCallback_p     Collback function for command handling.
+ * @param [in]     CommandCallback_p     Callback function for command handling.
+ * @param [in]     Buffers_p             Pointer to buffer handling functions.
+ * @param [in]     Timers_p              Pointer to timers handling functions.
+ * @param [in]     Queue_p               Pointer to queue handling functions.
  *
  * @retval  E_SUCCESS If the module instance is successfully
- *                    initialized. A protocol family dependant error
+ *                    initialized. A protocol family dependent error
  *                    code otherwise.
  */
 ErrorCode_e Do_Communication_Initialize(void *Object_p, Communication_t **Communication_pp, Family_t Family, HashDevice_t *HashDevice_p, CommunicationDevice_t *CommunicationDevice_p, Do_CEH_Call_t CommandCallback_p, BuffersInterface_t *Buffers_p, TimersInterface_t *Timers_p, QueueInterface_t *Queue_p)
@@ -188,6 +192,8 @@ ErrorCode_e Do_Communication_Initialize(void *Object_p, Communication_t **Commun
     Communication_p->CurrentFamilyHash = HASH_NONE;
     Communication_p->BackupCommBufferSize = 0;
 
+    CommunicationDevice_p->Object_p = Communication_p;
+
     ReturnValue = Do_Communication_SetFamily(Communication_p, Family, CommandCallback_p);
 
     C_(printf("#---------------------------------------------------------\n");)
@@ -208,7 +214,7 @@ ErrorExit:
  * @param [in,out] Communication_pp    Communication module context.
  *
  * @retval  E_SUCCESS If the module instance is successfully
- *                    shut down. A protocol family dependant error
+ *                    shut down. A protocol family dependent error
  *                    code otherwise.
  */
 ErrorCode_e Do_Communication_Shutdown(Communication_t **Communication_pp)
@@ -261,7 +267,7 @@ ErrorExit:
  * @param [in] CEHCallback      Callback that will handle the commands.
  *
  * @retval  E_SUCCESS If the family is successfully changed. A
- *                    protocol family dependant error code otherwise.
+ *                    protocol family dependent error code otherwise.
  */
 ErrorCode_e Do_Communication_SetFamily(Communication_t *Communication_p, Family_t Family, Do_CEH_Call_t CEHCallback)
 {
@@ -271,7 +277,7 @@ ErrorCode_e Do_Communication_SetFamily(Communication_t *Communication_p, Family_
     VERIFY(NULL != Family_p, E_INVALID_INPUT_PARAMETERS);
 
     if (NULL != Communication_p->Family_p) {
-        (void)Communication_p->CommunicationDevice_p->Cancel(Communication_p);
+        (void)Communication_p->CommunicationDevice_p->Cancel(Communication_p->CommunicationDevice_p);
         ReturnValue = Communication_p->Family_p->FamilyShutdown_fn(Communication_p);
 
         VERIFY(E_SUCCESS == ReturnValue, ReturnValue);
@@ -298,7 +304,7 @@ ErrorExit:
  *
  *
  * @retval  E_SUCCESS If all packets are successfully handled. A
- *                    protocol family dependant error code otherwise.
+ *                    protocol family dependent error code otherwise.
  */
 ErrorCode_e Do_Communication_Poll(Communication_t *Communication_p)
 {
@@ -316,7 +322,7 @@ ErrorExit:
  * Function for sending packet.
  *
  * @param [in]  Communication_p Communication module context.
- * @param [in]  InputData_p     Pointer to the data for tranmission.
+ * @param [in]  InputData_p     Pointer to the data for transmission.
  *
  * @retval E_SUCCESS                        After successful execution.
  * @retval E_FAILED_TO_ALLOCATE_COMM_BUFFER Failed to allocate communication
@@ -397,7 +403,7 @@ ErrorExit:
  *                                     device for the given LCM context.
  *
  * @retval E_SUCCESS                 After successful execution.
- * @retval E_INVALID_INPUT_PARAMTERS In case when communicaiton is not Singleton
+ * @retval E_INVALID_INPUT_PARAMTERS In case when communication is not Singleton
  *                                   and Communication_p is NULL pointer.
  */
 ErrorCode_e Do_Communication_GetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t** CommunicationDevice_pp)
@@ -422,7 +428,7 @@ ErrorExit:
  *                                     device to be set for the given LCM context.
  *
  * @retval E_SUCCESS                 After successful execution.
- * @retval E_INVALID_INPUT_PARAMTERS In case when communicaiton is not Singleton
+ * @retval E_INVALID_INPUT_PARAMTERS In case when communication is not Singleton
  *                                   and Communication_p is NULL pointer.
  */
 ErrorCode_e Do_Communication_SetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t* CommunicationDevice_p)
@@ -437,7 +443,7 @@ ErrorExit:
 }
 
 /*
- * Cancek Receiving new packets
+ * Cancel Receiving new packets
  *
  * @param [in] Communication_p  Communication module context.
  * @param [in] PacketsBeforeReceiverStop  Number of packets to be send before stopping the receiver.
@@ -451,7 +457,7 @@ ErrorCode_e Do_Communication_Cancel_Receiver(Communication_t *Communication_p, u
 
     VERIFY(NULL != Communication_p->Family_p, ReturnValue);
 
-	ReturnValue = Communication_p->Family_p->CancelReceiver_fn(Communication_p, PacketsBeforeReceiverStop);
+    ReturnValue = Communication_p->Family_p->CancelReceiver_fn(Communication_p, PacketsBeforeReceiverStop);
 
 ErrorExit:
     return ReturnValue;
@@ -463,7 +469,7 @@ void Do_CommunicationInternalErrorHandler(const ErrorCode_e IntError)
     IDENTIFIER_NOT_USED(IntError);
 #endif
     A_(printf("# Error Code: 0x%X !\n", IntError);)
-    A_(printf("# Loader stoped!\n");)
+    A_(printf("# Loader stopped!\n");)
     A_(printf("#---------------------------------------------------------\n");)
 
     /* coverity[no_escape] */

@@ -12,11 +12,11 @@
     <value number="0" name="E_SUCCESS" fatal="false" short="Operation successful."> Operation finished successfully.</value>
     <value number="1" name="E_GENERAL_FATAL_ERROR" fatal="true" short="General Failure."> Unknown error.</value>
     <value number="2" name="E_ALLOCATE_FAILED" fatal="true" short="Failed to allocate memory."> Try to reset the loader and if problem still exist, report it.</value>
-    
+
     <value number="51" name="E_INVALID_INPUT_PARAMETERS" fatal="false" short="The expected value into the function was incorrect."> Check the input parameters in the command that you try to execute. Repeat operation. Report if problem is not solved.</value>
     <value number="52" name="E_INVALID_CURRDATE_STRING_LENGTH" fatal="false" short="Indicate that the currdate string array variable has invalid length."> Try to reset the loader and if problem still exist, report this error.</value>
     <value number="53" name="E_UNALIGNED_DATA" fatal="false" short="Indicate that a variable is not aligned."> Try to reset the loader and if still exist the problem, report this error.</value>
-   
+
     <!--
     * IO Fatal 100-150
     * IO non-fatal 151-199
@@ -190,7 +190,7 @@
     <value number="989" name="E_FAILED_TO_FIND_ELF_SECTION" fatal="false" short="Can not find elf section."> Internal error. Reset loader. Report if problem still exist.</value>   
     <value number="990" name="E_MAX_NUMBER_OF_MOUNTED_VOLUMES_EXCEEDED" fatal="false" short="Unable to mount volume due to exceeding the maximum number of allowed volumes.">First check the defined number of volumes in the flasharchive. If it is lower than maximum allowed volumes repeat the operation or reset loader. Report if problem still exist </value> 
     <value number="991" name="E_NO_MOUNTED_DEVICES_ARE_FOUND" fatal="false" short="Information message that no mounted devices are found."> This message can be issued in case when is detected that loader is trying to unmount zero mounted devices.</value>
-    
+
     <!--
     * Command Auditing and execution Fatal 1000-1050
     * Command Auditing and execution non-fatal 1051-1099
@@ -203,7 +203,7 @@
     <value number="1052" name="E_OVERLOAD_COMMAND_TABLE" fatal="false" short="Too many commands are registered."> It is not allowed more than 5 commands to be registered.</value>
     <value number="1053" name="E_COMMAND_ALREADY_REGISTERED" fatal="false" short="Command has already registered in execution queue.">It is not allowed the command to be registerd more than once in execution queue</value>
     <value number="1054" name="E_AUDITING_FAILED" fatal="false" short=" Command auditing failed."> You should be authenticate with appropriate permission level in order to execute this command.</value>
-    
+
     <!--
     * Timers Fatal 1200-1250
     * Timers non-fatal 1251-1299
@@ -263,9 +263,9 @@
     <value number="1393" name="E_CSPSA_RESULT_E_ALREADY_EXISTS" fatal="false" short="Parameter storage area with same name was already registered."> Loader internal problem. Report this issue.</value>
     <value number="1394" name="E_CSPSA_RESULT_E_OUT_OF_MEMORY" fatal="false" short="There was not enough memory to perform the operation."> Loader internal problem. Report this issue.</value>
     <value number="1395" name="E_CSPSA_RESULT_E_BAD_PARAMETER" fatal="false" short="Error because of bad input parameter.">Check input parameters. Retry operation. If problem still exist reset loader. Report if problem doesn't solved.</value>
-    
+
     <value number="1399" name="E_GD_NO_DATA_TO_READ" fatal="false" short="GD: No data to read."> Write something to GD before attempting to read from it. Report this problem if you are shore that GD is not empty.</value>
-    
+
     <!--
     * Block device Fatal 1400-1450
     * Block device non-fatal 1451-1499
@@ -297,7 +297,7 @@
     <value number="1475" name="E_BDM_PRE_FLASH_FINISHED" fatal="false" short="BDM: No more preflash blocks can be fetched."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1476" name="E_BDM_PRE_FLASH_TERMINATE_FAILED" fatal="false" short="BDM: Termination of preflash failed."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1477" name="E_BDM_OUT_OF_MEM" fatal="false" short="BDM: Could not allocate enough memory."> Internal error. Reset loader. Report if problem still exist.</value>
-    
+
     <value number="1481" name="E_BDM_XSR_CRITICAL_ERROR" fatal="false" short="BDM XSR: Critical error."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1482" name="E_BDM_XSR_INVALID_PARAMS" fatal="false" short="BDM XSR: Invalid parameters."> Check input parameters. Retry operation. If problem still exist reset loader. Report if problem doesn't solved.</value>
     <value number="1483" name="E_BDM_XSR_PARTITION_NOT_OPENED" fatal="false" short="BDM XSR: Could not open partition."> Internal error. Reset loader. Report if problem still exist.</value>
@@ -310,7 +310,7 @@
     <value number="1490" name="E_BDM_XSR_DEVICE_ERROR" fatal="false" short="BDM XSR: Device error."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1491" name="E_BDM_XSR_GOODBLOCK" fatal="false" short="BDM XSR: Good block."> Check input parameters. Retry operation. If problem still exist reset loader. Report if problem doesn't solved.</value>
     <value number="1492" name="E_BDM_XSR_BADBLOCK" fatal="false" short="BDM XSR: Bad block."> Check input parameters. Retry operation. If problem still exist reset loader. Report if problem doesn't solved.</value>
-    
+
     <!--
     * Boot area Fatal 1500-1550
     * Boot area non-fatal 1551-1619
@@ -368,7 +368,7 @@
     <value number="1607" name="E_BAM_ONLD_DEVICE_ERROR" fatal="false" short="BAM ONLD: Device error."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1608" name="E_BAM_ONLD_GOODBLOCK" fatal="false" short="BAM ONLD: Good block."> Check input parameters. Retry operation. If problem still exist reset loader. Report if problem doesn't solved.</value>
     <value number="1609" name="E_BAM_ONLD_BADBLOCK" fatal="false" short="BAM ONLD: Bad block."> Check input parameters. Retry operation. If problem still exist reset loader. Report if problem doesn't solved.</value>
-     
+
     <!--
     * Cops data Fatal 1620-1650
     * Cops data non-fatal 1651-1699
@@ -399,7 +399,7 @@
     <value number="1674" name="E_COPS_ARGUMENT_ERROR" fatal="false" short="COPS: Argument error!"> Verify the input parameters. Repeat operation. Report if problem still exist.</value>
     <value number="1698" name="E_COPS_VERIFY_FAILED" fatal="false" short="COPS: Failed to verify internal data.">Reset loader. Report if problem still exist.</value>
     <value number="1699" name="E_COPS_UNDEFINED_ERROR" fatal="false" short="COPS: Undefined error."> Internal error. Reset loader. Report if problem still exist.</value>
-    
+
     <!--
     * PD NAND Fatal 1700-1750
     * PD NAND non-fatal 1751-1799
@@ -413,11 +413,10 @@
     <value number="1757" name="E_PD_NAND_RESULT_READING_ERASED_PAGE" fatal="false" short="PD NAND: Attempting to read erased page."> Repeat operation. Report if problem still exist.</value>
     <value number="1758" name="E_PD_NAND_RESULT_NUMBER_OF_ITEMS" fatal="false" short="PD NAND: Number of valid states of this type."> Repeat operation. Report if problem still exist.</value>
     <value number="1759" name="E_PD_NAND_RESULT_UNDEFINED" fatal="false" short="PD NAND: Represents an undefined value of this type."> Repeat operation. Report if problem still exist.</value>
-    
+
     <!--
     * Trim Area non-fatal 1851-1899
     -->
-
     <value number="1851" name="E_GD_TA_BASE" fatal="false" short="GD/TA: TA base."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1852" name="E_GD_TA_UNKNOWN_PARTITION" fatal="false" short="GD/TA: Unknown partition."> Check input parameters. Repeat operation with the correct input parameters. Report if problem still exist.</value>
     <value number="1853" name="E_GD_TA_UNKNOWN_CONFIG" fatal="false" short="GD/TA: Unknown configuration."> Possible wrong or missing configuration in flash archive. Check the archive. Flash the correct archive. If problem still exist report the problem.</value>
@@ -433,7 +432,7 @@
 
     <value number="1863" name="E_GD_UNKNOWN_UNIT_NAME" fatal="false" short="GD: Unknown unit name."> Check input parameters. Requested unit is not supported. Repeat operation with the correct input parameters. Report if problem still exist.</value>
     <value number="1864" name="E_GD_LAST" fatal="false" short="GD: Last enumeration (last valid + 1)."> Reset loader. If problem doesn't solved report it.</value>
-    
+
     <!--
     * Loader utilities Fatal 1900-1950
     * Loader utilities non-fatal 1951-1999
@@ -456,7 +455,7 @@
     <value number="1966" name="E_DEVICE_TYPE" fatal="false" short="Device type to long."> Check manifest file from flash archive. Repeat operation with correct flash archive. Report if problem still exist.</value>
     <value number="1967" name="E_NUMBER_OF_TARGET_DEVICES" fatal="false" short="Number of target devices to big.">Internal error. Reset the loader. Report if problem still exist.</value>
     <value number="1968" name="E_DESCRIPTION_TOO_LONG" fatal="false" short="Description field too long.">Internal error. Reset the loader. Report if problem still exist.</value>
-    
+
     <!--
     * Loader ADBG Fatal 2000-2050
     * Loader ADBG non-fatal 2051-2099
@@ -471,7 +470,7 @@
     <value number="2007" name="E_INT_FUNCTION_LIST_EMPTY" fatal="true" short="There isn't any interface function in interface group."> Use List Interface command to see if there's any available internal function.</value>
     <value number="2008" name="E_PRECONDITION_IS_ALREADY_SET" fatal="true" short="Request for setting precondition that is already set."> Precondition is already set. If you want to change it, recover precondition, and than set it again.</value>
     <value number="2009" name="E_PRECONDITION_IS_NOT_SET" fatal="true" short="Request to recover condition that is not changed."> You cannot recover condition that is not set before. There's no need of any further activities in order to resolve this problem. Loader will work fine.</value>
-    
+
     <!--
     * OTP applications Fatal 2100-2150
     * OTP applications non-fatal 2151-2199
@@ -482,7 +481,7 @@
     <value number="2103" name="E_INVALID_CID_VALUE" fatal="true" short="Trying to write invalid CID in OTP."> The value for CID must be in the range from 19 to 16384.0 value is also alowed CID value</value>
     <value number="2104" name="E_INIT_OTP_LD_FAILED" fatal="true" short="Failed to initialize OTD logical driver."> Internal error. Reset loader. Report if problem still exist</value>
     <value number="2105" name="E_OTP_AREA_LOCKED" fatal="true" short="Requested OTP area is already locked."> It is not allowed to write in already locked OTP area</value>
-  
+
     <!--
     * Security applications Fatal 2200-2250
     * Security applications non-fatal 2251-2299
@@ -497,7 +496,7 @@
     <value number="2258" name="E_SEC_APP_PATCH_REINSTALLED" fatal="true" short="Operation successful."> ROM Patch in Flash is successfuly reinstalled.</value>
     <value number="2259" name="E_SEC_APP_ROOTKEY_EXISTS" fatal="true" short="RootKey is already installed.">.Please make sure that version of Root key is the same with already installed</value>
     <value number="2260" name="E_SEC_APP_ROOTKEY_REINSTALLED" fatal="true" short="Operation successful."> Root Key is successfuly reinstalled.</value>
-    
+
     <!--
     * Trim Area Fatal 2300-2350
     * Trim Area non-fatal 2351-2499
@@ -514,22 +513,21 @@
     <value number="2360" name="E_TA_INSUFFICIANT_SPACE" fatal="false" short="TA: Not enough space to flush the Trim Area."> Internal error. Reset loader. Report if problem still exist</value>
     <value number="2361" name="E_TA_UNKNOWN_PARTITION" fatal="false" short="TA: Unknown partition."> Check input parameters. Repeat operation with the correct input parameters. Report if problem still exist.</value>
     <value number="2362" name="E_TA_FAIL" fatal="false" short="TA: Fail."> Internal error. Reset loader. Report if problem still exist.</value>
-    
+
     <value number="2460" name="E_TA_MEDIA_ERROR" fatal="false" short="TA: Media error."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="2461" name="E_TA_NOT_CONFIGURED" fatal="false" short="TA: Error occurs during configuration."> Possible wrong or missing configuration in flash archive. Check the archive. Flash the correct archive. If problem still exist report the problem.</value>
-    
+
     <!--
     * Recovery applications Fatal 2500-2550
     * Recovery applications non-fatal 2551-2599
      -->
     <value number="2500" name="E_REQUEST_DENIED" fatal="true" short="Request for change operation denied."> Init request is twice called and state is changed. Should be sent Update request then can be used Init request again.</value>
     <value number="2501" name="E_UNDEFINED_CHANGE_OPERATION" fatal="true" short="Requested change operation is not supported."> Use the implemented change operation.</value>
-  
+
     <!--
     * PD CFI Flash Fatal 2600-2650
     * PD CFI Flash non-fatal 2651-2699
      -->
-
     <value number="2651" name="E_PD_CFI_IN_PROGRESS" fatal="false" short="PD CFI: The operation is in progress. Additional poll calls must be done."></value>
     <value number="2652" name="E_PD_CFI_UNKNOWN_REQUEST" fatal="false" short="PD CFI: Type not recognized."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="2653" name="E_PD_CFI_HARDWARE_ERROR" fatal="false" short="PD CFI: Operation could not be completed because of a hardware malfunction."> It is possible that part of the operation has been carried out.</value>
@@ -569,6 +567,27 @@
     -->
     <value number="2850" name="E_CR_INVALID_STATE" fatal="false" short="Invalid state for commnication relay detected.">Wrong value passed as state for the communication relay and hence it can't be used. Try setting some of predifined communication relay states.</value>
     <value number="2851" name="E_CR_NOT_RUNNING" fatal="false" short="Communication Relay is not running.">Communication relay is set in error state or it is not configured properly. Check the relay state. If error occured restart the loader, otherwise try reconfiguring the relay.</value>
+
+    <!--
+    * SDIO Driver SDIO_BSC_Result_t - Error codes for all functions (offset 2900)
+    * SDIO Driver Fatal 2900-2924
+    * SDIO Driver Non-Fatal 2925-2949
+    -->
+    <value number="2901" name="E_SDIO_BSC_RESULT_FAILED" fatal="true" short="General Error.">It is possible to failed to initialize the communication device.Reset loader.Report if problem still exist</value>
+    <value number="2902" name="E_SDIO_BSC_RESULT_FAILED_INVALIDARGS" fatal="true" short="Invalid arguments.">.Check input parameters. Retry operation. If problem still exist reset loader. Report if problem doesn't solved.</value>
+    <value number="2903" name="E_SDIO_BSC_RESULT_FAILED_NOTSUPPORTED" fatal="true" short="Implementation is removed."> Implementation it is not supported anymore.</value>
+    <value number="2904" name="E_SDIO_BSC_RESULT_FAILED_SDIOERR" fatal="true" short="SDIO internal error.">Buffer with unaligned length is requested to be transfered or device driver is confiured to use unsupported frame size.</value>
+    <value number="2905" name="E_SDIO_BSC_RESULT_FAILED_BUSY" fatal="true" short="Communication device is busy.">Current transfer is not finished.</value>
+
+    <!--
+    * SDIO Driver SDIO_BSC_Error_t - Error codes for error callbacks (offset 2950)
+    * SDIO Driver Error Callback Fatal 2950-2974
+    * SDIO Driver Error Callback Non-Fatal 2975-2999
+    -->
+    <value number="2951" name="E_SDIO_BSC_ERROR_TIMEOUT" fatal="true" short="Timeout error.">Incorrect number of bits received.</value>
+    <value number="2952" name="E_SDIO_BSC_ERROR_BREAK" fatal="true" short="Break received.">.Reset loader.Report if problem still exist.</value>
+    <value number="2953" name="E_SDIO_BSC_ERROR_RECEIVE" fatal="true" short="Receive buffer is not provided.">Reset loader.Report if problem still exist.</value>
+    <value number="2954" name="E_SDIO_BSC_ERROR_TRANSMIT" fatal="true" short="Transmit buffer is not provided.">Reset loader.Report if problem still exist.</value>
 
     <!--
     * Security Library Fatal 4000-4050
@@ -634,7 +653,7 @@
     <value number="4308" name="E_INVALID_A01_FORMAT" fatal="true" short="Something wrong with the A01 file containing the flash image.">Verify that the flash image is valid, otherwise report the problem. </value>
     <value number="4309" name="E_A01_BUFFER_FULL" fatal="true" short="Buffer holding the data from the A01 file is full.">Reset loader. Report if problem still exist.</value>
     <value number="4350" name="E_CONFIG_FILE_NOT_SPECIFIED" fatal="false" short="Configuration file for the emulator is not specified."> The loader will start with the default settings.</value>
-    
+
     <!--
     * R13 and lower versions
     * Error codes translation
@@ -854,7 +873,7 @@
     <value number="5329" name="A2_E_READ_FILE" fatal="true" short="Failed to read a file from the file system.">.</value>
     <value number="61797" name="A2_E_CORE_SUPERV" fatal="true"></value>
     <value number="66166" name="A2_E_MEM_ALLOC" fatal="true"></value>
-    
+
     <!--
     * GDFS Error codes
     -->

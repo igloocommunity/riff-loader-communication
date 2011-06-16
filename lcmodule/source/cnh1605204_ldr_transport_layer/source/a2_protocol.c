@@ -30,7 +30,7 @@
 #include "r_debug.h"
 #include "r_debug_macro.h"
 #include "r_serialization.h"
-#include "r_memmory_utils.h"
+#include "r_memory_utils.h"
 
 /*******************************************************************************
  * File scope types, constants and variables
@@ -179,7 +179,7 @@ static ErrorCode_e ProcessAcknowledgement(Communication_t *Communication_p, A2_P
     ReturnValue = A2_Network_PacketRelease(Communication_p, Packet_p);
 
     if (A2_SPEEDFLASH_START == A2_SPEEDFLASH(Communication_p)->State) {
-        Communication_p->CommunicationDevice_p->Cancel(Communication_p);
+        Communication_p->CommunicationDevice_p->Cancel(Communication_p->CommunicationDevice_p);
         A2_SPEEDFLASH(Communication_p)->State = A2_SPEEDFLASH_ACTIVE;
         A2_SPEEDFLASH(Communication_p)->InboundState = A2_SPEEDFLASH_READ_REQ;
     }

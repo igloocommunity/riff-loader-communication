@@ -52,14 +52,18 @@ ErrorCode_e Protrom_Family_Init(Communication_t *Communication_p)
     PROTROM_NETWORK(Communication_p)->Inbound.StopTransfer = FALSE;
     
     if (NULL != Communication_p->BackupCommBuffer_p) {
-        if (Communication_p->BackupCommBufferSize <= PROTROM_HEADER_LENGTH) {
+        if (Communication_p->BackupCommBufferSize < PROTROM_HEADER_LENGTH) {
             memcpy(PROTROM_NETWORK(Communication_p)->Inbound.Scratch, Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBufferSize);
             PROTROM_NETWORK(Communication_p)->Inbound.ReqData = PROTROM_HEADER_LENGTH - Communication_p->BackupCommBufferSize;
             PROTROM_NETWORK(Communication_p)->Inbound.ReqBuffOffset = Communication_p->BackupCommBufferSize;
             PROTROM_NETWORK(Communication_p)->Inbound.RecBackupData = Communication_p->BackupCommBufferSize;
             Communication_p->BackupCommBufferSize = 0;
         } else {
+            /* Copy content of backup buffer into scratch buffer */
             memcpy(PROTROM_NETWORK(Communication_p)->Inbound.Scratch, Communication_p->BackupCommBuffer_p, PROTROM_HEADER_LENGTH);
+            /* Move rest of backup data at the beginning of the backup buffer */
+            memcpy(Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBuffer_p + PROTROM_HEADER_LENGTH, Communication_p->BackupCommBufferSize - PROTROM_HEADER_LENGTH);
+            /* Update the size of the backup buffer */
             Communication_p->BackupCommBufferSize = Communication_p->BackupCommBufferSize - PROTROM_HEADER_LENGTH;
             PROTROM_NETWORK(Communication_p)->Inbound.RecBackupData = PROTROM_HEADER_LENGTH;
         }
@@ -79,7 +83,7 @@ ErrorExit:
 }
 
 /*
- * Protrom family protocols sutdown.
+ * Protrom family protocols shutdown.
  *
  * @param [in] Communication_p Communication module context.
  *
@@ -122,10 +126,10 @@ ErrorExit:
 }
 
 /*
- * Protrom Cancel Transmition.
+ * Protrom Cancel Transmission.
  *
  * @param [in] Communication_p Communication module context.
- * @param [in] PacketsBeforeTransferStop Number of packets that will be transmited before stopping the transmition.
+ * @param [in] PacketsBeforeTransferStop Number of packets that will be transmitted before stopping the transmission.
  *
  * @retval  E_SUCCESS                   After successful execution.
  * @retval  E_INVALID_INPUT_PARAMETERS  Invalid input parameter.
@@ -134,16 +138,16 @@ ErrorCode_e Protrom_CancelReceiver(Communication_t *Communication_p, uint8 Packe
 {
     ErrorCode_e ReturnValue = E_SUCCESS;
 
-	printf("Protrom_CancelReceiver called ...\n");
+    printf("Protrom_CancelReceiver called ...\n");
 
     VERIFY(NULL != Communication_p, E_INVALID_INPUT_PARAMETERS);
 
-	PROTROM_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop = PacketsBeforeReceiverStop;
+    PROTROM_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop = PacketsBeforeReceiverStop;
     PROTROM_NETWORK(Communication_p)->Inbound.StopTransfer = TRUE;
 
 ErrorExit:
     A_(printf("protrom_family.c(%d) ErrorCode=%d\n", __LINE__, ReturnValue);)
-    return ReturnValue;   
+    return ReturnValue;
 }
 
 /**         @} */

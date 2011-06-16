@@ -83,11 +83,15 @@ ErrorCode_e A2_Speedflash_Poll(Communication_t *Communication_p)
     case A2_SPEEDFLASH_READ_REQ:
         A2_SPEEDFLASH(Communication_p)->InboundState = A2_SPEEDFLASH_WAIT_READ_REQ;
 
+#ifdef CFG_ENABLE_LOADER_TYPE
         if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read((void *)A2_SPEEDFLASH(Communication_p)->Scratch,
-                A2_SPEEDFLASH_REQ_SIZE, A2_Speedflash_ReadCallback, Communication_p)) {
+                A2_SPEEDFLASH_REQ_SIZE, A2_Speedflash_ReadCallback, Communication_p->CommunicationDevice_p)) {
             A2_SPEEDFLASH(Communication_p)->InboundState = A2_SPEEDFLASH_READ_REQ;
         }
-
+#else
+        (void)Communication_p->CommunicationDevice_p->Read((void *)A2_SPEEDFLASH(Communication_p)->Scratch,
+                A2_SPEEDFLASH_REQ_SIZE, A2_Speedflash_ReadCallback, Communication_p->CommunicationDevice_p);
+#endif
         break;
     case A2_SPEEDFLASH_WAIT_READ_REQ:
         /* nothing to do */
@@ -98,7 +102,7 @@ ErrorCode_e A2_Speedflash_Poll(Communication_t *Communication_p)
             A2_SPEEDFLASH(Communication_p)->InboundState = A2_SPEEDFLASH_WAIT_WRITE_BLOCK;
 
             if (E_SUCCESS != Communication_p->CommunicationDevice_p->Write(A2_SPEEDFLASH(Communication_p)->Outbound_p,
-                    A2_SPEEDFLASH(Communication_p)->OutboundSize, A2_Speedflash_WriteCallback, Communication_p)) {
+                    A2_SPEEDFLASH(Communication_p)->OutboundSize, A2_Speedflash_WriteCallback, Communication_p->CommunicationDevice_p)) {
                 A2_SPEEDFLASH(Communication_p)->InboundState = A2_SPEEDFLASH_WRITE_BLOCK;
             }
         }
@@ -114,7 +118,7 @@ ErrorCode_e A2_Speedflash_Poll(Communication_t *Communication_p)
 
 void A2_Speedflash_WriteCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
-    Communication_t *Communication_p = (Communication_t *)Param_p;
+    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
 
     A2_SPEEDFLASH(Communication_p)->Outbound_p = NULL;
     A2_SPEEDFLASH(Communication_p)->OutboundSize = 0;
@@ -132,7 +136,7 @@ void A2_Speedflash_WriteCallback(const void *Data_p, const uint32 Length, void *
 
 void A2_Speedflash_ReadCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
-    Communication_t *Communication_p = (Communication_t *)Param_p;
+    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
     A2_CommandData_t CmdData;
 
     CmdData.Type = A2_SPEEDFLASH_GR;

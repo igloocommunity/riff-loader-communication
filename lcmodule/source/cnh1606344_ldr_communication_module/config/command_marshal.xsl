@@ -167,14 +167,14 @@ void disable_interrupt(void)
 #ifndef WIN32
 /* todo implement this */
 //#warning This is disable_interrupt
-#endif  
+#endif
 }
 void enable_interrupt(void)
 {
 #ifndef WIN32
 /* todo implement this */
 //#warning This is enable_interrupt  
-#endif  
+#endif
 }
 
 ErrorCode_e Do_CEH_Call(void *Object_p, CommandData_t *CmdData_p)
@@ -194,13 +194,13 @@ ErrorCode_e Do_CEH_Call(void *Object_p, CommandData_t *CmdData_p)
 //    ResponseStatus = (ErrorCode_e)get_uint16(&amp;Data_p);
   }
 
-#ifdef CFG_ENABLE_AUDIT_CMD 
+#ifdef CFG_ENABLE_AUDIT_CMD
   if(COMMAND_TYPE == CmdData_p-&gt;Type)
   {
     ErrorCode_e AuditResponse = CommandAudit(CmdData_p);
     CommandData_t CmdData = {0};
     uint32 PLSize = sizeof(ErrorCode_e);
-       
+
     if (E_SUCCESS != AuditResponse)
     {
       memset((uint8*)&amp;CmdData, 0x00, sizeof(CommandData_t));
@@ -217,10 +217,10 @@ ErrorCode_e Do_CEH_Call(void *Object_p, CommandData_t *CmdData_p)
         A_(printf("command_marshal.c (%d): ** memory allocation failed! **\n",__LINE__);)
         return  E_ALLOCATE_FAILED;
       }
-  
+
       Data_p = CmdData.Payload.Data_p;
       put_uint32(&amp;Data_p, AuditResponse);
-      
+
       Status = Do_R15_Command_Send(GlobalCommunication_p, &amp;CmdData);
       if (NULL != CmdData.Payload.Data_p)
       {
@@ -240,12 +240,12 @@ ErrorCode_e Do_CEH_Call(void *Object_p, CommandData_t *CmdData_p)
     }
   }
 #endif
-    
+
   switch(COMMAND(response, CmdData_p-&gt;ApplicationNr, CmdData_p-&gt;CommandNr))
   {
   <apply-templates select="group" mode="unmarshal"/>
   default:
-    {    
+    {
       Status = Do_CustomCEH_Call(CmdData_p);
       if (E_SUCCESS != Status)
       {

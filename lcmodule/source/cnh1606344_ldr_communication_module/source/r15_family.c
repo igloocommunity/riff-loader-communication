@@ -57,16 +57,20 @@ ErrorCode_e R15_Family_Init(Communication_t *Communication_p)
     R15_NETWORK(Communication_p)->Inbound.StopTransfer = FALSE;
 
     if (NULL != Communication_p->BackupCommBuffer_p) {
-        if (Communication_p->BackupCommBufferSize <= HEADER_LENGTH) {
+        if (Communication_p->BackupCommBufferSize < ALIGNED_HEADER_LENGTH) {
             memcpy(R15_NETWORK(Communication_p)->Inbound.Scratch, Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBufferSize);
-            R15_NETWORK(Communication_p)->Inbound.ReqData = HEADER_LENGTH - Communication_p->BackupCommBufferSize;
+            R15_NETWORK(Communication_p)->Inbound.ReqData = ALIGNED_HEADER_LENGTH - Communication_p->BackupCommBufferSize;
             R15_NETWORK(Communication_p)->Inbound.ReqBuffOffset = Communication_p->BackupCommBufferSize;
             R15_NETWORK(Communication_p)->Inbound.RecBackupData = Communication_p->BackupCommBufferSize;
             Communication_p->BackupCommBufferSize = 0;
         } else {
-            memcpy(R15_NETWORK(Communication_p)->Inbound.Scratch, Communication_p->BackupCommBuffer_p, HEADER_LENGTH);
-            Communication_p->BackupCommBufferSize = Communication_p->BackupCommBufferSize - HEADER_LENGTH;
-            R15_NETWORK(Communication_p)->Inbound.RecBackupData = HEADER_LENGTH;
+            /* Copy content of backup buffer into scratch buffer */
+            memcpy(R15_NETWORK(Communication_p)->Inbound.Scratch, Communication_p->BackupCommBuffer_p, ALIGNED_HEADER_LENGTH);
+            /* Move rest of backup data at the beginning of the backup buffer */
+            memcpy(Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBuffer_p + ALIGNED_HEADER_LENGTH, Communication_p->BackupCommBufferSize - ALIGNED_HEADER_LENGTH);
+            /* Update the size of the backup buffer */
+            Communication_p->BackupCommBufferSize = Communication_p->BackupCommBufferSize - ALIGNED_HEADER_LENGTH;
+            R15_NETWORK(Communication_p)->Inbound.RecBackupData = ALIGNED_HEADER_LENGTH;
         }
 
         C_(printf("r15_family.c(%d) BackupBuffer=0x%x Size=%d\n", __LINE__, Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBufferSize);)
@@ -89,7 +93,7 @@ ErrorExit:
 
 
 /*
- * R15 family protocols sutdown.
+ * R15 family protocols shutdown.
  *
  * @param [in] Communication_p Communication module context.
  *
@@ -136,10 +140,10 @@ ErrorExit:
 }
 
 /*
- * R15 Cancel Transmition.
+ * R15 Cancel Transmission.
  *
  * @param [in] Communication_p Communication module context.
- * @param [in] PacketsBeforeTransferStop Number of packets that will be transmited before stopping the transmition.
+ * @param [in] PacketsBeforeTransferStop Number of packets that will be transmitted before stopping the transmission.
  *
  * @retval  E_SUCCESS                   After successful execution.
  * @retval  E_INVALID_INPUT_PARAMETERS  Invalid input parameter.
@@ -150,12 +154,12 @@ ErrorCode_e R15_CancelReceiver(Communication_t *Communication_p, uint8 PacketsBe
 
     VERIFY(NULL != Communication_p, E_INVALID_INPUT_PARAMETERS);
 
-	R15_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop = PacketsBeforeReceiverStop;
+    R15_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop = PacketsBeforeReceiverStop;
     R15_NETWORK(Communication_p)->Inbound.StopTransfer = TRUE;
 
 ErrorExit:
     A_(printf("protrom_family.c(%d) ErrorCode=%d\n", __LINE__, ReturnValue);)
-    return ReturnValue;   
+    return ReturnValue;
 }
 
 /** @} */

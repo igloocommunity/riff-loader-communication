@@ -76,103 +76,6 @@ uint32 get_uint32_be(void **data_pp)
     return ((d[0] << 8 | d[1]) << 8 | d[2]) << 8 | d[3];
 }
 
-uint32 get_directory_entries_len(const DirEntry_t *source_p, uint32 DirectoryEntriesCount)
-{
-    uint32 EntriesLen = 0;
-    uint32 i = 0;
-
-    if (DirectoryEntriesCount > 0) {
-        for (i = 0; i < DirectoryEntriesCount; i++) {
-            EntriesLen += get_uint32_string_le((void **)&source_p[i].Name_p);
-            EntriesLen += sizeof(uint32) + sizeof(uint32) + sizeof(uint64);
-        }
-    }
-
-    return EntriesLen;
-}
-
-void serialize_directory_entries(void **data_pp, const DirEntry_t *source_p, uint32 DirectoryEntriesCount)
-{
-    uint32 NameLength = 0;
-    uint32 i = 0;
-
-    if (DirectoryEntriesCount > 0) {
-        for (i = 0; i < DirectoryEntriesCount; i++) {
-            NameLength = get_uint32_string_le((void **)&source_p[i].Name_p);
-            memcpy(*data_pp, source_p[i].Name_p, NameLength);
-            *(const uint8 **)data_pp += NameLength;
-            memcpy(*data_pp, &source_p[i].Size, sizeof(uint64));
-            *(const uint8 **)data_pp += sizeof(uint64);
-            memcpy(*data_pp, &source_p[i].Mode, sizeof(uint32));
-            *(const uint8 **)data_pp += sizeof(uint32);
-            memcpy(*data_pp, &source_p[i].Time, sizeof(uint32));
-            *(const uint8 **)data_pp += sizeof(uint32);
-        }
-    }
-}
-
-uint32 get_device_entries_len(const ListDevice_t *source_p, uint32 DeviceEntriesCount)
-{
-    uint32 EntriesLen = 0;
-    uint32 i = 0;
-
-    if (DeviceEntriesCount > 0) {
-        for (i = 0; i < DeviceEntriesCount; i++) {
-            if (NULL != source_p[i].Path_p) {
-                EntriesLen += get_uint32_string_le((void **)&source_p[i].Path_p);
-            } else {
-                EntriesLen += sizeof(uint32);
-            }
-
-            if (NULL != source_p[i].Type_p) {
-                EntriesLen += get_uint32_string_le((void **)&source_p[i].Type_p);
-            } else {
-                EntriesLen += sizeof(uint32);
-            }
-
-            EntriesLen += sizeof(uint64) + sizeof(uint64) + sizeof(uint64);
-        }
-    }
-
-    return EntriesLen;
-}
-
-void serialize_device_entries(void **data_pp, const ListDevice_t *source_p, uint32 DeviceEntriesCount)
-{
-    uint32 PathLen = 0;
-    uint32 TypeLen = 0;
-    uint32 i = 0;
-
-    if (DeviceEntriesCount > 0) {
-        for (i = 0; i < DeviceEntriesCount; i++) {
-            if (NULL != source_p[i].Path_p) {
-                PathLen = get_uint32_string_le((void **)&source_p[i].Path_p);
-                memcpy(*data_pp, source_p[i].Path_p, PathLen);
-                *(const uint8 **)data_pp += PathLen;
-            } else {
-                memset(*data_pp, 0x00, sizeof(char *));
-                *(const uint8 **)data_pp += sizeof(char *);
-            }
-
-            if (NULL != source_p[i].Type_p) {
-                TypeLen = get_uint32_string_le((void **)&source_p[i].Type_p);
-                memcpy(*data_pp, source_p[i].Type_p, TypeLen);
-                *(const uint8 **)data_pp += TypeLen;
-            } else {
-                memset(*data_pp, 0x00, sizeof(char *));
-                *(const uint8 **)data_pp += sizeof(char *);
-            }
-
-            memcpy(*data_pp, &source_p[i].BlockSize, sizeof(uint64));
-            *(const uint8 **)data_pp += sizeof(uint64);
-            memcpy(*data_pp, &source_p[i].Start, sizeof(uint64));
-            *(const uint8 **)data_pp += sizeof(uint64);
-            memcpy(*data_pp, &source_p[i].Length, sizeof(uint64));
-            *(const uint8 **)data_pp += sizeof(uint64);
-        }
-    }
-}
-
 void put_block(void **data_pp, const void *source_p, uint32 length)
 {
     if (length > 0) {
@@ -323,6 +226,97 @@ void insert_string(char **data_pp, const char *source_p, uint32 length)
     memcpy(*data_pp, &length, sizeof(uint32));
     memcpy(*data_pp + sizeof(uint32), source_p, length);
 }
+
+#if defined(CFG_ENABLE_LOADER_SERIALIZATION)
+uint32 get_directory_entries_len(const DirEntry_t *source_p, uint32 DirectoryEntriesCount)
+{
+    uint32 EntriesLen = 0;
+    uint32 i = 0;
+
+    for (i = 0; i < DirectoryEntriesCount; i++) {
+        EntriesLen += get_uint32_string_le((void **)&source_p[i].Name_p);
+        EntriesLen += sizeof(uint32) + sizeof(uint32) + sizeof(uint64);
+    }
+
+    return EntriesLen;
+}
+
+void serialize_directory_entries(void **data_pp, const DirEntry_t *source_p, uint32 DirectoryEntriesCount)
+{
+    uint32 NameLength = 0;
+    uint32 i = 0;
+
+    for (i = 0; i < DirectoryEntriesCount; i++) {
+        NameLength = get_uint32_string_le((void **)&source_p[i].Name_p);
+        memcpy(*data_pp, source_p[i].Name_p, NameLength);
+        *(const uint8 **)data_pp += NameLength;
+        memcpy(*data_pp, &source_p[i].Size, sizeof(uint64));
+        *(const uint8 **)data_pp += sizeof(uint64);
+        memcpy(*data_pp, &source_p[i].Mode, sizeof(uint32));
+        *(const uint8 **)data_pp += sizeof(uint32);
+        memcpy(*data_pp, &source_p[i].Time, sizeof(uint32));
+        *(const uint8 **)data_pp += sizeof(uint32);
+    }
+}
+
+uint32 get_device_entries_len(const ListDevice_t *source_p, uint32 DeviceEntriesCount)
+{
+    uint32 EntriesLen = 0;
+    uint32 i = 0;
+
+    for (i = 0; i < DeviceEntriesCount; i++) {
+        if (NULL != source_p[i].Path_p) {
+            EntriesLen += get_uint32_string_le((void **)&source_p[i].Path_p);
+        } else {
+            EntriesLen += sizeof(uint32);
+        }
+
+        if (NULL != source_p[i].Type_p) {
+            EntriesLen += get_uint32_string_le((void **)&source_p[i].Type_p);
+        } else {
+            EntriesLen += sizeof(uint32);
+        }
+
+        EntriesLen += sizeof(uint64) + sizeof(uint64) + sizeof(uint64);
+    }
+
+    return EntriesLen;
+}
+
+void serialize_device_entries(void **data_pp, const ListDevice_t *source_p, uint32 DeviceEntriesCount)
+{
+    uint32 PathLen = 0;
+    uint32 TypeLen = 0;
+    uint32 i = 0;
+
+    for (i = 0; i < DeviceEntriesCount; i++) {
+        if (NULL != source_p[i].Path_p) {
+            PathLen = get_uint32_string_le((void **)&source_p[i].Path_p);
+            memcpy(*data_pp, source_p[i].Path_p, PathLen);
+            *(const uint8 **)data_pp += PathLen;
+        } else {
+            memset(*data_pp, 0x00, sizeof(char *));
+            *(const uint8 **)data_pp += sizeof(char *);
+        }
+
+        if (NULL != source_p[i].Type_p) {
+            TypeLen = get_uint32_string_le((void **)&source_p[i].Type_p);
+            memcpy(*data_pp, source_p[i].Type_p, TypeLen);
+            *(const uint8 **)data_pp += TypeLen;
+        } else {
+            memset(*data_pp, 0x00, sizeof(char *));
+            *(const uint8 **)data_pp += sizeof(char *);
+        }
+
+        memcpy(*data_pp, &source_p[i].BlockSize, sizeof(uint64));
+        *(const uint8 **)data_pp += sizeof(uint64);
+        memcpy(*data_pp, &source_p[i].Start, sizeof(uint64));
+        *(const uint8 **)data_pp += sizeof(uint64);
+        memcpy(*data_pp, &source_p[i].Length, sizeof(uint64));
+        *(const uint8 **)data_pp += sizeof(uint64);
+    }
+}
+#endif
 
 /* @} */
 /* @} */

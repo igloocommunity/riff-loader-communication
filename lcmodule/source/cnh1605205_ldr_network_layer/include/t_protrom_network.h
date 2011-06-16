@@ -34,7 +34,7 @@ typedef enum {
     PROTROM_RECEIVE_HEADER,   /**< State for receiving Header.*/
     PROTROM_RECEIVE_PAYLOAD,  /**< State for receiving Payload.*/
     PROTROM_RECEIVE_ERROR,    /**< State for error handling.*/
-    PROTROM_RECEIVE_IDLE      /**< State for receiver idele.*/
+    PROTROM_RECEIVE_IDLE      /**< State for receiver idle.*/
 } Protrom_InboundState_t;
 
 /** Defined state of the transmitter */

@@ -56,7 +56,7 @@ ErrorCode_e Z_Network_Initialize(Communication_t *Communication_p)
     Z_NETWORK(Communication_p)->Outbound.TxCriticalSection = Do_CriticalSection_Create();
 
     /* Simulate a finished read to get the inbound state-machine going. */
-    Z_Network_ReadCallback(NULL, 0, Communication_p);
+    Z_Network_ReadCallback(NULL, 0, Communication_p->CommunicationDevice_p);
 
     return E_SUCCESS;
 }
@@ -70,7 +70,7 @@ ErrorCode_e Z_Network_Shutdown(const Communication_t *const Communication_p)
 
 void Z_Network_ReadCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
-    Communication_t *Communication_p = (Communication_t *)Param_p;
+    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
     CommandData_t CmdData;
 
     Z_NETWORK(Communication_p)->Inbound.RecData += Length;
@@ -100,15 +100,36 @@ void Z_Network_ReceiverHandler(Communication_t *Communication_p)
         ReqData = In_p->ReqData;
         In_p->ReqData = 0;
         In_p->RecData = 0;
-        (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p, ReqData, Z_Network_ReadCallback, Communication_p);
         C_(printf("z_network.c (%d) ReqData(%d) RecData(%d) \n", __LINE__, ReqData, In_p->RecData);)
+
+#ifdef CFG_ENABLE_LOADER_TYPE
+        if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
+                ReqData, Z_Network_ReadCallback, Communication_p->CommunicationDevice_p)) {
+            /* Read failed! Return to previous state. */
+            In_p->ReqData = ReqData;
+        }
+#else
+        (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
+                ReqData, Z_Network_ReadCallback, Communication_p->CommunicationDevice_p);
+#endif
     }
 
-    /* check for receiver sinhronization */
+    /* check for receiver synchronization */
     if (In_p->State == Z_RECEIVE_ERROR) {
         In_p->ReqData = 0;
         In_p->RecData = 0;
-        (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p, Z_HEADER_LENGTH, Z_Network_ReadCallback, Communication_p);
+#ifdef CFG_ENABLE_LOADER_TYPE
+        if (TRUE == Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
+                Z_HEADER_LENGTH, Z_Network_ReadCallback,
+                Communication_p->CommunicationDevice_p)) {
+            In_p->State = Z_RECEIVE_HEADER;
+        }
+#else
+        (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
+                Z_HEADER_LENGTH, Z_Network_ReadCallback,
+                Communication_p->CommunicationDevice_p);
+        In_p->State = Z_RECEIVE_HEADER;
+#endif
     }
 }
 
@@ -130,7 +151,7 @@ ErrorCode_e Z_Network_TransmiterHandler(Communication_t *Communication_p, Z_Send
 
     switch (Out_p->State) {
     case Z_SEND_IDLE:
-        /* get next packet for transmiting */
+        /* get next packet for transmitting */
         Out_p->State = Z_SEND_PACKET;
 
         /* FALLTHROUGH */
@@ -138,7 +159,7 @@ ErrorCode_e Z_Network_TransmiterHandler(Communication_t *Communication_p, Z_Send
 
         if (E_SUCCESS == Communication_p->CommunicationDevice_p->Write(Data_p,
                 Size,
-                Z_Network_WriteCallback, Communication_p)) {
+                Z_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
             Out_p->State = Z_SENDING_PACKET;
         } else {
             /* error state ?*/

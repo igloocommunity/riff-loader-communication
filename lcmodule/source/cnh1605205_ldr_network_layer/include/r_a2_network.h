@@ -9,7 +9,9 @@
  *  @{
  *    @addtogroup a2_family
  *    @{
- *      @addtogroup ldr_network_layer
+ *      @addtogroup ldr_network_layer A2 Network Layer
+ *      A2 network layer support receiving and sending A2 packets.
+ *
  *      @{
  */
 

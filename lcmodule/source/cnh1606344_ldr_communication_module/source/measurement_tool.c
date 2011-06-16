@@ -17,7 +17,7 @@
 #include "r_time_utilities.h"
 #include "r_serialization.h"
 #include "r_debug_macro.h"
-#include "r_memmory_utils.h"
+#include "r_memory_utils.h"
 
 /*******************************************************************************
  * File scope types, constants and variables

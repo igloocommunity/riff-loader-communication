@@ -205,9 +205,9 @@ CommandPermissionList_t * GetAuditData(CommandData_t * CmdData_p)
   boolean A1_RD             = FALSE;
   boolean A1_Product        = FALSE;
   boolean A1_Service        = FALSE;
-  
+
   uint8 A1_depandancy       = 0x00;
-  
+
   uint32 AuthenticationVector = 0; */
   int CounterList = 0;
 
@@ -228,7 +228,7 @@ ErrorCode_e CommandAudit(CommandData_t * CmdData_p)
 {
   ErrorCode_e ReturnValue = E_GENERAL_FATAL_ERROR;
   CommandPermissionList_t* CmdPermission_p = NULL;
-   
+
   CmdPermission_p = GetAuditData(CmdData_p);
   if(NULL == CmdPermission_p)
   {

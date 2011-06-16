@@ -28,7 +28,7 @@
 #include "r_protrom_protocol.h"
 #include "r_communication_service.h"
 #include "t_security_algorithms.h"
-#include "r_memmory_utils.h"
+#include "r_memory_utils.h"
 
 /*******************************************************************************
  * Declaration of file local functions

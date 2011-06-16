@@ -44,7 +44,7 @@ typedef enum {
 
 typedef void (*CommunicationCallback_t)(const void *Data_p, const uint32 Length, void *Param_p);
 typedef void (*HashCallback_t)(void *Data_p, const uint32 Length, uint8 *Hash_p, void *Param_p);
-typedef boolean(*DeviceRead_fn)(void *Data_p, uint32 Length, CommunicationCallback_t Callback_fn, void *Param_p);
+typedef ErrorCode_e(*DeviceRead_fn)(void *Data_p, uint32 Length, CommunicationCallback_t Callback_fn, void *Param_p);
 typedef ErrorCode_e(*DeviceWrite_fn)(void *Data_p, uint32 Length, CommunicationCallback_t Callback_fn, void *Param_p);
 typedef ErrorCode_e(*DeviceCancel_fn)(void *Param_p);
 typedef void (*HashDeviceCancel_fn)(void *Object_p, void **Param_p);
@@ -122,8 +122,8 @@ typedef struct {
                                           defined timer. */
     ReadTime_t      ReadTime_Fn;       /**< Pointer to function for read time from
                                           specified timer. */
-    GetSystemTime_t GetSystemTime_Fn;  /**< Pointer to function for read curent
-                                          sytem time. */
+    GetSystemTime_t GetSystemTime_Fn;  /**< Pointer to function for read current
+                                          system time. */
     void           *Object_p;          /**< Pointer for instancing. It is used in
                                           the PC application, but in the loaders
                                           is always NULL */
@@ -165,7 +165,7 @@ typedef struct {
                                                           then all interrupt
                                                           enabled. */
     RFifoDestroy_t          RFifoDestroy_Fn;           /**< Pointer to function
-                                                          for Fifo destroing.
+                                                          for Fifo destroying.
                                                           First all interrupts
                                                           are disabled,
                                                           function executed and
@@ -219,9 +219,9 @@ typedef struct {
                                                           executed and then all
                                                           interrupt enabled. */
     void                   *Object_p;                  /**<Pointer for instancing.
-                                                         It is used in the PC
-                                                         application, but in the
-                                                         loaders is always NULL.*/
+                                                          It is used in the PC
+                                                          application, but in the
+                                                          loaders is always NULL.*/
 } QueueInterface_t;
 
 /**
@@ -247,9 +247,10 @@ typedef struct {
                                    communication device. */
     DeviceWrite_fn  Write;      /**< Pointer to function for write data thru the
                                    communication device. */
-    DeviceCancel_fn Cancel;     /**< Pointer to function for caneling current
-                                   communcation with communiation device. */
+    DeviceCancel_fn Cancel;     /**< Pointer to function for canceling current
+                                   communication with communication device. */
     void           *Context_p;  /**< Pointer to Device description data. */
+    void           *Object_p;   /**< Pointer to Object associated with the device. */
 } CommunicationDevice_t;
 
 /**
@@ -288,7 +289,7 @@ typedef struct ExecutionContext_s {
 /** Communication context.*/
 typedef struct {
     void                      *Inbound_p;            /**< Pointer to structure for
-                                                        handling incomming
+                                                        handling incoming
                                                         packets.*/
     void                      *Outbound_p;           /**< Pointer to structure for
                                                         handling outgoing
@@ -309,7 +310,7 @@ typedef struct {
     FunctionInterface_t       *Functions_p;          /**< Pointer to interface
                                                         functions for buffers,
                                                         timers and queue.*/
-    Do_CEH_Call_t             Do_CEH_Call_Fn;        /**< Pointer to calback
+    Do_CEH_Call_t             Do_CEH_Call_Fn;        /**< Pointer to callback
                                                         function for handling
                                                         commands received thru
                                                         the LCM.*/
@@ -329,7 +330,7 @@ typedef struct FamilyDescriptor_s {
     ErrorCode_e(*FamilyInit_fn)(Communication_t *Communication_p);
     /**< Pointer to Interface function for protocol family de-initialization. */
     ErrorCode_e(*FamilyShutdown_fn)(Communication_t *Communication_p);
-    /**< Pointer to Pooling function in curren protocol family. */
+    /**< Pointer to Pooling function in current protocol family. */
     ErrorCode_e(*Process_fn)(Communication_t *Communication_p);
     /**< Pointer to function for sending packets.*/
     ErrorCode_e(*Send_fn)(Communication_t *Communication_p, void *InputData_p);

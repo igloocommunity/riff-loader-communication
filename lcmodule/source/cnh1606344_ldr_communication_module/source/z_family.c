@@ -115,10 +115,10 @@ ErrorExit:
 }
 
 /*
- * Z family Cancel Transmition.
+ * Z family Cancel Transmission.
  *
  * @param [in] Communication_p Communication module context.
- * @param [in] PacketsBeforeTransferStop Number of packets that will be transmited before stopping the transmition.
+ * @param [in] PacketsBeforeTransferStop Number of packets that will be transmitted before stopping the transmission.
  *
  * @retval  E_SUCCESS                   After successful execution.
  * @retval  E_INVALID_INPUT_PARAMETERS  Invalid input parameter.
@@ -129,12 +129,12 @@ ErrorCode_e Z_CancelReceiver(Communication_t *Communication_p, uint8 PacketsBefo
 
     VERIFY(NULL != Communication_p, E_INVALID_INPUT_PARAMETERS);
 
-	Z_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop = PacketsBeforeReceiverStop;
+    Z_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop = PacketsBeforeReceiverStop;
     Z_NETWORK(Communication_p)->Inbound.StopTransfer = TRUE;
 
 ErrorExit:
     A_(printf("protrom_family.c(%d) ErrorCode=%d\n", __LINE__, ReturnValue);)
-    return ReturnValue;   
+    return ReturnValue;
 }
 
 /**         @} */

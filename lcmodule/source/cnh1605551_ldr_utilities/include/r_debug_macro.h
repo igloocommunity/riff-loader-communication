@@ -79,9 +79,7 @@
     { \
       if(!(Condition)) \
       { \
-        {\
-          INT_DISABLE()\
-        }\
+        INT_DISABLE()\
         while(1); \
       } \
     } while(0)
@@ -143,9 +141,7 @@
       if(!(Condition)) \
       { \
         A_(printf("%s (%d): ** Assert failed **\n",__FILE__, __LINE__);)\
-        {\
-          INT_DISABLE()\
-        }\
+        INT_DISABLE()\
         while(1); \
       } \
     } while(0)
@@ -155,9 +151,7 @@
     { \
       if(!(Condition)) \
       { \
-        {\
-          INT_DISABLE()\
-        }\
+        INT_DISABLE()\
         while(1); \
       } \
     } while(0)

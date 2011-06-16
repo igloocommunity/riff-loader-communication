@@ -286,13 +286,13 @@ typedef struct {
     PacketMeta_t            *MetaInfoList[COMMAND_BUFFER_COUNT+BULK_BUFFER_COUNT];
     /**< List of meta data for used packets. */
     RetransmissionContext_t *RetransmissionList[MAX_SIZE_RETRANSMISSION_LIST];
-    /**< List of packet for retransmision */
+    /**< List of packet for retransmission */
     uint32                   RetransmissionListCount;
-    /**< Counter for packets retransmision */
+    /**< Counter for packets retransmission */
     R15_Inbound_t            Inbound;
     /**< Context for receiver. */
     R15_Outbound_t           Outbound;
-    /**< Context for transmiter. */
+    /**< Context for transmitter. */
 } R15_NetworkContext_t;
 
 /*

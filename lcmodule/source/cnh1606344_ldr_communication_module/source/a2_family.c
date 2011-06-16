@@ -56,14 +56,18 @@ ErrorCode_e A2_Family_Init(Communication_t *Communication_p)
     Communication_p->CurrentFamilyHash = HASH_CRC16;
 
     if (NULL != Communication_p->BackupCommBuffer_p) {
-        if (Communication_p->BackupCommBufferSize <= A2_HEADER_LENGTH) {
+        if (Communication_p->BackupCommBufferSize < A2_HEADER_LENGTH) {
             memcpy(A2_NETWORK(Communication_p)->Inbound.Scratch, Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBufferSize);
             A2_NETWORK(Communication_p)->Inbound.ReqData = A2_HEADER_LENGTH - Communication_p->BackupCommBufferSize;
             A2_NETWORK(Communication_p)->Inbound.ReqBuffOffset = Communication_p->BackupCommBufferSize;
             A2_NETWORK(Communication_p)->Inbound.RecBackupData = Communication_p->BackupCommBufferSize;
             Communication_p->BackupCommBufferSize = 0;
         } else {
+            /* Copy content of backup buffer into scratch buffer */
             memcpy(A2_NETWORK(Communication_p)->Inbound.Scratch, Communication_p->BackupCommBuffer_p, A2_HEADER_LENGTH);
+            /* Move rest of backup data at the beginning of the backup buffer */
+            memcpy(Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBuffer_p + A2_HEADER_LENGTH, Communication_p->BackupCommBufferSize - A2_HEADER_LENGTH);
+            /* Update the size of the backup buffer */
             Communication_p->BackupCommBufferSize = Communication_p->BackupCommBufferSize - A2_HEADER_LENGTH;
             A2_NETWORK(Communication_p)->Inbound.RecBackupData = A2_HEADER_LENGTH;
         }
@@ -86,7 +90,7 @@ ErrorExit:
 
 
 /*
- * A2 family protocols sutdown.
+ * A2 family protocols shutdown.
  *
  * @param [in] Communication_p Communication module context.
  *
@@ -131,10 +135,10 @@ ErrorExit:
 }
 
 /*
- * A2 Cancel Transmition.
+ * A2 Cancel Transmission.
  *
  * @param [in] Communication_p Communication module context.
- * @param [in] PacketsBeforeTransferStop Number of packets that will be transmited before stopping the transmition.
+ * @param [in] PacketsBeforeTransferStop Number of packets that will be transmitted before stopping the transmission.
  *
  * @retval  E_SUCCESS                   After successful execution.
  * @retval  E_INVALID_INPUT_PARAMETERS  Invalid input parameter.
@@ -145,12 +149,12 @@ ErrorCode_e A2_CancelReceiver(Communication_t *Communication_p, uint8 PacketsBef
 
     VERIFY(NULL != Communication_p, E_INVALID_INPUT_PARAMETERS);
 
-	A2_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop = PacketsBeforeReceiverStop;
+    A2_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop = PacketsBeforeReceiverStop;
     A2_NETWORK(Communication_p)->Inbound.StopTransfer = TRUE;
 
 ErrorExit:
     A_(printf("protrom_family.c(%d) ErrorCode=%d\n", __LINE__, ReturnValue);)
-    return ReturnValue;   
+    return ReturnValue;
 }
 
 

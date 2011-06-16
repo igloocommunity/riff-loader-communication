@@ -70,7 +70,7 @@ ErrorCode_e A2_Network_Initialize(Communication_t *Communication_p)
     memset(A2_NETWORK(Communication_p), 0, sizeof(A2_NetworkContext_t));
 
     /* Simulate a finished read to get the inbound state-machine going. */
-    A2_Network_ReadCallback(NULL, 0, Communication_p);
+    A2_Network_ReadCallback(NULL, 0, Communication_p->CommunicationDevice_p);
     A2_NETWORK(Communication_p)->Outbound.TxCriticalSection = Do_CriticalSection_Create();
 
 #ifdef  CFG_ENABLE_LOADER_TYPE
@@ -123,7 +123,7 @@ ErrorExit:
 
 
 /*
- * Handler for received packets in A2 protocl family.
+ * Handler for received packets in A2 protocol family.
  *
  * This callback function handles the received packets.
  *
@@ -136,7 +136,7 @@ ErrorExit:
 void A2_Network_ReadCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
     IDENTIFIER_NOT_USED(Data_p);
-    Communication_t *Communication_p = (Communication_t *)Param_p;
+    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
 
     C_(printf("a2_network.c (%d) RecLength(%d) RecBackupData (%d)\n", __LINE__, Length, A2_NETWORK(Communication_p)->Inbound.RecBackupData);)
     A2_NETWORK(Communication_p)->Inbound.RecData += Length + A2_NETWORK(Communication_p)->Inbound.RecBackupData;
@@ -186,46 +186,87 @@ void A2_Network_ReadCallback(const void *Data_p, const uint32 Length, void *Para
 ErrorCode_e A2_Network_ReceiverHandler(Communication_t *Communication_p)
 {
     uint32 ReqData;
+    uint32 ReqBufferOffset;
     A2_Inbound_t *In_p = &(A2_NETWORK(Communication_p)->Inbound);
 
     if (In_p->ReqData > 0) {
         if (Communication_p->BackupCommBufferSize != 0) {
             if (Communication_p->BackupCommBufferSize < In_p->ReqData) {
                 memcpy(In_p->Target_p + In_p->ReqBuffOffset, Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBufferSize);
-                In_p->RecBackupData = Communication_p->BackupCommBufferSize;
-                (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p + In_p->ReqBuffOffset + Communication_p->BackupCommBufferSize,
-                        In_p->ReqData - Communication_p->BackupCommBufferSize,
-                        A2_Network_ReadCallback, Communication_p);
-                C_(printf("a2_network.c (%d) ReqData(%d) RecData(%d)\n", __LINE__, In_p->ReqData, In_p->RecData);)
-                C_(printf("a2_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
-                In_p->RecData = 0;
-                In_p->ReqBuffOffset = 0;
-                Communication_p->BackupCommBufferSize = 0;
-                In_p->ReqData = 0;
-            } else {
-                memcpy(In_p->Target_p + In_p->ReqBuffOffset, Communication_p->BackupCommBuffer_p, In_p->ReqData);
-                Communication_p->BackupCommBufferSize = Communication_p->BackupCommBufferSize - In_p->ReqData;
                 ReqData = In_p->ReqData;
                 In_p->ReqData = 0;
-                A2_Network_ReadCallback(In_p->Target_p + In_p->ReqBuffOffset, ReqData, Communication_p);
+                ReqBufferOffset = In_p->ReqBuffOffset;
+                In_p->ReqBuffOffset = 0;
+                In_p->RecBackupData = Communication_p->BackupCommBufferSize;
+                Communication_p->BackupCommBufferSize = 0;
                 In_p->RecData = 0;
+
+                C_(printf("a2_network.c (%d) ReqData(%d) RecData(%d)\n", __LINE__, ReqData, In_p->RecData);)
+                C_(printf("a2_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
+
+#ifdef CFG_ENABLE_LOADER_TYPE
+                if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(
+                        In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
+                        ReqData - In_p->RecBackupData, A2_Network_ReadCallback,
+                        Communication_p->CommunicationDevice_p)) {
+                    /* Read failed! Return to previous state. */
+                    In_p->ReqData = ReqData;
+                    In_p->ReqBuffOffset = ReqBufferOffset;
+                    Communication_p->BackupCommBufferSize = In_p->RecBackupData;
+                    In_p->RecBackupData = 0;
+                }
+#else
+                (void)Communication_p->CommunicationDevice_p->Read(
+                        In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
+                        ReqData - In_p->RecBackupData, A2_Network_ReadCallback,
+                        Communication_p->CommunicationDevice_p);
+#endif
+            } else {
+                /* Copy content of backup buffer into receive buffer */
+                memcpy(In_p->Target_p + In_p->ReqBuffOffset, Communication_p->BackupCommBuffer_p, In_p->ReqData);
+                /* Move rest of backup data at the beginning of the backup buffer. */
+                memcpy(Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBuffer_p + In_p->ReqData, Communication_p->BackupCommBufferSize - In_p->ReqData);
+                /* Update the size of the backup buffer to handle only unprocessed data. */
+                Communication_p->BackupCommBufferSize = Communication_p->BackupCommBufferSize - In_p->ReqData;
+
+                ReqData = In_p->ReqData;
+                In_p->ReqData = 0;
+                ReqBufferOffset = In_p->ReqBuffOffset;
+                In_p->ReqBuffOffset = 0;
+                In_p->RecData = 0;
+                A2_Network_ReadCallback(In_p->Target_p + ReqBufferOffset, ReqData, Communication_p->CommunicationDevice_p);
             }
         } else {
             ReqData = In_p->ReqData;
             In_p->ReqData = 0;
-            (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p + In_p->ReqBuffOffset, ReqData, A2_Network_ReadCallback, Communication_p);
-            C_(printf("a2_network.c (%d) ReqData(%d) RecData(%d) \n", __LINE__, In_p->ReqData, In_p->RecData);)
-            C_(printf("a2_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
-            In_p->RecData = 0;
+            ReqBufferOffset = In_p->ReqBuffOffset;
             In_p->ReqBuffOffset = 0;
+            In_p->RecData = 0;
+
+            C_(printf("a2_network.c (%d) ReqData(%d) RecData(%d) \n", __LINE__, ReqData, In_p->RecData);)
+            C_(printf("a2_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
+
+#ifdef CFG_ENABLE_LOADER_TYPE
+            if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(
+                    In_p->Target_p + ReqBufferOffset, ReqData, A2_Network_ReadCallback,
+                    Communication_p->CommunicationDevice_p)) {
+                /* Read failed! Return to previous state. */
+                In_p->ReqData = ReqData;
+                In_p->ReqBuffOffset = ReqBufferOffset;
+            }
+#else
+            (void)Communication_p->CommunicationDevice_p->Read(
+                    In_p->Target_p + ReqBufferOffset, ReqData, A2_Network_ReadCallback,
+                    Communication_p->CommunicationDevice_p);
+#endif
         }
     }
 
-    /* check for receiver sinhronization */
+    /* check for receiver synchronization */
     if (In_p->State == A2_RECEIVE_ERROR) {
         A2_RESET_INBOUND(In_p, A2_RECEIVE_HEADER);
         A2_SYNC_HEADER(In_p, A2_HEADER_LENGTH, In_p->Scratch);
-        //(void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p, A2_HEADER_LENGTH, A2_Network_ReadCallback, Communication_p);
+        //(void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p, A2_HEADER_LENGTH, A2_Network_ReadCallback, Communication_p->CommunicationDevice_p);
     }
 
     return A2_NETWORK(Communication_p)->Inbound.LCM_Error;
@@ -369,7 +410,7 @@ void A2_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Par
 {
     IDENTIFIER_NOT_USED(Data_p);
     IDENTIFIER_NOT_USED(Length);
-    Communication_t *Communication_p = (Communication_t *)Param_p;
+    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
     A2_Outbound_t *Out_p = &(A2_NETWORK(Communication_p)->Outbound);
 
     if (A2_SENDING_PAYLOAD == Out_p->State) {
@@ -512,7 +553,7 @@ ErrorCode_e A2_Network_TransmiterHandler(Communication_t *Communication_p)
         }
 
         if (E_SUCCESS == Communication_p->CommunicationDevice_p->Write((Out_p->Packet_p->Buffer_p),
-                A2_HEADER_LENGTH, A2_Network_WriteCallback, Communication_p)) {
+                A2_HEADER_LENGTH, A2_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
             C_(printf("a2_network.c (%d) Header Sent to comm device! \n", __LINE__);)
         } else {
             Out_p->State = A2_SEND_HEADER;
@@ -529,7 +570,7 @@ ErrorCode_e A2_Network_TransmiterHandler(Communication_t *Communication_p)
         if (E_SUCCESS == Communication_p->CommunicationDevice_p->Write(
                     (Out_p->Packet_p->Buffer_p + A2_HEADER_LENGTH),
                     Out_p->Packet_p->Header.DataLength + A2_CRC_LENGTH,
-                    A2_Network_WriteCallback, Communication_p)) {
+                    A2_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
             C_(printf("a2_network.c (%d) Payload Sent to comm device! \n", __LINE__);)
         } else {
             Out_p->State = A2_SEND_PAYLOAD;

@@ -26,7 +26,7 @@
 #include "r_adbg_module.h"
 #include "r_adbg_command.h"
 #include "r_communication_service.h"
-#include "r_memmory_utils.h"
+#include "r_memory_utils.h"
 
 /*******************************************************************************
  * The test case functions declarations

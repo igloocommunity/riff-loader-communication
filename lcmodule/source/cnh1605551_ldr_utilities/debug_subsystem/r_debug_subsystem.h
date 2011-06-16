@@ -24,6 +24,10 @@
  ******************************************************************************/
 #include "t_basicdefinitions.h"
 #include "t_debug_subsystem.h"
+#ifdef CFG_ENABLE_LOADER_TYPE
+#include "error_codes.h"
+#include "t_communication_service.h"
+#endif
 
 /*******************************************************************************
  * Defines
@@ -50,13 +54,34 @@
 #ifndef CFG_ENABLE_LOADER_TYPE
 void lcm_printf(const char *format, ...);
 #else
+/*
+ * Initialization of Debug communication device.
+ *
+ * Used communication devices UART (specified with UART_DEBUG_PORT).
+ *
+ * @return none.
+ */
+void Do_Loader_DebugoutInit(void);
+
+/*
+ * Function for getting the debug communication device.
+ *
+ * @param [out] DebugDevice_pp    Pointer to the initialized debug communication
+ *                                device.
+ *
+ * @retval E_SUCCESS              After successful execution.
+ * @retval E_GENERAL_FATAL_ERROR  If debug communication device is not
+ *                                initialized.
+ */
+ErrorCode_e Do_GetDebugCommunicationDevice(CommunicationDevice_t **DebugDevice_pp);
+
 /**
  * Calls function 'circular_printf'. If debug queue is not initialized this
- * function takes care for initialization and than redidrect input parameters to
+ * function takes care for initialization and than redirect input parameters to
  * 'circular_printf' function.
  *
  * @param [in] *format The string constant format provides a description of the
- *                     output, with placeholders marked by "%" escape
+ *                     output, with place holders marked by "%" escape
  *                     characters, to specify both the relative location and the
  *                     type of output that the function should produce.(Standard
  *                     definition for library 'printf' function).

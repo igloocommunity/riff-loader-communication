@@ -67,7 +67,7 @@ ErrorCode_e Protrom_Network_Initialize(Communication_t *Communication_p)
     PROTROM_NETWORK(Communication_p)->Outbound.TxCriticalSection = Do_CriticalSection_Create();
 
     /* Simulate a finished read to get the inbound state-machine going. */
-    Protrom_Network_ReadCallback(NULL, 0, Communication_p);
+    Protrom_Network_ReadCallback(NULL, 0, Communication_p->CommunicationDevice_p);
     (void)QUEUE(Communication_p, Fifo_SetCallback_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Outbound_p, QUEUE_NONEMPTY, Protrom_QueueCallback, Communication_p);
 
     return E_SUCCESS;
@@ -109,13 +109,13 @@ ErrorCode_e Protrom_Network_Shutdown(const Communication_t *const Communication_
  *
  * @param [in] Data_p  Pointer to the received data.
  * @param [in] Length  Length of the received data.
- * @param [in] Param_p Extra parameteres.
+ * @param [in] Param_p Extra parameters.
  *
  * @return none.
  */
 void Protrom_Network_ReadCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
-    Communication_t *Communication_p = (Communication_t *)Param_p;
+    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
 
     A_(printf("protrom_family.c (%d) RecLength(%d) RecBackupData (%d)\n", __LINE__, Length, PROTROM_NETWORK(Communication_p)->Inbound.RecBackupData);)
     PROTROM_NETWORK(Communication_p)->Inbound.RecData = Length + PROTROM_NETWORK(Communication_p)->Inbound.RecBackupData;
@@ -175,6 +175,7 @@ void Protrom_Network_ReadCallback(const void *Data_p, const uint32 Length, void 
 void Protrom_Network_ReceiverHandler(Communication_t *Communication_p)
 {
     uint32 ReqData;
+    uint32 ReqBufferOffset;
     Protrom_Inbound_t *In_p = &(PROTROM_NETWORK(Communication_p)->Inbound);
 
     /* new data for receiving ? */
@@ -182,42 +183,91 @@ void Protrom_Network_ReceiverHandler(Communication_t *Communication_p)
         if (Communication_p->BackupCommBufferSize != 0) {
             if (Communication_p->BackupCommBufferSize < In_p->ReqData) {
                 memcpy(In_p->Target_p + In_p->ReqBuffOffset, Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBufferSize);
-                In_p->RecBackupData = Communication_p->BackupCommBufferSize;
-                (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p + In_p->ReqBuffOffset + Communication_p->BackupCommBufferSize,
-                        In_p->ReqData - Communication_p->BackupCommBufferSize,
-                        Protrom_Network_ReadCallback, Communication_p);
-                C_(printf("protrom_network.c (%d) ReqData(%d) RecData(%d)\n", __LINE__, In_p->ReqData, In_p->RecData);)
-                C_(printf("protrom_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
-                In_p->RecData = 0;
-                In_p->ReqBuffOffset = 0;
-                Communication_p->BackupCommBufferSize = 0;
-                In_p->ReqData = 0;
-            } else {
-                memcpy(In_p->Target_p + In_p->ReqBuffOffset, Communication_p->BackupCommBuffer_p, In_p->ReqData);
-                Communication_p->BackupCommBufferSize = Communication_p->BackupCommBufferSize - In_p->ReqData;
                 ReqData = In_p->ReqData;
                 In_p->ReqData = 0;
-                Protrom_Network_ReadCallback(In_p->Target_p + In_p->ReqBuffOffset, ReqData, Communication_p);
+                ReqBufferOffset = In_p->ReqBuffOffset;
+                In_p->ReqBuffOffset = 0;
+                In_p->RecBackupData = Communication_p->BackupCommBufferSize;
+                Communication_p->BackupCommBufferSize = 0;
                 In_p->RecData = 0;
+
+                C_(printf("protrom_network.c (%d) ReqData(%d) RecData(%d)\n", __LINE__, ReqData, In_p->RecData);)
+                C_(printf("protrom_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
+
+#ifdef CFG_ENABLE_LOADER_TYPE
+                if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(
+                        In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
+                        ReqData - In_p->RecBackupData, Protrom_Network_ReadCallback,
+                        Communication_p->CommunicationDevice_p)) {
+                    /* Read failed! Return to previous state. */
+                    In_p->ReqData = ReqData;
+                    In_p->ReqBuffOffset = ReqBufferOffset;
+                    Communication_p->BackupCommBufferSize = In_p->RecBackupData;
+                    In_p->RecBackupData = 0;
+                }
+#else
+                (void)Communication_p->CommunicationDevice_p->Read(
+                        In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
+                        ReqData - In_p->RecBackupData, Protrom_Network_ReadCallback,
+                        Communication_p->CommunicationDevice_p);
+#endif
+            } else {
+                /* Copy content of backup buffer into receive buffer */
+                memcpy(In_p->Target_p + In_p->ReqBuffOffset, Communication_p->BackupCommBuffer_p, In_p->ReqData);
+                /* Move rest of backup data at the beginning of the backup buffer */
+                memcpy(Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBuffer_p + In_p->ReqData, Communication_p->BackupCommBufferSize - In_p->ReqData);
+                /* Update the size of the backup buffer */
+                Communication_p->BackupCommBufferSize = Communication_p->BackupCommBufferSize - In_p->ReqData;
+
+                ReqData = In_p->ReqData;
+                In_p->ReqData = 0;
+                ReqBufferOffset = In_p->ReqBuffOffset;
+                In_p->ReqBuffOffset = 0;
+                In_p->RecData = 0;
+                Protrom_Network_ReadCallback(In_p->Target_p + ReqBufferOffset, ReqData, Communication_p->CommunicationDevice_p);
             }
         } else {
             ReqData = In_p->ReqData;
             In_p->ReqData = 0;
-            In_p->RecData = 0;
-            (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p + In_p->ReqBuffOffset, ReqData, Protrom_Network_ReadCallback, Communication_p);
-            C_(printf("protrom_network.c (%d) ReqData(%d) RecData(%d) \n", __LINE__, In_p->ReqData, In_p->RecData);)
-            C_(printf("protrom_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
+            ReqBufferOffset = In_p->ReqBuffOffset;
             In_p->ReqBuffOffset = 0;
+            In_p->RecData = 0;
+            C_(printf("protrom_network.c (%d) ReqData(%d) RecData(%d) \n", __LINE__, ReqData, In_p->RecData);)
+            C_(printf("protrom_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
+
+#ifdef CFG_ENABLE_LOADER_TYPE
+            if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(
+                    In_p->Target_p + ReqBufferOffset, ReqData, Protrom_Network_ReadCallback,
+                    Communication_p->CommunicationDevice_p)) {
+                /* Read failed! Return to previous state. */
+                In_p->ReqData = ReqData;
+                In_p->ReqBuffOffset = ReqBufferOffset;
+            }
+#else
+            (void)Communication_p->CommunicationDevice_p->Read(
+                    In_p->Target_p + ReqBufferOffset, ReqData, Protrom_Network_ReadCallback,
+                    Communication_p->CommunicationDevice_p);
+#endif
         }
     }
 
-    /* check for receiver sinhronization */
+    /* check for receiver synchronization */
     if (In_p->State == PROTROM_RECEIVE_ERROR) {
         In_p->ReqData = 0;
         In_p->RecData = 0;
         In_p->ReqBuffOffset = 0;
-        (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p, PROTROM_HEADER_LENGTH, Protrom_Network_ReadCallback, Communication_p);
+#ifdef CFG_ENABLE_LOADER_TYPE
+        if (E_SUCCESS == Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
+                PROTROM_HEADER_LENGTH, Protrom_Network_ReadCallback,
+                Communication_p->CommunicationDevice_p)) {
+            In_p->State = PROTROM_RECEIVE_HEADER;
+        }
+#else
+        (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
+                PROTROM_HEADER_LENGTH, Protrom_Network_ReadCallback,
+                Communication_p->CommunicationDevice_p);
         In_p->State = PROTROM_RECEIVE_HEADER;
+#endif
     }
 }
 
@@ -236,7 +286,7 @@ void Protrom_Network_ReceiverHandler(Communication_t *Communication_p)
  */
 void Protrom_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
-    Communication_t *Communication_p = (Communication_t *)Param_p;
+    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
     Protrom_Outbound_t *Out_p = &(PROTROM_NETWORK(Communication_p)->Outbound);
     if (Out_p->State == PROTROM_SENDING_PAYLOAD) {
         if (NULL != Out_p->Packet_p) {
@@ -341,12 +391,11 @@ static ErrorCode_e Protrom_Network_TransmiterHandler(Communication_t *Communicat
         }
 
         /* FALLTHROUGH */
-
     case PROTROM_SEND_HEADER:
         Out_p->State = PROTROM_SENDING_HEADER;
 
         if (E_SUCCESS != Communication_p->CommunicationDevice_p->Write(Out_p->Packet_p->Buffer_p,
-                PROTROM_HEADER_LENGTH, Protrom_Network_WriteCallback, Communication_p)) {
+                PROTROM_HEADER_LENGTH, Protrom_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
             Out_p->State = PROTROM_SEND_HEADER;
             break;
         }
@@ -357,7 +406,7 @@ static ErrorCode_e Protrom_Network_TransmiterHandler(Communication_t *Communicat
         Out_p->State = PROTROM_SENDING_PAYLOAD;
         if (E_SUCCESS != Communication_p->CommunicationDevice_p->Write(Out_p->Packet_p->Buffer_p + PROTROM_HEADER_LENGTH,
                 Out_p->Packet_p->Header.PayloadLength + PROTROM_CRC_LENGTH,
-                Protrom_Network_WriteCallback, Communication_p)) {
+                Protrom_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
             Out_p->State = PROTROM_SEND_PAYLOAD;
             break;
         }

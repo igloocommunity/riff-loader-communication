@@ -9,7 +9,9 @@
  *  @{
  *    @addtogroup a2_family
  *    @{
- *      @addtogroup ldr_header
+ *      @addtogroup ldr_header A2 Header
+ *      Functionalities for serialization and de-serialization A2 header.
+ *
  *      @{
  */
 
