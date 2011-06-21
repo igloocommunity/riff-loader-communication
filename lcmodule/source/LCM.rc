@@ -69,16 +69,16 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "Build date: 2011-06-16"
+            VALUE "Comments", "Build date: 2011-06-21"
             VALUE "CompanyName", "ST Ericsson AB"
             VALUE "FileDescription", "LCM Dynamic Link Library"
             VALUE "FileVersion", "1,0,0,1"
             VALUE "InternalName", "LCM"
             VALUE "LegalCopyright", "Copyright (C) ST Ericsson 2011"
             VALUE "OriginalFilename", "LCM.dll"
-            VALUE "PrivateBuild", "Change-Id: Ib1901abfc2efa6c887c70b8583ddd2258e21aa78"
+            VALUE "PrivateBuild", "Change-Id: I5d459585cb065bad1cc16ffefd25ec28b731778d"
             VALUE "ProductName", "CXA1104507 Loader Communication Module"
-            VALUE "ProductVersion", "R1T"
+            VALUE "ProductVersion", "P1S"
         END
     END
     BLOCK "VarFileInfo"

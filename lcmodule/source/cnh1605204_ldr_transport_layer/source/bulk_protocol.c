@@ -1311,7 +1311,7 @@ static ErrorCode_e R15_Bulk_ReadRequestHandler(Communication_t *Communication_p,
 
 ErrorExit:
     /* release the buffer for command BULK READ */
-    ReturnValue = R15_Network_PacketRelease(Communication_p, Packet_p);  // TODO: proveri zosto ReturnValue se zema od ovde za posleden!
+    ReturnValue = R15_Network_PacketRelease(Communication_p, Packet_p);
     return ReturnValue;
 }
 

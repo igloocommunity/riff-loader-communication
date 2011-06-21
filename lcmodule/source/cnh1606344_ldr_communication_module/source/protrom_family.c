@@ -138,7 +138,7 @@ ErrorCode_e Protrom_CancelReceiver(Communication_t *Communication_p, uint8 Packe
 {
     ErrorCode_e ReturnValue = E_SUCCESS;
 
-    printf("Protrom_CancelReceiver called ...\n");
+    A_(printf("Protrom_CancelReceiver called ...\n");)
 
     VERIFY(NULL != Communication_p, E_INVALID_INPUT_PARAMETERS);
 

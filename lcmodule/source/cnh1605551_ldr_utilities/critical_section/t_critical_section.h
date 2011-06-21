@@ -20,7 +20,7 @@
  * Types, constants
  ******************************************************************************/
 /** Critical Section abstract type definition */
-typedef void* CriticalSection_t;
+typedef void *CriticalSection_t;
 
 /** @} */
 /** @} */

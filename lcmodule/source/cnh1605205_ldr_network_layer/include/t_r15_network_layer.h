@@ -50,7 +50,7 @@
 /** Acknowledge packet time(mS) out value */
 #define ACK_TIMEOUT_IN_MS       10000
 /** Default time(mS) out for receiving bulk command */
-#define BULK_COMMAND_RECEIVING_TIMEOUT  10000
+#define BULK_COMMAND_RECEIVING_TIMEOUT  20000
 /** Default time(mS) out for receiving bulk data. This value is set for UART on 115200kbps! */
 #define BULK_DATA_RECEIVING_TIMEOUT   120000
 
