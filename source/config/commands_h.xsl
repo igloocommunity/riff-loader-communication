@@ -39,9 +39,9 @@ public:
   }
 <apply-templates select="group"/>
 protected:
-  CLCDriverMethods* lcdMethods_;
   CmdResult* cmdResult_;
   LcmInterface* lcmInterface_;
+  CLCDriverMethods* lcdMethods_;
 };
 
 #endif /* _COMMANDS_H_ */

@@ -40,7 +40,7 @@
 extern  Measurement_t *Measurement_p;
 #endif
 
-static PacketMeta_t PacketMetaInfo[COMMAND_BUFFER_COUNT + BULK_BUFFER_COUNT] = {0}; /* Packet Meta Info vector*/
+static PacketMeta_t PacketMetaInfo[COMMAND_BUFFER_COUNT + BULK_BUFFER_COUNT] ; /* Packet Meta Info vector*/
 
 /*******************************************************************************
  * Declaration of file local functions
@@ -429,7 +429,7 @@ uint32 R15_Network_CreateUniqueKey(const PacketMeta_t *const Packet_p, const uin
     uint32 Key = Packet_p->Header.Protocol;
 
     if (Key == PROTO_COMMAND) {
-        return((Key << 16) | *(Packet_p->ExtendedHeader_p) & MASK_CLR_STATE);
+        return((Key << 16) | (*(Packet_p->ExtendedHeader_p) & MASK_CLR_STATE));
     } else {
         return ((Key << 16) | ((*(Packet_p->ExtendedHeader_p) & 0x00FF) << 8) | ExternalKey);
     }
@@ -685,7 +685,7 @@ static ErrorCode_e R15_Network_ReceiveExtendedHeader(Communication_t *Communicat
 
             SET_INBOUND(In_p, RECEIVE_PAYLOAD, Aligned_Size);
         } else {
-#ifdef DISABLE_SECURITY
+#ifdef SKIP_PAYLOAD_VERIFICATION
             SET_PACKET_FLAGS(In_p->Packet_p, PACKET_RX_STATE_MASK, BUF_RX_READY);
             (void)QUEUE(Communication_p, FifoEnqueue_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Inbound_p, In_p->Packet_p);
 #else

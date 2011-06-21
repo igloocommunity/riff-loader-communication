@@ -17,11 +17,10 @@
 
 CCaptiveThreadObject::CCaptiveThreadObject()
     : IsDying(0),
-#pragma warning(disable: 4355) // 'this' used before initialized but ok as thread starts in inactive state
       Thread(ThreadEntry, this)
 {
 }
-#pragma warning(default: 4355)
+
 
 CCaptiveThreadObject::~CCaptiveThreadObject()
 {

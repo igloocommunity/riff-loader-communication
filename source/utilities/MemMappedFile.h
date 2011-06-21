@@ -27,9 +27,9 @@ private:
     std::string path_;
     uint64 size_;
     bool isMapped_;
-    uint32 alignmentLength_;
     uint8 *mappedData_;
     int error_;
+    uint32 alignmentLength_;
 #ifdef _WIN32
     HANDLE handle_;
     HANDLE memmap_;

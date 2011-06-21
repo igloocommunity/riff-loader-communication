@@ -71,7 +71,10 @@ int MemMappedFile::LoadFileData(const char *path)
         return FILE_OPENING_ERROR;
     }
 
-    size_ = ::GetFileSize(handle_, NULL);
+    uint64 SizeHigh = 0;
+
+    size_ = ::GetFileSize(handle_, (LPDWORD)&SizeHigh);
+    size_ = (SizeHigh << 32) | size_;
 
     if (0 == size_) {
         return 0;
@@ -113,8 +116,9 @@ int MemMappedFile::LoadFileData(const char *path)
 
     size_ = fileStat.st_size;
 
-    mappedData_ = static_cast<uint8 *>(mmap(0, size_, PROT_READ, MAP_PRIVATE | MAP_POPULATE, descriptor_, 0));
-
+    /* alway return MAP_FAILED to prevent memory consumption */
+    mappedData_ = (uint8 *)MAP_FAILED; //static_cast<uint8 *>(mmap(0, size_, PROT_READ, MAP_PRIVATE /*| MAP_POPULATE*/, descriptor_, 0));
+    
     if (MAP_FAILED != mappedData_) {
         isMapped_ = true;
     } else {

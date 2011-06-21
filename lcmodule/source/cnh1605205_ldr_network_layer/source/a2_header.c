@@ -163,8 +163,8 @@ boolean A2_IsReceivedHeader(A2_Inbound_t *In_p)
             return TRUE;
         } else {
             In_p->ReqData = StartHeaderInBuffer;
-            TmpPointer_p = (uint8 *)((uint32)In_p->Target_p + StartHeaderInBuffer);
-            memcpy(In_p->Target_p, (uint8 *)TmpPointer_p, A2_HEADER_LENGTH - StartHeaderInBuffer);
+            TmpPointer_p = In_p->Target_p + StartHeaderInBuffer;
+            memcpy(In_p->Target_p, TmpPointer_p, A2_HEADER_LENGTH - StartHeaderInBuffer);
             In_p->ReqBuffOffset = A2_HEADER_LENGTH - StartHeaderInBuffer;
         }
     } else {

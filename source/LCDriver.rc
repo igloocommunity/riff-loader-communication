@@ -81,7 +81,7 @@ BEGIN
     BEGIN
         BLOCK "000904b0"
         BEGIN
-            VALUE "Comments", "Build date: 2011-05-18"
+            VALUE "Comments", "Build date: 2011-05-30"
             VALUE "CompanyName", "STEricsson AB"
             VALUE "FileDescription", "LCDriver Dynamic Link Library"
             VALUE "FileVersion", "1, 0, 0, 1"
@@ -90,7 +90,7 @@ BEGIN
             VALUE "OriginalFilename", "LCDriver_CNH1606432.dll"
             VALUE "PrivateBuild", "http://gerrit.lud.stericsson.com/gerrit/21155"
             VALUE "ProductName", "CXC 173 0865,  LCDriver DLL"
-            VALUE "ProductVersion", "Test Version"
+            VALUE "ProductVersion", "P1K"
         END
     END
     BLOCK "VarFileInfo"

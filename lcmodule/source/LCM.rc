@@ -69,7 +69,7 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "Build date: 2011-05-18"
+            VALUE "Comments", "Build date: 2011-05-30"
             VALUE "CompanyName", "ST Ericsson AB"
             VALUE "FileDescription", "LCM Dynamic Link Library"
             VALUE "FileVersion", "1,0,0,1"
@@ -78,7 +78,7 @@ BEGIN
             VALUE "OriginalFilename", "LCM.dll"
             VALUE "PrivateBuild", "http://gerrit.lud.stericsson.com/gerrit/21155"
             VALUE "ProductName", "CXA1104507 Loader Communication Module"
-            VALUE "ProductVersion", "Test Version"
+            VALUE "ProductVersion", "P1L"
         END
     END
     BLOCK "VarFileInfo"

@@ -209,8 +209,8 @@ boolean R15_IsReceivedHeader(R15_Inbound_t *In_p)
     if (HEADER_PATTERN_CANDIDATE == Res) {
         /* call for receiving the rest bytes in header */
         In_p->ReqData = StartHeaderInBuffer + ALIGNED_HEADER_LENGTH - In_p->RecData;
-        TmpPointer_p = (uint8 *)((uint32)In_p->Target_p + StartHeaderInBuffer);
-        memcpy(In_p->Target_p, (uint8 *)TmpPointer_p, In_p->RecData - StartHeaderInBuffer);
+        TmpPointer_p = In_p->Target_p + StartHeaderInBuffer;
+        memcpy(In_p->Target_p, TmpPointer_p, In_p->RecData - StartHeaderInBuffer);
         In_p->ReqBuffOffset = In_p->RecData - StartHeaderInBuffer;
     } else {
         if (HEADER_PATTERN_MATCH == Res) {
@@ -219,8 +219,8 @@ boolean R15_IsReceivedHeader(R15_Inbound_t *In_p)
                 return TRUE;
             } else {
                 In_p->ReqData = StartHeaderInBuffer + ALIGNED_HEADER_LENGTH - In_p->RecData;
-                TmpPointer_p = (uint8 *)((uint32)In_p->Target_p + StartHeaderInBuffer);
-                memcpy(In_p->Target_p, (uint8 *)TmpPointer_p, In_p->RecData - StartHeaderInBuffer);
+                TmpPointer_p = In_p->Target_p + StartHeaderInBuffer;
+                memcpy(In_p->Target_p, TmpPointer_p, In_p->RecData - StartHeaderInBuffer);
                 In_p->ReqBuffOffset = In_p->RecData - StartHeaderInBuffer;
             }
         } else {

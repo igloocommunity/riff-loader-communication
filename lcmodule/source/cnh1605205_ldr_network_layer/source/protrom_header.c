@@ -100,6 +100,7 @@ uint32 Protrom_GetPacketLength(const Protrom_Header_t *Header_p)
 boolean Protrom_IsValidHeader(const void *Data_p)
 {
     uint8 *Temp_p = (uint8 *)Data_p;
+    uint16 ProtromVal = 0;
 
     if (PROTROM_HEADER_PATTERN != *Temp_p) {
         return FALSE;
@@ -121,7 +122,8 @@ boolean Protrom_IsValidHeader(const void *Data_p)
         return FALSE;
     }
 
-    if (*(uint16 *)(Temp_p + 5) < 1) {
+    ProtromVal = (Temp_p[6] << 8) | Temp_p[5];
+    if (ProtromVal < 1) {
         return FALSE;
     }
 
@@ -148,8 +150,8 @@ boolean Protrom_IsReceivedHeader(Protrom_Inbound_t *In_p)
     if (PROTROM_HEADER_PATTERN_CANDIDATE == Res) {
         /* call for receiving the rest bytes in header */
         In_p->ReqData = StartHeaderInBuffer + PROTROM_HEADER_LENGTH - In_p->RecData;
-        TmpPointer_p = (uint8 *)((uint32)In_p->Target_p + StartHeaderInBuffer);
-        memcpy(In_p->Target_p, (uint8 *)TmpPointer_p, In_p->RecData - StartHeaderInBuffer);
+        TmpPointer_p = In_p->Target_p + StartHeaderInBuffer;
+        memcpy(In_p->Target_p, TmpPointer_p, In_p->RecData - StartHeaderInBuffer);
         In_p->ReqBuffOffset = In_p->RecData - StartHeaderInBuffer;
     } else {
         if (PROTROM_HEADER_PATTERN_MATCH == Res) {
@@ -158,8 +160,8 @@ boolean Protrom_IsReceivedHeader(Protrom_Inbound_t *In_p)
                 return TRUE;
             } else {
                 In_p->ReqData = StartHeaderInBuffer + PROTROM_HEADER_LENGTH - In_p->RecData;
-                TmpPointer_p = (uint8 *)((uint32)In_p->Target_p + StartHeaderInBuffer);
-                memcpy(In_p->Target_p, (uint8 *)TmpPointer_p, In_p->RecData - StartHeaderInBuffer);
+                TmpPointer_p = In_p->Target_p + StartHeaderInBuffer;
+                memcpy(In_p->Target_p, TmpPointer_p, In_p->RecData - StartHeaderInBuffer);
                 In_p->ReqBuffOffset = In_p->RecData - StartHeaderInBuffer;
             }
         } else {

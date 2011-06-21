@@ -45,11 +45,13 @@ ErrorCode_e R15_Family_Init(Communication_t *Communication_p)
 #ifndef CFG_ENABLE_LOADER_TYPE
     Communication_p->CurrentFamilyHash = HASH_NONE;
 #else
-#ifdef DISABLE_SECURITY
+
+#ifdef SKIP_PAYLOAD_VERIFICATION
     Communication_p->CurrentFamilyHash = HASH_NONE;
 #else
     Communication_p->CurrentFamilyHash = HASH_SHA256;
 #endif
+
 #endif
 
     R15_NETWORK(Communication_p)->Inbound.StopTransfer = FALSE;

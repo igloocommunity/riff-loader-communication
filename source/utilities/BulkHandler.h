@@ -56,14 +56,15 @@ public:
     void HandleCommandRequest(uint16 session, uint32 chunkSize, uint64 offset, uint32 length, bool acknowledge);
 private:
     CLCDriverMethods *m_Methods;
+    CSemaphoreQueue m_ReceiveQueue;
     Buffers *m_pBuffers;
     LcmInterface *m_pLcmInterface;
     Logger *m_pLogger;
     BulkState m_State;
+    CThreadWrapper *m_pFileWriteThread;
     TL_BulkVectorList_t *m_pBulkVector;
     std::string m_sFilePath;
-    CSemaphoreQueue m_ReceiveQueue;
-    CThreadWrapper *m_pFileWriteThread;
+
 private:
     void HandleReadRequest(uint16 session, uint32 chunkSize, uint64 offset, uint32 length);
     void HandleWriteRequest(uint16 session, uint32 chunkSize, uint64 offset, uint32 length);

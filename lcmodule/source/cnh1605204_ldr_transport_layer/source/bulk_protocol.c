@@ -50,7 +50,16 @@
 extern  Measurement_t *Measurement_p;
 #endif
 
+typedef struct {
+    TL_BulkVectorList_t *BulkVector_p;
+    uint32 ChunkId;
+    uint8*  ChunksList_p;
+} TL_RetransmissionRequest_t;
+
+static TL_RetransmissionRequest_t RetransmissionRequest;
+
 static void R15_Bulk_ReadChunkCallBack(Communication_t *Communication_p, const void *const Timer_p, const void *const Data_p);
+static void R15_Bulk_ReadDataChunkCallBack(Communication_t *Communication_p, const void *const Timer_p, const void *const Data_p);
 static void R15_Bulk_RetransmitChunks_CallBack(const Communication_t *const Communication_p, const void *const Timer_p, const void *const Data_p);
 static ErrorCode_e R15_Bulk_Process_Read(Communication_t *Communication_p, TL_BulkVectorList_t *BulkVector_p, PacketMeta_t *Packet_p);
 static ErrorCode_e R15_Bulk_SendReadRequest(Communication_t *Communication_p, TL_BulkVectorList_t *BulkVector_p, uint32 Chunks, void *ChunksList_p, void *CallBack_p);
@@ -763,14 +772,12 @@ static ErrorCode_e R15_Bulk_Process_Read(Communication_t *Communication_p, TL_Bu
         } else if (VECTOR_MISSING_CHUNK == ChunkReceivedStatus) {
             ReturnValue = R15_Bulk_SendReadRequest(Communication_p, BulkVector_p, ChunkId, ChunksList, NULL);
         } else { // Chunks are received in order
-            R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = R15_Bulk_GetTimerChunkRetransmision(Communication_p, R15_TIMEOUTS(Communication_p)->TBDR, (HandleFunction_t)R15_Bulk_ReadChunkCallBack);
+            RetransmissionRequest.BulkVector_p = BulkVector_p;
+            RetransmissionRequest.ChunkId = ChunkId;
+            RetransmissionRequest.ChunksList_p = ChunksList;
+            R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = R15_Bulk_GetTimerChunkRetransmision(Communication_p, R15_TIMEOUTS(Communication_p)->TBDR, (HandleFunction_t)R15_Bulk_ReadDataChunkCallBack);
         }
 
-        break;
-
-    case SEND_BULK_ACK:   //TODO: check this state. look like unused state!!!
-        R15_Bulk_GetListOfReceivedChunks(BulkVector_p, &ChunkId, ChunksList);
-        ReturnValue = R15_Bulk_SendReadRequest(Communication_p, BulkVector_p, ChunkId, ChunksList, NULL);
         break;
 
     default:
@@ -921,11 +928,6 @@ static ErrorCode_e R15_Bulk_SendReadRequest(Communication_t *Communication_p, TL
     } else {
         Param.Time = R15_TIMEOUTS(Communication_p)->TBDR; // Receiving chunks
 
-        if (Chunks != 0) {
-            VERIFY(NULL != ChunksList_p, E_INVALID_INPUT_PARAMETERS);
-            Param.Payload_p = ChunksList_p;
-        }
-
         VERIFY(NULL != CallBack_p, E_INVALID_INPUT_PARAMETERS);
         //lint --e(611)
         Param.TimerCallBackFn_p = (HandleFunction_t)CallBack_p;
@@ -1062,6 +1064,11 @@ static void R15_Bulk_ReadChunkCallBack(Communication_t *Communication_p, const v
     (void)QUEUE((Communication_p), FifoEnqueue_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Outbound_p, (void *)Data_p);
 }
 
+static void R15_Bulk_ReadDataChunkCallBack(Communication_t *Communication_p, const void *const Timer_p, const void *const Data_p)
+{
+    (void)R15_Bulk_SendReadRequest(Communication_p, RetransmissionRequest.BulkVector_p, RetransmissionRequest.ChunkId, RetransmissionRequest.ChunksList_p, NULL);
+}
+
 static void R15_Bulk_RetransmitChunks_CallBack(const Communication_t *const Communication_p, const void *const Timer_p, const void *const Data_p)
 {
     /* set all chunks for retransmision . Max retransmision is 3. */
@@ -1122,8 +1129,7 @@ static TL_BulkVectorStatus_t R15_Bulk_GetVectorStatus(TL_BulkVectorList_t *BulkV
     for (ChunkCounter = 0; ChunkCounter < BulkVector_p->Buffers; ChunkCounter++) {
         Packet_p = BulkVector_p->Entries[ChunkCounter].Buffer_p;
 
-        if (Packet_p == NULL ||
-                !(CHECK_PACKET_FLAGS(Packet_p, BUF_ACK_READY) || CHECK_PACKET_FLAGS(Packet_p, BUF_ACKNOWLEDGED))) {
+        if (Packet_p == NULL || !(CHECK_PACKET_FLAGS(Packet_p, BUF_ACK_READY) || CHECK_PACKET_FLAGS(Packet_p, BUF_ACKNOWLEDGED))) {
             Status = VECTOR_NOT_COMPLETE;
         } else {
             if (Status == VECTOR_NOT_COMPLETE) {
