@@ -324,6 +324,13 @@ LCDRIVER_API int __cdecl Flash_FlashRaw(LCDContext Context, const char *pchPath,
     return Context->m_pObject->Do_Flash_FlashRaw(pchPath, uiStart, uiLength, uiDevice, iUseBulk, iDeleteBuffers);
 }
 
+LCDRIVER_API int __cdecl Flash_SetEnhancedArea(LCDContext Context, const char *pchPathToDump, uint64 uiStart, uint64 uiLength)
+{
+    VERIFY_CONTEXT_STARTED(Context);
+
+    return Context->m_pObject->Do_Flash_SetEnhancedArea(pchPathToDump, uiStart, uiLength);
+}
+
 LCDRIVER_API int __cdecl FileSystem_VolumeProperties(LCDContext Context, const char *pchDevicePath, char *pchFSType, int *piFSTypeSize, uint64 *puiSize, uint64 *puiFree)
 {
     VERIFY_CONTEXT_STARTED(Context);

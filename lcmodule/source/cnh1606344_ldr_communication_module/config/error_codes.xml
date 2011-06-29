@@ -144,6 +144,9 @@
     <value number="775" name="E_FILE_TOO_LARGE" fatal="false" short="File too large.">The file is too large to fit in the partition. Increase the partition size and try to flash the file again. If problem still exist, report it</value>
     <value number="776" name="E_FILE_OUT_OF_BOOT_AREA" fatal="false" short="File outside of boot area">The file is too large to fit in the boot area.</value>
     <value number="777" name="E_DUMP_OUT_OF_FLASH_RANGE" fatal="false" short="Dump outside of flash range">The requested dump size is outside of the flash range, available flash range is dumped.</value>
+    <value number="778" name="E_ENHANCED_AREA_NOT_SET" fatal="false" short="Enhanced area is not set">Archive contains image marked for enhanced area, but enhanced area is not set on eMMC</value>
+    <value number="779" name="E_ENHANCED_IMAGE_OUT_OF_ENHANCED_AREA" fatal="false" short="Image out of enhanced area">Image marked for enhanced area has start and/or end address out of enhanced area</value>
+    <value number="780" name="E_SET_ENHANCED_AREA_FAILED" fatal="false" short="Setting of enhanced area failed">eMMC driver returned error while setting enhanced area</value>
 
     <!--
     * File management Fatal 900-950

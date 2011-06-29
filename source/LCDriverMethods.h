@@ -75,6 +75,7 @@ public:
     int Do_Flash_DumpArea(const char *pchPathToDump, uint64 uiStart, uint64 uiLength, const char *pchFilePath, uint32 RedundantArea, int iUseBulk);
     int Do_Flash_EraseArea(const char *pchPath, uint64 uiStart, uint64 uiLength);
     int Do_Flash_FlashRaw(const char *pchPath, uint64 uiStart, uint64 uiLength, uint32 uiDevice, int iUseBulk, int iDeleteBuffers);
+    int Do_Flash_SetEnhancedArea(const char *pchPathToDump, uint64 uiStart, uint64 uiLength);
 
     int Do_FileSystem_VolumeProperties(const char *pchDevicePath, char *pchFSType, int *piFSTypeSize, uint64 *puiSize, uint64 *puiFree);
     int Do_FileSystem_FormatVolume(const char *pchDevicePath);

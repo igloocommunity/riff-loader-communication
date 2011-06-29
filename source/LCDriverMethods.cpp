@@ -1070,6 +1070,27 @@ ErrorExit:
 }
 
 /// <summary>
+/// This command is used to set enhanced area in eMMC.
+/// </summary>
+/// <param name="Context">LCD context on which to execute the operation.</param>
+/// <param name="pchPathToDump">Path to the device where area should be set.</param>
+/// <param name="uiStart">Start of enhanced area [Byte].</param>
+/// <param name="uiLength">Length of enhanced area [Byte].</param>
+/// <returns>Status of the command.</returns>
+int CLCDriverMethods::Do_Flash_SetEnhancedArea(const char *pchPathToDump, uint64 uiStart, uint64 uiLength)
+{
+    uint16 uiSessionOut = 0;
+    int ReturnValue = E_SUCCESS;
+
+    VERIFY_SUCCESS(IsMainThreadAlive());
+    VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_Flash_SetEnhancedArea(uiSessionOut, pchPathToDump, uiStart, uiLength));
+    VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_FLASH, COMMAND_FLASH_SETENHANCEDAREA));
+
+ErrorExit:
+    return ReturnValue;
+}
+
+/// <summary>
 /// This command retrieves the properties of the specified file system volume. It is issued by the PC application.
 /// </summary>
 /// <param name="pchDevicePath">Path of file system volume.</param>

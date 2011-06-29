@@ -482,6 +482,26 @@
       </permissions>
     </command>
 
+    <command number="6" name="Set Enhanced Area" ADbg="false" source="PC" supportedcmdtype="longrunning">
+      <documentation>
+        This command is used to set enhanced area on eMC card.
+      </documentation>
+      <interface type="loader" name="SetEnhancedArea"/>
+      <input>
+        <value type="string" name="Path_p">Path to the device where area will be set.</value>
+        <value type="uint64" name="Start">Start address of enhanced area in bytes.</value>
+        <value type="uint64" name="Length">Length of the enhanced area in bytes.</value>
+      </input>
+      <output>
+      </output>
+      <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
+       <value ref="A1"/>
+       <value ref="CA"/>
+      </authentication>
+      <permissions>
+       <value ref="ProductionModeLevel"/>
+      </permissions>
+    </command>
   </group>
 
   <group number="03" name="File system operations" supportedcmdtype="longrunning,shortrunning">

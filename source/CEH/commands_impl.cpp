@@ -166,6 +166,13 @@ ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_Flash_FlashRawImpl(uint16 Session, E
     return E_SUCCESS;
 }
 
+ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_Flash_SetEnhancedAreaImpl(uint16 Session, ErrorCode_e Status)
+{
+    cmdResult_->GeneralResponse_Session = Session;
+
+    return E_SUCCESS;
+}
+
 ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_File_System_Operations_VolumePropertiesImpl(uint16 Session, ErrorCode_e Status, const char *FS_Type_p, const uint64 Size, const uint64 Free)
 {
 
