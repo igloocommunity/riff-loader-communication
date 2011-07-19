@@ -11,6 +11,9 @@
 		<Platform
 			Name="Win32"
 		/>
+		<Platform
+			Name="x64"
+		/>
 	</Platforms>
 	<ToolFiles>
 	</ToolFiles>
@@ -95,6 +98,90 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|x64"
+			OutputDirectory="..\target"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="0"
+			WholeProgramOptimization="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/D LITTLE_ENDIAN=1234 /D BIG_ENDIAN=4321 /D BYTE_ORDER=LITTLE_ENDIAN"
+				Optimization="0"
+				AdditionalIncludeDirectories="security_algorithms\sha;.;LCM;LCM\include;autogen;CEH;utilities;security_algorithms;api_wrappers\windows"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;_USRDLL;LCDRIVER_EXPORTS;_MESSAGES;_BULKDEBUG;_TIMERDEBUG;_BUFFERDEBUG;_THREADDEBUG"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				CallingConvention="0"
+				CompileAs="2"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\$(ProjectName)_CNH1606432_x64.dll"
+				AdditionalLibraryDirectories=""
+				GenerateManifest="true"
+				ModuleDefinitionFile=""
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
@@ -137,6 +224,8 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				Description=""
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCLinkerTool"
@@ -176,6 +265,94 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Copying $(TargetPath) to $(TargetDir)..\win_binaries"
+				CommandLine="copy /B /Y $(TargetPath) $(TargetDir)..\win_binaries"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			OutputDirectory="..\target"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="0"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/D LITTLE_ENDIAN=1234 /D BIG_ENDIAN=4321 /D BYTE_ORDER=LITTLE_ENDIAN"
+				AdditionalIncludeDirectories=".;LCM;LCM\include;autogen;CEH;utilities;security_algorithms;api_wrappers\windows;security_algorithms\sha"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;_USRDLL;LCDRIVER_EXPORTS"
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+				Description=""
+				CommandLine=""
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\$(ProjectName)_CNH1606432_x64.dll"
+				Version=""
+				AdditionalLibraryDirectories="security_algorithms"
+				ModuleDefinitionFile=""
+				AddModuleNamesToAssembly=""
+				AssemblyLinkResource=""
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+				ValidateIntelliSense="false"
+				OutputDocumentFile="..\target\$(TargetName).xml"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="Copying $(TargetPath) to $(TargetDir)..\win_binaries"
+				CommandLine="copy /B /Y $(TargetPath) $(TargetDir)..\win_binaries"
 			/>
 		</Configuration>
 		<Configuration
@@ -229,6 +406,84 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="ReleaseWithDebugMessages|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="0"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories=".;LCM;LCM\include;autogen;CEH;utilities;security_algorithms;api_wrappers\windows"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;_USRDLL;LCDRIVER_EXPORTS;_MESSAGES;_BULKDEBUG;_TIMERDEBUG;_BUFFERDEBUG"
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="SecurityAlgorithms.lib"
+				OutputFile="$(OutDir)\$(ProjectName)_CNH1606432.dll"
+				Version=""
+				AdditionalLibraryDirectories="security_algorithms"
+				ModuleDefinitionFile=""
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -381,6 +636,17 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_command_ids.h..."
+						CommandLine="java -classpath  ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_command_ids.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_command_ids.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					>
 					<Tool
@@ -392,7 +658,29 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_command_ids.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_command_ids.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_command_ids.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="ReleaseWithDebugMessages|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_command_ids.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_command_ids.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_command_ids.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseWithDebugMessages|x64"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -422,6 +710,17 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_commands.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_commands.h&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_commands.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					>
 					<Tool
@@ -433,7 +732,29 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_commands.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_commands.h&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_commands.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="ReleaseWithDebugMessages|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_commands.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_commands.h&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_commands.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseWithDebugMessages|x64"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -459,6 +780,17 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_commands_impl.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_commands_impl.h&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_commands_impl.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					>
 					<Tool
@@ -470,7 +802,29 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_commands_impl.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_commands_impl.h&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_commands_impl.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="ReleaseWithDebugMessages|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_commands_impl.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_commands_impl.h&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_commands_impl.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseWithDebugMessages|x64"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -496,6 +850,17 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_commands_marshal.cpp..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_commands_marshal.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_commands_marshal.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					>
 					<Tool
@@ -507,7 +872,29 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_commands_marshal.cpp..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_commands_marshal.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_commands_marshal.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="ReleaseWithDebugMessages|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating a2_commands_marshal.cpp..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)a2_commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\a2_commands_marshal.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)a2_commands.xml&quot;"
+						Outputs="autogen\a2_commands_marshal.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseWithDebugMessages|x64"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -537,6 +924,17 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating command_ids.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\command_ids.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\command_ids.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					>
 					<Tool
@@ -548,7 +946,29 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating command_ids.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\command_ids.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\command_ids.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="ReleaseWithDebugMessages|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating command_ids.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\command_ids.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\command_ids.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseWithDebugMessages|x64"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -578,6 +998,17 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating commands.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\commands.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\commands.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					>
 					<Tool
@@ -589,7 +1020,29 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating commands.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\commands.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\commands.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="ReleaseWithDebugMessages|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating commands.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\commands.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\commands.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseWithDebugMessages|x64"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -615,6 +1068,17 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating commands_impl.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\commands_impl.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\commands_impl.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					>
 					<Tool
@@ -626,7 +1090,29 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating commands_impl.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\commands_impl.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\commands_impl.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="ReleaseWithDebugMessages|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating commands_impl.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\commands_impl.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\commands_impl.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseWithDebugMessages|x64"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -652,6 +1138,17 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating commands_marshal.cpp..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\commands_marshal.cpp&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\commands_marshal.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					>
 					<Tool
@@ -663,7 +1160,29 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating commands_marshal.cpp..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\commands_marshal.cpp&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\commands_marshal.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="ReleaseWithDebugMessages|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating commands_marshal.cpp..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)commands.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\commands_marshal.cpp&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)commands.xml&quot;"
+						Outputs="autogen\commands_marshal.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseWithDebugMessages|x64"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -697,6 +1216,17 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating lcdriver_error_codes.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)lcdriver_error_codes.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\lcdriver_error_codes.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)lcdriver_error_codes.xml&quot;"
+						Outputs="autogen\lcdriver_error_codes.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
 					>
 					<Tool
@@ -708,7 +1238,29 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating lcdriver_error_codes.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)lcdriver_error_codes.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\lcdriver_error_codes.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)lcdriver_error_codes.xml&quot;"
+						Outputs="autogen\lcdriver_error_codes.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="ReleaseWithDebugMessages|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating lcdriver_error_codes.h..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)lcdriver_error_codes.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\lcdriver_error_codes.h&#x0D;&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)lcdriver_error_codes.xml&quot;"
+						Outputs="autogen\lcdriver_error_codes.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ReleaseWithDebugMessages|x64"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
