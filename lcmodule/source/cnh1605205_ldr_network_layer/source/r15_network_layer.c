@@ -33,9 +33,6 @@
 #include "r_time_utilities.h"
 #endif
 
-#define FREE_TRANSMITER 0
-#define BUSY_TRANSMITER 1
-
 #ifdef  CFG_ENABLE_MEASUREMENT_TOOL
 extern  Measurement_t *Measurement_p;
 #endif
@@ -327,17 +324,15 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
         /* check retransmission count before send */
         Out_p->Packet_p = (PacketMeta_t *)QUEUE(Communication_p, FifoDequeue_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Outbound_p);
 
-        if (NULL != Out_p->Packet_p) {
-            if (Out_p->Packet_p->Resend < MAX_RESENDS) {
-                Out_p->Packet_p->Resend++;
-                /* get next packet for transmitting */
-                Out_p->State = SEND_HEADER;
-            } else {
-                //Do_CommunicationInternalErrorHandler(E_RETRANSMITION_FAILED);
-                return E_RETRANSMITION_FAILED;
-            }
-        } else {
+        if ((NULL == Out_p->Packet_p) || (CHECK_PACKET_FLAGS(Out_p->Packet_p, BUF_TX_DONE))) {
             break;
+        } else if (Out_p->Packet_p->Resend < MAX_RESENDS) {
+            Out_p->Packet_p->Resend++;
+            /* get next packet for transmitting */
+            Out_p->State = SEND_HEADER;
+        } else {
+            //Do_CommunicationInternalErrorHandler(E_RETRANSMITION_FAILED);
+            return E_RETRANSMITION_FAILED;
         }
 
         /* FALLTHROUGH */

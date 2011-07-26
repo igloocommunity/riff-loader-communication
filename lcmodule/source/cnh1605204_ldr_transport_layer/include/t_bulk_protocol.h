@@ -18,6 +18,7 @@
  ******************************************************************************/
 #include "t_basicdefinitions.h"
 #include "t_r15_network_layer.h"
+#include "t_critical_section.h"
 
 /*******************************************************************************
  * Types, constants
@@ -34,11 +35,12 @@
 /** Defined bulk error in 64 bits format. */
 #define BULK_ERROR_64 0xffffffffffffffff
 
+#ifndef CFG_ENABLE_LOADER_TYPE
 /** Defined Callback functions used for bulk transfer in the LCM on PC side. */
-typedef void (*BulkCommandReqCallback_t)(void *Object_p, uint16 *Session_p, uint32 *ChunkSize_p, uint64 *Offset_p, uint32 *Length_p, boolean ACK_Read);
-typedef void(*BulkDataReqCallback_t)(void *Object_p, uint16 *Session_p, uint32 *ChunkSize_p, uint64 *Offset_p, uint32 *Length_p, uint64 *TotalLength_p, uint32 *TransferedLength_p);
-typedef void(*BulkDataEndOfDump_t)(void *Object_p);
-
+typedef void (*BulkCommandReqCallback_t)(void *Object_p, uint16 Session, uint32 ChunkSize, uint64 Offset, uint32 Length, boolean ACK_Read);
+typedef void (*BulkDataReqCallback_t)(void *Object_p, uint16 Session, uint32 ChunkSize, uint64 Offset, uint32 Length, uint64 TotalLength, uint32 TransferedLength);
+typedef void (*BulkDataEndOfDump_t)(void *Object_p);
+#endif // CFG_ENABLE_LOADER_TYPE
 
 /** Defined bulk commands. */
 typedef enum {
@@ -57,19 +59,19 @@ typedef enum {
 
 /** States of bulk protocol. */
 TYPEDEF_ENUM {
-    BULK_IDLE_STATE            = 0, /**< Idle state. */
-    SEND_READ_REQUEST          = 1, /**< Send read request command to PC. */
-    WAIT_CHUNKS                = 2, /**< Wait to receive all expected chunks. */
-    SEND_BULK_ACK              = 3, /**< Send bulk acknowledge to PC. */
-    WAIT_BULK_ACK_TIMEOUT      = 4, /**< Wait timeout for confirmation of bulk
-                                       ack command. */
-    SEND_WRITE_REQUEST         = 5, /**< Send write request command. */
-    WAIT_READ_REQUEST          = 6, /**< Wait read request from PC. */
-    SENDING_CHUNKS             = 7, /**< Send chunks to PC. */
-    WAIT_BULK_ACK              = 8, /**< Wait bulk acknowledge to PC. */
-    WRITE_BULK_FINISH          = 9, /**< Bulk acknowledge has been received,
-                                       finish the write bulk process. */
-    WAIT_WRITE_REQUEST         = 10 /**< Wait bulk request command. */
+    BULK_IDLE_STATE            = 0,  /**< Idle state. */
+    SEND_READ_REQUEST          = 1,  /**< Send read request command to PC. */
+    WAIT_CHUNKS                = 2,  /**< Wait to receive all expected chunks. */
+    SEND_WRITE_REQUEST         = 3,  /**< Send write request command. */
+    WAIT_READ_REQUEST          = 4,  /**< Wait read request from PC. */
+    PROCESSING_CHUNKS          = 5,  /**< Calculate CRC and get chunks ready for sending. */
+    WAIT_CHUNK_SENT            = 6,  /**< Wait for chunk to be sent. */
+    SENDING_CHUNKS             = 7,  /**< Send chunks to PC. */
+    WAIT_BULK_ACK              = 8,  /**< Wait bulk acknowledge to PC. */
+    WAIT_TX_DONE               = 9,  /**< Wait all chunks to be sent. */
+    WRITE_BULK_FINISH          = 10, /**< Bulk acknowledge has been received,
+                                          finish the write bulk process. */
+    WAIT_WRITE_REQUEST         = 11  /**< Wait bulk request command. */
 } ENUM8(TL_BulkProtocolState_t);
 
 /** Defined bulk process states. */
@@ -104,49 +106,60 @@ typedef enum {
  *  Bulk Vector Entry parameters
  */
 typedef struct {
-    PacketMeta_t         *Buffer_p;  /**< Pointer to reserved buffer meta info. */
-    uint8                *Payload_p; /**< Pointer to payload data in reserved
-                                        buffer. */
-    uint8                *Hash_p;    /**< Pointer to calculated payload hash. */
+    PacketMeta_t         *Buffer_p;               /**< Pointer to reserved buffer meta info. */
+    uint8                *Payload_p;              /**< Pointer to payload data in reserved
+                                                       buffer. */
+    uint8                *Hash_p;                 /**< Pointer to calculated payload hash. */
+    boolean              RetransmissionRequested; /**< Determines if retransmission for the packet
+                                                       was requested earlier to avoid sending requests
+                                                       for the same packet multiple times. */
 } TL_BulkVectorEntry_t;
 
 /**
  *  This type defines Bulk Vector parameters
  */
 typedef struct {
-    /**< Bulk session status. */
+    /** Bulk session status. */
     TL_BulkSessionState_t  Status;
-    /**< Requested bulk process(Read or Write). */
+    /** Requested bulk process(Read or Write). */
     TL_SessionMode_t       Mode;
-    /**< State of bulk protocol state machine. */
+    /** State of bulk protocol state machine. */
     TL_BulkProtocolState_t State;
-    /**< Current bulk session ID. */
+    /** Current bulk session ID. */
     uint16                 SessionId;
-    /**< Length of the file transfered with bulk transfer. */
+    /** Length of the file transfered with bulk transfer. */
     uint64                 TotalLength;
-    /**< Length of payload data transfered with bulk transfer. */
+    /** Length of payload data transfered with bulk transfer. */
     uint32                 Length;
-    /**< Number of used buffers for bulk transfer. */
+    /** Number of used buffers for bulk transfer. */
     uint32                 Buffers;
-    /**< requested size of payload. */
+    /** requested size of payload. */
     uint32                 ChunkSize;
-    /**< Offset in the cuurent opened file.*/
+    /** Offset in the current opened file.*/
     uint64                 Offset;
-    /**< Length of payload data transfered with bulk transfer. */
+    /** Length of payload data transfered with bulk transfer. */
     uint32                 TransferedLength;
-    /**< Callback function pointer for bulk command handling.*/
-    void                  *BulkCommandCallback_p;
-    /**< Callback function pointer for bulk data command handling.*/
-    void                  *BulkDataCallback_p;
-    /**< Array with information for used buffers. */
+    /** ID of the chunk that currently being sent. */
+    uint32                 SendingChunkId;
+    /** Callback function pointer for bulk command handling.*/
+    void                   *BulkCommandCallback_p;
+    /** Callback function pointer for bulk data command handling.*/
+    void                   *BulkDataCallback_p;
+    /** Array with information for used buffers. */
     TL_BulkVectorEntry_t   Entries[MAX_BULK_TL_PROCESSES];
 } TL_BulkVectorList_t;
 
 /** Structure for current bulk transfer handling. */
 typedef struct {
-    uint32                TimerKey;   /**< Timer Id for current used timer. */
-    TL_BulkVectorList_t   *BulkVector_p; /**< Current used bulk vector for bulk
-                                         transfer.*/
+    uint32               TimerKey;             /**< Timer Id for current used timer. */
+    TL_BulkVectorList_t  *BulkVector_p;        /**< Current used bulk vector for bulk
+                                                    transfer.*/
+    CriticalSection_t    BulkTransferCS;       /**< Synchronization object used to avoid
+                                                    parallel access in bulk transmitter
+                                                    function. */
+    BulkExtendedHeader_t *PendingBulkHeader_p; /**< Pending Read Request data. Needed for
+                                                    opening new session, received while
+                                                    current session is in process of sending. */
 } BulkHandle_t;
 
 /** @} */
