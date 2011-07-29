@@ -2591,7 +2591,7 @@ void CLCDriverMethods::Do_BulkDataReqCallback(uint16 Session, uint32 ChunkSize, 
 void CLCDriverMethods::UpdateBulkProgress()
 {
     if (NULL != m_ProgressBarUpdate) {
-        m_ProgressBarUpdate(m_pLcmInterface->getLCMContext(), m_uiBulkLength, m_uiBulkTransferred);
+        m_ProgressBarUpdate(m_pCommunicationDevice, m_uiBulkLength, m_uiBulkTransferred);
     }
 }
 

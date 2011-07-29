@@ -87,9 +87,9 @@ BEGIN
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "Loader Communication Driver"
             VALUE "LegalCopyright", "Copyright (C) STEricsson AB 2011"
-            VALUE "PrivateBuild", "http://gerrit.lud.stericsson.com/gerrit/27573"
+            VALUE "PrivateBuild", "http://gerrit.lud.stericsson.com/gerrit/28022"
             VALUE "ProductName", "CXC 173 0865,  LCDriver DLL"
-            VALUE "ProductVersion", "R1S"
+            VALUE "ProductVersion", "PT1"
         END
     END
     BLOCK "VarFileInfo"
