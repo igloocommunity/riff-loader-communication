@@ -31,39 +31,38 @@ typedef enum {
 </template>
 
 <template match="typedef">
-typedef struct <value-of select="interface/@name" />_s
-{
-<apply-templates select="value" />}<value-of select="interface/@name" />_t;
-</template>
+typedef struct <value-of select="interface/@name" />_s {
 
+<apply-templates select="value" />}<value-of select="interface/@name"/>_t;
+</template>
 <template match="value">
-  <text>  </text>
+<text>  </text>
   <choose>
+  <when test="@type='uint64'">
+  <value-of select="@type" /><text>  </text><value-of select="@name" />; /**&lt; <value-of select="text()" /> */
+  </when>
   <when test="@type='string'">
-  char *<text>  </text><value-of select="@name" />; /**&lt; <value-of select="text()" /> */
+    char   *<text></text><value-of select="@name" />; /**&lt; <value-of select="text()" /> */
   </when>
   <when test="@type='uint32'">
   <value-of select="@type" /><text>  </text><value-of select="@name" />; /**&lt; <value-of select="text()" /> */
   </when>
-  <when test="@type='uint64'">
-  <value-of select="@type" /><text>  </text><value-of select="@name" />; /**&lt; <value-of select="text()" /> */
-  </when>
-  </choose>
-  <if test="position() = last()"><text></text>
-  </if>
+</choose>
+<if test="position() = last()"><text></text>
+</if>
 </template>
 
 <template match="group" mode="id">
 <variable name="group" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]'>
-  <text>  </text><call-template name="groupid" /> = <choose> <when test="@number&lt;10"> <value-of select="substring-after(@number, '0')" /> </when> <otherwise> <value-of select="@number"/> </otherwise> </choose>, /**&lt; <value-of select="@name" /> */
+<text>    </text><call-template name="groupid" /> = <choose> <when test="@number&lt;10"> <value-of select="substring-after(@number, '0')" /> </when> <otherwise> <value-of select="@number"/> </otherwise> </choose>, /**&lt; <value-of select="@name" /> */
 </if>
 </template>
 
 <template match="group[last()]" mode="id">
 <variable name="group" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]'>
-  <text>  </text><call-template name="groupid" /> = <choose> <when test="@number&lt;10"> <value-of select="substring-after(@number, '0')" /> </when> <otherwise> <value-of select="@number"/> </otherwise> </choose>  /**&lt; <value-of select="@name" /> */
+<text>    </text><call-template name="groupid" /> = <choose> <when test="@number&lt;10"> <value-of select="substring-after(@number, '0')" /> </when> <otherwise> <value-of select="@number"/> </otherwise> </choose>  /**&lt; <value-of select="@name" /> */
 </if>
 </template>
 
@@ -71,7 +70,7 @@ typedef struct <value-of select="interface/@name" />_s
 <variable name="group" select="../@number" />
 <variable name="command" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]/command[@number=$command]'>
-  <text>  </text><call-template name="commandid" /> = <value-of select="@number" />, /**&lt; <value-of select="@name" /> */
+<text>    </text><call-template name="commandid" /> = <value-of select="@number" />, /**&lt; <value-of select="@name" /> */
 </if>
 </template>
 
@@ -79,7 +78,7 @@ typedef struct <value-of select="interface/@name" />_s
 <variable name="group" select="../@number" />
 <variable name="command" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]/command[@number=$command]'>
-  <text>  </text><call-template name="commandid" /> = <value-of select="@number" />  /**&lt; <value-of select="@name" /> */
+<text>    </text><call-template name="commandid" /> = <value-of select="@number" />  /**&lt; <value-of select="@name" /> */
 </if>
 </template>
 

@@ -39,10 +39,12 @@
  */
 CriticalSection_t Do_CriticalSection_Create(void)
 {
-    uint32 *cs = (uint32*)malloc(sizeof(uint32));
+    uint32 *cs = (uint32 *)malloc(sizeof(uint32));
+
     if (NULL != cs) {
         *cs = CS_UNLOCKED;
     }
+
     return cs;
 }
 
@@ -58,7 +60,7 @@ CriticalSection_t Do_CriticalSection_Create(void)
  */
 void Do_CriticalSection_Destroy(CriticalSection_t *CriticalSectionObject)
 {
-    uint32** cs = (uint32**)CriticalSectionObject;
+    uint32 **cs = (uint32 **)CriticalSectionObject;
 
     if (NULL != *cs) {
         free(*cs);
@@ -80,9 +82,11 @@ void Do_CriticalSection_Destroy(CriticalSection_t *CriticalSectionObject)
 boolean Do_CriticalSection_Enter(CriticalSection_t CriticalSectionObject)
 {
     volatile uint32 *cs = (volatile uint32 *)CriticalSectionObject;
+
     if (NULL != cs) {
         uint32 cs_status = CS_LOCKED;
         cs_status = Do_Atomic_CompareAndSwap(cs, CS_UNLOCKED, CS_LOCKED);
+
         if (CS_UNLOCKED == cs_status) {
             return TRUE;
         } else {
@@ -108,9 +112,11 @@ boolean Do_CriticalSection_Enter(CriticalSection_t CriticalSectionObject)
 void Do_CriticalSection_Leave(CriticalSection_t CriticalSectionObject)
 {
     volatile uint32 *cs = (volatile uint32 *)CriticalSectionObject;
+
     if (NULL != cs) {
         uint32 cs_status = CS_UNLOCKED;
         cs_status = Do_Atomic_CompareAndSwap(cs, CS_LOCKED, CS_UNLOCKED);
+
         if (CS_LOCKED == cs_status) {
             /* SUCCESS */
         } else {

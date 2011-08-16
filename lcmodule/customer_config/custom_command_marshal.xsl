@@ -18,9 +18,9 @@
 </template>
 
 <template match="group/documentation" mode="unmarshal">
- /*
-  * <value-of select="normalize-space(.)"/>
-  */
+        /*
+         * <value-of select="normalize-space(.)"/>
+         */
 </template>
 
 <template name="unmarshal">
@@ -75,7 +75,7 @@
 #include "r_command_protocol.h"
 
 
-#define CUSTOMCOMMAND(response, group, id) (((response) &lt;&lt; 31) | ((group) &lt;&lt; 16) | (id)) 
+#define CUSTOMCOMMAND(response, group, id) (((response) &lt;&lt; 31) | ((group) &lt;&lt; 16) | (id))
 #define CUSTOMCOMMANDDATA(TypeP,ApplicationP,CommandP,SessionP,SizeP) \
   memset((uint8*)&amp;CmdData, 0x00, sizeof(CommandData_t)); \
   CmdData.Type             = TypeP; \
@@ -111,38 +111,39 @@
       return  E_ALLOCATE_FAILED; \
     }\
   }
-  
+
 //static uint16 Session;
 
-ErrorCode_e Do_CustomCEH_Call(CommandData_t * CmdData_p)
+ErrorCode_e Do_CustomCEH_Call(CommandData_t *CmdData_p)
 {
-  ErrorCode_e Status = E_GENERAL_FATAL_ERROR;
-//  uint32 PL_GRSize = 0;
-//  ErrorCode_e ResponseStatus = E_SUCCESS;
-  boolean response = FALSE;
+    ErrorCode_e Status = E_GENERAL_FATAL_ERROR;
+    //  uint32 PL_GRSize = 0;
+    //  ErrorCode_e ResponseStatus = E_SUCCESS;
+    boolean response = FALSE;
 
-  void *Data_p = CmdData_p-&gt;Payload.Data_p;
-  (void)(Data_p);  //XVSZOAN Temporary solution!
-  
-  if (CmdData_p-&gt;Type == GENERAL_RESPONSE_PACKAGE)
-  {
-    response = TRUE;
-//    PL_GRSize = CmdData_p-&gt;Payload.Size;
-//    ResponseStatus = (ErrorCode_e)get_uint16(&amp;Data_p);
-  }
+    void *Data_p = CmdData_p-&gt;Payload.Data_p;
+    (void)(Data_p);  //XVSZOAN Temporary solution!
 
-//  Session = CmdData_p-&gt;SessionNr;
+    if (CmdData_p-&gt;Type == GENERAL_RESPONSE_PACKAGE) {
 
-	switch(CUSTOMCOMMAND(response, CmdData_p-&gt;ApplicationNr, CmdData_p-&gt;CommandNr))
-  {<apply-templates select="group" mode="unmarshal"/>
-  default:
-    break;
-  }
+        response = TRUE;
+        //    PL_GRSize = CmdData_p-&gt;Payload.Size;
+        //    ResponseStatus = (ErrorCode_e)get_uint16(&amp;Data_p);
+    }
 
-  return Status;
+    //  Session = CmdData_p-&gt;SessionNr;
+
+    switch (CUSTOMCOMMAND(response, CmdData_p-&gt;ApplicationNr, CmdData_p-&gt;CommandNr)) {
+
+<apply-templates select="group" mode="unmarshal"/>
+    default:
+        break;
+    }
+
+    return Status;
 }
 
-  <apply-templates select="group" mode="marshal"/>
+<apply-templates select="group" mode="marshal"/>
 
 </template>
 

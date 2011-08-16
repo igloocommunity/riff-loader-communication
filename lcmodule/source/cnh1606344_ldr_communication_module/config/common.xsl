@@ -27,14 +27,14 @@
 
 <template match="value" mode="deserialize">
   <choose>
-  <when test="@type='uint32'"><text>    </text><value-of select="@name" /> = get_uint32_le(&amp;Data_p);
+  <when test="@type='uint32'"><text>      </text><value-of select="@name" /> = get_uint32_le(&amp;Data_p);
   </when>
-  <when test="@type='uint64'"><text>    </text><value-of select="@name" /> = get_uint64_le(&amp;Data_p);
+  <when test="@type='uint64'"><text>      </text><value-of select="@name" /> = get_uint64_le(&amp;Data_p);
   </when>
-  <when test="@type='string'"><text>    </text><value-of select="@name" /> = skip_str(&amp;Data_p);
+  <when test="@type='string'"><text>      </text><value-of select="@name" /> = skip_str(&amp;Data_p);
   </when>
   <when test="@type='buffer' and @length!='*'"><text>    </text><value-of select="@name" /> = Data_p;
-      skip_block( &amp;Data_p, <value-of select="@length" />);    
+    skip_block(&amp;Data_p, <value-of select="@length" />);
   </when>
   </choose>
   <if test="position() = last()"><text>
@@ -50,11 +50,11 @@
 
 <template match="value" mode="deserialize_size">
   <choose>
-  <when test="@type='uint32'">    uint32 <value-of select="@name" />;
+  <when test="@type='uint32'">      uint32 <value-of select="@name" />;
   </when>
-  <when test="@type='uint64'">    uint64 <value-of select="@name" />;
+  <when test="@type='uint64'">      uint64 <value-of select="@name" />;
   </when>
-  <when test="@type='string'">    char *<value-of select="@name" />;
+  <when test="@type='string'">      char *<value-of select="@name" />;
   </when>
   <when test="@type='buffer' and @length!='*'">    void *<value-of select="@name" />;
   </when>
@@ -76,8 +76,7 @@
   </when>
   <when test="@type='buffer' and @length!='*'">put_block(&amp;Data_p, <value-of select="@name" />, <value-of select="@length" />);
   </when>
-  <when test="@type='SupportedCommand' and @length!='*'">if (<value-of select="@name" /> != NULL)
-  {
+  <when test="@type='SupportedCommand' and @length!='*'">if (<value-of select="@name" /> != NULL) {
     put_block(&amp;Data_p, <value-of select="@name" />, PLSize<value-of select="@name" />);
   }
   </when>
@@ -98,7 +97,7 @@
   </when>
   <when test="@type='uint64'">PLSize += sizeof(uint64);
    </when>
-  <when test="@type='string'">PLSize += PLSize<value-of select="@name" /> = get_uint32_string_le((void**)&amp;<value-of select="@name" />);
+  <when test="@type='string'">PLSize += PLSize<value-of select="@name" /> = get_uint32_string_le((void **)&amp;<value-of select="@name" />);
   </when>
   <when test="@type='buffer' and @length!='*'">PLSize += <value-of select="@length" />;
   </when>
@@ -214,7 +213,7 @@
  * <value-of select="normalize-space(./documentation/text())"/>
  * \see <value-of select="$ref"/>
  * Call source: <value-of select="$source"/>
- * @param [in] Session Input session.<apply-templates select="input/value" mode="document" />
+ * @param [in] Session Input session.<apply-templates select="input/value" mode="document"/>
  * @return ErrorCode_e ...
  */
 ErrorCode_e <value-of select="$name"/>(uint16 Session<if test="count(input/value) > 0">, </if><apply-templates select="input/value" mode="declare"/>);</when>
@@ -223,7 +222,7 @@ ErrorCode_e <value-of select="$name"/>(uint16 Session<if test="count(input/value
  * <value-of select="normalize-space(./documentation/text())"/>
  * \see <value-of select="$ref"/>
  * Call source: <value-of select="$source"/>
- * <apply-templates select="input/value" mode="document" />
+ * <apply-templates select="input/value" mode="document"/>
  * @return ErrorCode_e ...
  */
 ErrorCode_e <value-of select="$name"/>(<choose><when test="count(input/value) > 0"><apply-templates select="input/value" mode="declare"/></when><otherwise>void</otherwise></choose>);</when>
@@ -233,7 +232,7 @@ ErrorCode_e <value-of select="$name"/>(<choose><when test="count(input/value) > 
  * Call source: <value-of select="$source"/>
  * @param [in] Session Transfered input session.
  * @param [in] Status Completion status code.
- * <apply-templates select="output/value" mode="document" />
+ * <apply-templates select="output/value" mode="document"/>
  * @return ErrorCode_e ...
  */
 ErrorCode_e <value-of select="$name"/>(uint16 Session, ErrorCode_e Status<if test="count(output/value) > 0">, </if><apply-templates select="output/value" mode="declare"></apply-templates>);</when>

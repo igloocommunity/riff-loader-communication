@@ -148,7 +148,7 @@ ErrorExit:
  */
 void R15_Network_ReadCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
-    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
+    Communication_t *Communication_p = (Communication_t *)(((CommunicationDevice_t *)Param_p)->Object_p);
 
     C_(printf("r15_network_layer.c (%d) RecLength(%d) RecBackupData (%d)\n", __LINE__, Length, R15_NETWORK(Communication_p)->Inbound.RecBackupData);)
     R15_NETWORK(Communication_p)->Inbound.RecData = Length + R15_NETWORK(Communication_p)->Inbound.RecBackupData;
@@ -224,21 +224,23 @@ ErrorCode_e R15_Network_ReceiverHandler(Communication_t *Communication_p)
                 C_(printf("r15_network_layer.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
 
 #ifdef CFG_ENABLE_LOADER_TYPE
+
                 if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(
-                        In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
-                        ReqData - In_p->RecBackupData, R15_Network_ReadCallback,
-                        Communication_p->CommunicationDevice_p)) {
+                    In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
+                    ReqData - In_p->RecBackupData, R15_Network_ReadCallback,
+                    Communication_p->CommunicationDevice_p)) {
                     /* Read failed! Return to previous state. */
                     In_p->ReqData = ReqData;
                     In_p->ReqBuffOffset = ReqBufferOffset;
                     Communication_p->BackupCommBufferSize = In_p->RecBackupData;
                     In_p->RecBackupData = 0;
                 }
+
 #else
                 (void)Communication_p->CommunicationDevice_p->Read(
-                        In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
-                        ReqData - In_p->RecBackupData, R15_Network_ReadCallback,
-                        Communication_p->CommunicationDevice_p);
+                    In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
+                    ReqData - In_p->RecBackupData, R15_Network_ReadCallback,
+                    Communication_p->CommunicationDevice_p);
 
 #endif
             } else {
@@ -267,17 +269,19 @@ ErrorCode_e R15_Network_ReceiverHandler(Communication_t *Communication_p)
             C_(printf("r15_network_layer.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
 
 #ifdef CFG_ENABLE_LOADER_TYPE
+
             if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(
-                    In_p->Target_p + ReqBufferOffset, ReqData, R15_Network_ReadCallback,
-                    Communication_p->CommunicationDevice_p)) {
+                In_p->Target_p + ReqBufferOffset, ReqData, R15_Network_ReadCallback,
+                Communication_p->CommunicationDevice_p)) {
                 /* Read failed! Return to previous state. */
                 In_p->ReqData = ReqData;
                 In_p->ReqBuffOffset = ReqBufferOffset;
             }
+
 #else
             (void)Communication_p->CommunicationDevice_p->Read(
-                    In_p->Target_p + ReqBufferOffset, ReqData, R15_Network_ReadCallback,
-                    Communication_p->CommunicationDevice_p);
+                In_p->Target_p + ReqBufferOffset, ReqData, R15_Network_ReadCallback,
+                Communication_p->CommunicationDevice_p);
 #endif
         }
     }
@@ -288,15 +292,17 @@ ErrorCode_e R15_Network_ReceiverHandler(Communication_t *Communication_p)
         In_p->RecData = 0;
         In_p->ReqBuffOffset = 0;
 #ifdef CFG_ENABLE_LOADER_TYPE
+
         if (E_SUCCESS == Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
-                ALIGNED_HEADER_LENGTH, R15_Network_ReadCallback,
-                Communication_p->CommunicationDevice_p)){
+        ALIGNED_HEADER_LENGTH, R15_Network_ReadCallback,
+        Communication_p->CommunicationDevice_p)) {
             In_p->State = RECEIVE_HEADER;
         }
+
 #else
         (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
-                ALIGNED_HEADER_LENGTH, R15_Network_ReadCallback,
-                Communication_p->CommunicationDevice_p);
+        ALIGNED_HEADER_LENGTH, R15_Network_ReadCallback,
+        Communication_p->CommunicationDevice_p);
         In_p->State = RECEIVE_HEADER;
 #endif
     }
@@ -366,8 +372,8 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
         }
 
         if (E_SUCCESS == Communication_p->CommunicationDevice_p->Write((Out_p->Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER),
-                ContinuousBufferLength,
-                R15_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
+        ContinuousBufferLength,
+        R15_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
             C_(printf("r15_network_layer.c (%d) Header Sent to comm device! \n", __LINE__);)
         } else {
             Out_p->State = SEND_HEADER;
@@ -385,8 +391,8 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
         Aligned_Length = (Out_p->Packet_p->Header.PayloadLength + (ALIGN_SIZE - 1)) & (~(ALIGN_SIZE - 1));
 
         if (E_SUCCESS == Communication_p->CommunicationDevice_p->Write(Out_p->Packet_p->Payload_p,
-                Aligned_Length,
-                R15_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
+        Aligned_Length,
+        R15_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
             RegisterRetransmission = TRUE;
             C_(printf("r15_network_layer.c (%d) Payload Sent to comm device! \n", __LINE__);)
         } else {
@@ -517,6 +523,7 @@ PacketMeta_t *R15_Network_PacketAllocate(const Communication_t *const Communicat
 
     /* packet meta info setup */
     C_(
+
         if (BULK_BUFFER_SIZE > BufferSize)
         printf("CmdBuffGet:%x\n", Buffer_p);
     else {
@@ -605,7 +612,7 @@ ErrorExit:
  */
 void R15_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
-    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
+    Communication_t *Communication_p = (Communication_t *)(((CommunicationDevice_t *)Param_p)->Object_p);
     R15_Outbound_t *Out_p = &(R15_NETWORK(Communication_p)->Outbound);
     BulkExtendedHeader_t ExtendedHeader = {0};
     B_(printf("r15_network_layer.c (%d): Device write finished!! \n", __LINE__);)
@@ -667,16 +674,14 @@ static ErrorCode_e R15_Network_ReceiveHeader(const Communication_t *const Commun
                 RESET_INBOUND(In_p, RECEIVE_HEADER);
                 SYNC_HEADER(In_p, ALIGNED_HEADER_LENGTH, In_p->Scratch);
             }
-        }
-        else
-        {
+        } else {
             A_(
-            uint32 Counter = 0;
+                uint32 Counter = 0;
 
-            printf("Invalid header! ");
-            for (Counter = 0; Counter < 16; Counter++)
-            {
-                printf(" %02X", In_p->Scratch[Counter]);
+                printf("Invalid header! ");
+
+            for (Counter = 0; Counter < 16; Counter++) {
+            printf(" %02X", In_p->Scratch[Counter]);
             }
             printf("\n\n");
             )
@@ -700,12 +705,12 @@ static ErrorCode_e R15_Network_ReceiveExtendedHeader(Communication_t *Communicat
     R15_DeserializeBulkExtendedHeader(&BulkExtendedHeader, In_p->Target_p);
 
     IsValidHeader = R15_IsValidExtendedHeader(In_p->Target_p,
-                    In_p->Header.ExtendedHeaderLength,
-                    In_p->Header.ExtendedHeaderChecksum);
+    In_p->Header.ExtendedHeaderLength,
+    In_p->Header.ExtendedHeaderChecksum);
 
     if (IsValidHeader) {
         if (R15Header.Protocol == BULK_PROTOCOL &&
-                (BulkExtendedHeader.TypeFlags & MASK_BULK_COMMAND_SELECT) == CMD_BULK_DATA) {
+        (BulkExtendedHeader.TypeFlags & MASK_BULK_COMMAND_SELECT) == CMD_BULK_DATA) {
             In_p->Packet_p = R15_Network_PacketAllocate(Communication_p, BULK_BUFFER_SIZE);
         } else {
             In_p->Packet_p = R15_Network_PacketAllocate(Communication_p, COMMAND_BUFFER_SIZE);
@@ -746,10 +751,10 @@ static ErrorCode_e R15_Network_ReceiveExtendedHeader(Communication_t *Communicat
             memcpy(Packet_p->Hash, &Packet_p->Header.PayloadChecksum, 4);
 
             Communication_p->HashDevice_p->Calculate(OBJECT_HASH(Communication_p),
-                    HASH_NONE,
-                    Packet_p->Payload_p, Packet_p->Header.PayloadLength,
-                    Packet_p->Hash, (HashCallback_t)R15_InHashCallback,
-                    (void *)Packet_p);
+            HASH_NONE,
+            Packet_p->Payload_p, Packet_p->Header.PayloadLength,
+            Packet_p->Hash, (HashCallback_t)R15_InHashCallback,
+            (void *)Packet_p);
 #endif
 
             In_p->Packet_p = NULL;
@@ -792,10 +797,10 @@ static ErrorCode_e R15_Network_ReceivePayload(Communication_t *Communication_p)
 
 #endif
         Communication_p->HashDevice_p->Calculate(OBJECT_HASH(Communication_p),
-                Communication_p->CurrentFamilyHash,
-                Packet_p->Payload_p, Packet_p->Header.PayloadLength,
-                Packet_p->Hash, (HashCallback_t)R15_InHashCallback,
-                (void *)Packet_p);
+        Communication_p->CurrentFamilyHash,
+        Packet_p->Payload_p, Packet_p->Header.PayloadLength,
+        Packet_p->Hash, (HashCallback_t)R15_InHashCallback,
+        (void *)Packet_p);
     } else {
         SET_PACKET_FLAGS(Packet_p, PACKET_RX_STATE_MASK, BUF_PAYLOAD_CRC_OK);
         (void)QUEUE((Packet_p->Communication_p), FifoEnqueue_Fn)(OBJECT_QUEUE(Packet_p->Communication_p), Packet_p->Communication_p->Inbound_p, Packet_p);

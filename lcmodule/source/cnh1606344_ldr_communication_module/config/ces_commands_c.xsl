@@ -21,12 +21,12 @@
 <if test='$group=2 and $command=5'>
 #ifdef DISABLE_SECURITY
 </if> 
-<text>  </text>{
-<text>   </text>NULL,
-<text>   </text><value-of select="../interface/@name"/>_<value-of select="interface/@name"/>Repeat,
-<text>   </text><call-template name="commandid"/>,
-<text>   </text>1
-<text>  </text>},
+<text>  </text>  {
+<text>   </text>     NULL,
+<text>        </text><value-of select="../interface/@name"/>_<value-of select="interface/@name"/>Repeat,
+<text>        </text><call-template name="commandid"/>,
+<text>   </text>     1
+<text>  </text>  },
 <if test='$group=2 and $command=5'>
 #endif
 </if> 
@@ -38,23 +38,23 @@
 <variable name="group" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]'>
 <if test='contains(@supportedcmdtype, "longrunning")'>
-CommandInformation_t Generic<value-of select="interface/@name"/>GroupCommandsList[]=
-{
+CommandInformation_t Generic<value-of select="interface/@name"/>GroupCommandsList[] = {
+
 <apply-templates select="command" />
-  {
-   NULL,
-   <value-of select="interface/@name"/>_ErrorHandlerRepeat,
-   COMMAND_ERRORHANDLER,
-   1
-  },
-  /* ADD MORE COMMANDS */
-  /*stop block. it can not be removed*/
-  {
-   NULL,
-   NULL,
-   0xFF,
-   1
-  }
+    {
+        NULL,
+        <value-of select="interface/@name"/>_ErrorHandlerRepeat,
+        COMMAND_ERRORHANDLER,
+        1
+    },
+    /* ADD MORE COMMANDS */
+    /*stop block. it can not be removed*/
+    {
+        NULL,
+        NULL,
+        0xFF,
+        1
+    }
 };
 </if>
 </if>
@@ -64,11 +64,11 @@ CommandInformation_t Generic<value-of select="interface/@name"/>GroupCommandsLis
 <variable name="group" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]'>
 <if test='contains(@supportedcmdtype, "longrunning")'>
-<text>  </text>{
-<text>    </text><call-template name="groupid" />,
-<text>    </text>0,
-<text>    </text>Generic<value-of select="interface/@name"/>GroupCommandsList
-<text>  </text>},
+<text>  </text>  {
+<text>        </text><call-template name="groupid" />,
+<text>    </text>    0,
+<text>    </text>    Generic<value-of select="interface/@name"/>GroupCommandsList
+<text>  </text>  },
 </if>
 </if>
 </template>
@@ -102,10 +102,10 @@ CommandInformation_t Generic<value-of select="interface/@name"/>GroupCommandsLis
  */
 <apply-templates select="group" mode="CommandsList" />
 
-ApplicationInfo_t ActiveApplications[]=
-{
+ApplicationInfo_t ActiveApplications[] = {
+
 <apply-templates select="group" mode="ActiveApplications" />
-/* ADD MORE APPLICATIONS HERE */
+    /* ADD MORE APPLICATIONS HERE */
 };
 
 /*******************************************************************************
@@ -113,12 +113,12 @@ ApplicationInfo_t ActiveApplications[]=
  ******************************************************************************/
 uint32 Get_ApplicationInfoSize(void)
 {
-  return sizeof(ApplicationInfo_t);
+    return sizeof(ApplicationInfo_t);
 }
 
 uint32 Get_ActiveApplicationsSize(void)
 {
-  return sizeof(ActiveApplications);
+    return sizeof(ActiveApplications);
 }
 
 /*@}*/

@@ -136,7 +136,7 @@ ErrorExit:
 void A2_Network_ReadCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
     IDENTIFIER_NOT_USED(Data_p);
-    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
+    Communication_t *Communication_p = (Communication_t *)(((CommunicationDevice_t *)Param_p)->Object_p);
 
     C_(printf("a2_network.c (%d) RecLength(%d) RecBackupData (%d)\n", __LINE__, Length, A2_NETWORK(Communication_p)->Inbound.RecBackupData);)
     A2_NETWORK(Communication_p)->Inbound.RecData += Length + A2_NETWORK(Communication_p)->Inbound.RecBackupData;
@@ -205,21 +205,23 @@ ErrorCode_e A2_Network_ReceiverHandler(Communication_t *Communication_p)
                 C_(printf("a2_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
 
 #ifdef CFG_ENABLE_LOADER_TYPE
+
                 if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(
-                        In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
-                        ReqData - In_p->RecBackupData, A2_Network_ReadCallback,
-                        Communication_p->CommunicationDevice_p)) {
+                            In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
+                            ReqData - In_p->RecBackupData, A2_Network_ReadCallback,
+                            Communication_p->CommunicationDevice_p)) {
                     /* Read failed! Return to previous state. */
                     In_p->ReqData = ReqData;
                     In_p->ReqBuffOffset = ReqBufferOffset;
                     Communication_p->BackupCommBufferSize = In_p->RecBackupData;
                     In_p->RecBackupData = 0;
                 }
+
 #else
                 (void)Communication_p->CommunicationDevice_p->Read(
-                        In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
-                        ReqData - In_p->RecBackupData, A2_Network_ReadCallback,
-                        Communication_p->CommunicationDevice_p);
+                    In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
+                    ReqData - In_p->RecBackupData, A2_Network_ReadCallback,
+                    Communication_p->CommunicationDevice_p);
 #endif
             } else {
                 /* Copy content of backup buffer into receive buffer */
@@ -247,17 +249,19 @@ ErrorCode_e A2_Network_ReceiverHandler(Communication_t *Communication_p)
             C_(printf("a2_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
 
 #ifdef CFG_ENABLE_LOADER_TYPE
+
             if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(
-                    In_p->Target_p + ReqBufferOffset, ReqData, A2_Network_ReadCallback,
-                    Communication_p->CommunicationDevice_p)) {
+                        In_p->Target_p + ReqBufferOffset, ReqData, A2_Network_ReadCallback,
+                        Communication_p->CommunicationDevice_p)) {
                 /* Read failed! Return to previous state. */
                 In_p->ReqData = ReqData;
                 In_p->ReqBuffOffset = ReqBufferOffset;
             }
+
 #else
             (void)Communication_p->CommunicationDevice_p->Read(
-                    In_p->Target_p + ReqBufferOffset, ReqData, A2_Network_ReadCallback,
-                    Communication_p->CommunicationDevice_p);
+                In_p->Target_p + ReqBufferOffset, ReqData, A2_Network_ReadCallback,
+                Communication_p->CommunicationDevice_p);
 #endif
         }
     }
@@ -410,7 +414,7 @@ void A2_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Par
 {
     IDENTIFIER_NOT_USED(Data_p);
     IDENTIFIER_NOT_USED(Length);
-    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
+    Communication_t *Communication_p = (Communication_t *)(((CommunicationDevice_t *)Param_p)->Object_p);
     A2_Outbound_t *Out_p = &(A2_NETWORK(Communication_p)->Outbound);
 
     if (A2_SENDING_PAYLOAD == Out_p->State) {
@@ -520,7 +524,7 @@ ErrorCode_e A2_Network_TransmiterHandler(Communication_t *Communication_p)
     ErrorCode_e ReturnValue = E_SUCCESS;
     A2_Outbound_t *Out_p = &(A2_NETWORK(Communication_p)->Outbound);
 
-    if(!Do_CriticalSection_Enter(Out_p->TxCriticalSection)) {
+    if (!Do_CriticalSection_Enter(Out_p->TxCriticalSection)) {
         return ReturnValue;
     }
 

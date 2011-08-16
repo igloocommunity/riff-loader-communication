@@ -179,11 +179,13 @@ ErrorCode_e R15_Transport_Send(Communication_t *Communication_p, void *InputData
     /* serialize and calculate extended header */
     Packet_p->ExtendedHeader_p = Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH;
     R15_SerializeExtendedHeader(Packet_p->ExtendedHeader_p, InputData_p->Header_p->Protocol, InputData_p->ExtendedHeader_p, &(Packet_p->Header.ExtendedHeaderChecksum));
+
     if (Packet_p->Header.ExtendedHeaderLength == COMMAND_EXTENDED_HEADER_LENGTH) {
         Packet_p->Payload_p = Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH + ALIGNED_COMMAND_EXTENDED_HEADER_LENGTH;
     } else {
         Packet_p->Payload_p = Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH + ALIGNED_BULK_EXTENDED_HEADER_LENGTH;
     }
+
     if (NULL != InputData_p->Payload_p) {
         /* setup payload for calculation */
         memcpy(Packet_p->Payload_p, InputData_p->Payload_p, Packet_p->Header.PayloadLength);

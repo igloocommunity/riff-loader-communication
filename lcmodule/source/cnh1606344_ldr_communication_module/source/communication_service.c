@@ -40,7 +40,7 @@
 #define QUEUE_SIZE 32
 
 Communication_t GlobalCommunication = {0};
-Communication_t* GlobalCommunication_p = &GlobalCommunication;
+Communication_t *GlobalCommunication_p = &GlobalCommunication;
 
 static FamilyDescriptor_t ProtocolFamilies[] = {
     {
@@ -406,7 +406,7 @@ ErrorExit:
  * @retval E_INVALID_INPUT_PARAMTERS In case when communication is not Singleton
  *                                   and Communication_p is NULL pointer.
  */
-ErrorCode_e Do_Communication_GetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t** CommunicationDevice_pp)
+ErrorCode_e Do_Communication_GetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t **CommunicationDevice_pp)
 {
     ErrorCode_e ReturnValue = E_SUCCESS;
     VERIFY(NULL != Communication_p && CommunicationDevice_pp != NULL, E_INVALID_INPUT_PARAMETERS);
@@ -431,7 +431,7 @@ ErrorExit:
  * @retval E_INVALID_INPUT_PARAMTERS In case when communication is not Singleton
  *                                   and Communication_p is NULL pointer.
  */
-ErrorCode_e Do_Communication_SetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t* CommunicationDevice_p)
+ErrorCode_e Do_Communication_SetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t *CommunicationDevice_p)
 {
     ErrorCode_e ReturnValue = E_SUCCESS;
     VERIFY(NULL != Communication_p && CommunicationDevice_p != NULL, E_INVALID_INPUT_PARAMETERS);

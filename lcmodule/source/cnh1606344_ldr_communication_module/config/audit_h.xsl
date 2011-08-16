@@ -27,36 +27,36 @@
 
 <apply-templates select="PermissionList" />
 
-typedef struct CommandPermissionList_s
-{
-  GroupId_e               Group;
-  CommandId_e             Command;
-  int                     CommmandPermissionLength;
-  CommandPermission_e     *CommmandPermmision_p;
-  int                     ComandAuthenticationLength;
-  CommandAuthentication_e *CommandAuthentication_p;
-  int                     Depandancy;
-  boolean                 factory;
-  boolean                 rd;
-  boolean                 product;
-  boolean                 service;
-  uint8                   *DataParam_p;
-}CommandPermissionList_t;
+typedef struct CommandPermissionList_s {
 
-CommandPermissionList_t * GetAuditData(CommandData_t * CmdData_p);
-ErrorCode_e CommandAudit(CommandData_t * CmdData_p);
+    GroupId_e               Group;
+    CommandId_e             Command;
+    int                     CommmandPermissionLength;
+    CommandPermission_e     *CommmandPermmision_p;
+    int                     ComandAuthenticationLength;
+    CommandAuthentication_e *CommandAuthentication_p;
+    int                     Depandancy;
+    boolean                 factory;
+    boolean                 rd;
+    boolean                 product;
+    boolean                 service;
+    uint8                   *DataParam_p;
+} CommandPermissionList_t;
+
+CommandPermissionList_t *GetAuditData(CommandData_t *CmdData_p);
+ErrorCode_e CommandAudit(CommandData_t *CmdData_p);
 #endif /* _AUDIT_H */
 </template>
 
 <template match="AuthenticationList">
 TYPEDEF_ENUM {
-<apply-templates select="value" />}ENUM8(CommandAuthentication_e);
+<apply-templates select="value" />} ENUM8(CommandAuthentication_e);
 </template>
 
   
 <template match="PermissionList">
 TYPEDEF_ENUM {
-<apply-templates select="value" />}ENUM8(CommandPermission_e);
+<apply-templates select="value" />} ENUM8(CommandPermission_e);
 </template>
 
 <template match="value">

@@ -20,52 +20,52 @@
   </group>
 
   <group number="02" name="Flash application">
-		<documentation>
-		Flash command group.
-		</documentation>
+        <documentation>
+        Flash command group.
+        </documentation>
 		
 		<interface type="loader" name="Flash" />
 
   </group>
 	
 	<group number="03" name="GDFS application ">
-		<documentation>
-		GDFS command group.
-		</documentation>
+        <documentation>
+        GDFS command group.
+        </documentation>
 		
 		<interface type="loader" name="GDFS" />
 		
 	</group>
 
   <group number ="04" name ="FILE Sys application ">
-    <documentation>
-      File System Unit
-    </documentation>
+        <documentation>
+        File System Unit
+        </documentation>
 
     <interface type="loader" name="File_Management" />
 
   </group>
 
   <group number ="05" name ="Signature application ">
-    <documentation>
-      Signature application
-    </documentation>
+        <documentation>
+        Signature application
+        </documentation>
 
     <interface type="loader" name="SIGNATURE" />
   </group>
 
   <group number ="06" name ="Internal Security application ">
-    <documentation>
-      Internal Security application
-    </documentation>
+        <documentation>
+        Internal Security application
+        </documentation>
 
     <interface type="loader" name="INTERNAL_SECURITY" />
   </group>
 
   <group number ="07" name ="Reset application ">
-    <documentation>
-      Reset application
-    </documentation>
+        <documentation>
+        Reset application
+        </documentation>
 
     <interface type="loader" name="RESET" />
   </group>

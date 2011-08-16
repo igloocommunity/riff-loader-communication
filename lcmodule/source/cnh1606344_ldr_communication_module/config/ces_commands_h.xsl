@@ -15,7 +15,7 @@
 <variable name="group" select="../@number" />
 <variable name="command" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]/command[@number=$command]'>
-<if test='contains(@supportedcmdtype, "longrunning")'>ErrorCode_e <value-of select="../interface/@name"/>_<value-of select="interface/@name"/>Repeat(void* ExecutionContext_p);
+<if test='contains(@supportedcmdtype, "longrunning")'>ErrorCode_e <value-of select="../interface/@name"/>_<value-of select="interface/@name"/>Repeat(void *ExecutionContext_p);
 </if>
 </if>
 </template>
@@ -23,7 +23,7 @@
 <template match="group">
 <variable name="group" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]'>
-<apply-templates select="command"/><if test='contains(@supportedcmdtype, "longrunning")'>ErrorCode_e <value-of select="interface/@name"/>_ErrorHandlerRepeat(void* ExecutionContext_p);
+<apply-templates select="command"/><if test='contains(@supportedcmdtype, "longrunning")'>ErrorCode_e <value-of select="interface/@name"/>_ErrorHandlerRepeat(void *ExecutionContext_p);
 </if><text>
 </text>
 </if>

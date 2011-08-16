@@ -69,15 +69,15 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "Build date: 2011-07-26"
+            VALUE "Comments", "Build date: 2011-08-16"
             VALUE "CompanyName", "STEricsson AB"
             VALUE "FileDescription", "LCDriver Dynamic Link Library"
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "Loader Communication Driver"
             VALUE "LegalCopyright", "Copyright (C) STEricsson AB 2011"
-            VALUE "PrivateBuild", "http://gerrit.lud.stericsson.com/gerrit/27573"
+            VALUE "PrivateBuild", "Change-Id: Ib3dee092ba3c16e550bc6d1e2335cf817b7e8ec8"
             VALUE "ProductName", "CXA1104507 Loader Communication Module"
-            VALUE "ProductVersion", "R1U"
+            VALUE "ProductVersion", "PT2"
         END
     END
     BLOCK "VarFileInfo"

@@ -123,6 +123,7 @@ boolean Protrom_IsValidHeader(const void *Data_p)
     }
 
     ProtromVal = (Temp_p[6] << 8) | Temp_p[5];
+
     if (ProtromVal < 1) {
         return FALSE;
     }

@@ -36,9 +36,9 @@
 <template match="group/documentation" mode="staticarray">
 <variable name="group" select="../@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]'>
-  /*
-   * <value-of select="normalize-space(.)"/>
-   */
+    /*
+     * <value-of select="normalize-space(.)"/>
+     */
 </if>
 </template>
 
@@ -47,98 +47,98 @@
 <param name="direction" />
 <choose>
 <when test="name($direction)='input'">
-  /* Command <value-of select="../@name" /> / <value-of select="@name" /> (<value-of select="../@number" /> / <value-of select="@number" />) */
+    /* Command <value-of select="../@name" /> / <value-of select="@name" /> (<value-of select="../@number" /> / <value-of select="@number" />) */
 </when>
 <when test="name($direction)='output'">
-  /* Response to <value-of select="../@name" /> / <value-of select="@name" /> (<value-of select="../@number" /> / <value-of select="@number" />) */
+    /* Response to <value-of select="../@name" /> / <value-of select="@name" /> (<value-of select="../@number" /> / <value-of select="@number" />) */
 </when>
 </choose>
-  {
-    <call-template name="groupid" ><with-param name="path" select=".."/></call-template>,
-    <call-template name="commandid" />,
-  <variable name="group" select="../@number" />
-  <variable name="command" select="@number" />
-    <choose>
-      <when test='not($supported_commands/group[@number=$group]/command[@number=$command]/permissions)'>
-    <choose>
-      <when test="permissions"><text>  </text><apply-templates select="permissions/value" mode="permnumber" />,
-  </when>
-      <otherwise>  0,
-  </otherwise>
-  </choose>
-    <choose>
-      <when test="permissions">  PermArray_<value-of select="concat(../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />,
-  </when>
-      <otherwise>  NULL,
-  </otherwise>
-  </choose>
-  </when>
-  <otherwise>
-    <choose>
-      <when test="$supported_commands/group[@number=$group]/command[@number=$command]/permissions"><text>  </text><apply-templates select="$supported_commands/group[@number=$group]/command[@number=$command]/permissions/value" mode="permnumber" />,
-  </when>
-    <otherwise>  0,
-  </otherwise>
-  </choose>
-    <choose>
-      <when test="$supported_commands/group[@number=$group]/command[@number=$command]/permissions">  PermArray_<value-of select="concat(../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />,
-  </when>
-    <otherwise>  NULL,
-  </otherwise>
-  </choose>
-  </otherwise>
-  </choose>
-    <choose>
-      <when test="authentication"><text>  </text><apply-templates select="authentication/value" mode="authnumber" />,
-  </when>
-    <otherwise>  0,
-  </otherwise>
-  </choose>
-    <choose>
-    <when test="authentication">  AuthArray_<value-of select="concat(../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />,
-  </when>
-    <otherwise>  NULL,
-  </otherwise>
-  </choose>
-    <choose>
-    <when test="authentication">
-      <choose>
-        <when test="./authentication/@depandancy='and'">  1,
-  </when>
-        <when test="./authentication/@depandancy='or'">  2,
-  </when>
-        <when test="./authentication/@depandancy='xor'">  3,
-  </when>
+    {
+        <call-template name="groupid" ><with-param name="path" select=".."/></call-template>,
+        <call-template name="commandid" />,
+      <variable name="group" select="../@number" />
+      <variable name="command" select="@number" />
+        <choose>
+          <when test='not($supported_commands/group[@number=$group]/command[@number=$command]/permissions)'>
+        <choose>
+          <when test="permissions"><text>  </text><apply-templates select="permissions/value" mode="permnumber" />,
+      </when>
+          <otherwise>  0,
+      </otherwise>
       </choose>
-    </when>
-    <otherwise>  0,
-  </otherwise>
-  </choose>
-    <choose>
-      <when test="authentication"><text>  </text><value-of select="./authentication/@factory"/>,
-  </when>
-    <otherwise>  FALSE,
-  </otherwise>
-  </choose>
-    <choose>
-      <when test="authentication"><text>  </text><value-of select="./authentication/@rd"/>,
-  </when>
-    <otherwise>  FALSE,
-  </otherwise>
-  </choose>
-    <choose>
-      <when test="authentication"><text>  </text><value-of select="./authentication/@product"/>,
-  </when>
-    <otherwise>  FALSE,
-  </otherwise>
-  </choose>
-    <choose>
-      <when test="authentication"><text>  </text><value-of select="./authentication/@service"/>,
-  </when>
-    <otherwise>  FALSE,
-  </otherwise>
-  </choose>  NULL
-  },
+        <choose>
+          <when test="permissions">  PermArray_<value-of select="concat(../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />,
+      </when>
+          <otherwise>  NULL,
+      </otherwise>
+      </choose>
+      </when>
+      <otherwise>
+        <choose>
+          <when test="$supported_commands/group[@number=$group]/command[@number=$command]/permissions"><text>  </text><apply-templates    select="$supported_commands/group[@number=$group]/command[@number=$command]/permissions/value" mode="permnumber" />,
+      </when>
+        <otherwise>  0,
+      </otherwise>
+      </choose>
+        <choose>
+          <when test="$supported_commands/group[@number=$group]/command[@number=$command]/permissions">  PermArray_<value-of select="concat(../interface [@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />,
+      </when>
+        <otherwise>  NULL,
+      </otherwise>
+      </choose>
+      </otherwise>
+      </choose>
+        <choose>
+          <when test="authentication"><text>  </text><apply-templates select="authentication/value" mode="authnumber" />,
+      </when>
+        <otherwise>  0,
+      </otherwise>
+      </choose>
+        <choose>
+        <when test="authentication">  AuthArray_<value-of select="concat(../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />,
+      </when>
+        <otherwise>  NULL,
+      </otherwise>
+      </choose>
+        <choose>
+        <when test="authentication">
+          <choose>
+            <when test="./authentication/@depandancy='and'">  1,
+      </when>
+            <when test="./authentication/@depandancy='or'">  2,
+      </when>
+            <when test="./authentication/@depandancy='xor'">  3,
+      </when>
+          </choose>
+        </when>
+        <otherwise>  0,
+      </otherwise>
+      </choose>
+        <choose>
+          <when test="authentication"><text>  </text><value-of select="./authentication/@factory"/>,
+      </when>
+        <otherwise>  FALSE,
+      </otherwise>
+      </choose>
+        <choose>
+          <when test="authentication"><text>  </text><value-of select="./authentication/@rd"/>,
+      </when>
+        <otherwise>  FALSE,
+      </otherwise>
+      </choose>
+        <choose>
+          <when test="authentication"><text>  </text><value-of select="./authentication/@product"/>,
+      </when>
+        <otherwise>  FALSE,
+      </otherwise>
+      </choose>
+        <choose>
+          <when test="authentication"><text>  </text><value-of select="./authentication/@service"/>,
+      </when>
+        <otherwise>  FALSE,
+      </otherwise>
+      </choose>  NULL
+    },
 </template>
 
   
@@ -176,74 +176,76 @@
  */
 <apply-templates select="group" mode="autharray"/>
 
-CommandPermissionList_t CommandPermissionList[]=
-{<apply-templates select="group" mode="staticarray"/>
-  /* End of array */
-  {
-    0,
-    (CommandId_e)0,
-    0,
-    NULL,
-    0,
-    NULL,
-    0,
-    FALSE,
-    FALSE,
-    FALSE,
-    FALSE,
-    NULL
-  }
+CommandPermissionList_t CommandPermissionList[] = {
+
+<apply-templates select="group" mode="staticarray"/>
+    /* End of array */
+    {
+        0,
+        (CommandId_e)0,
+        0,
+        NULL,
+        0,
+        NULL,
+        0,
+        FALSE,
+        FALSE,
+        FALSE,
+        FALSE,
+        NULL
+    }
 };
 
-CommandPermissionList_t * GetAuditData(CommandData_t * CmdData_p)
+CommandPermissionList_t *GetAuditData(CommandData_t *CmdData_p)
 {
-/*
-  boolean A1_Authentication = FALSE;
-  boolean CA_Authentication = FALSE;
+    /*
+      boolean A1_Authentication = FALSE;
+      boolean CA_Authentication = FALSE;
 
-  boolean A1_Factory        = FALSE;
-  boolean A1_RD             = FALSE;
-  boolean A1_Product        = FALSE;
-  boolean A1_Service        = FALSE;
+      boolean A1_Factory        = FALSE;
+      boolean A1_RD             = FALSE;
+      boolean A1_Product        = FALSE;
+      boolean A1_Service        = FALSE;
 
-  uint8 A1_depandancy       = 0x00;
+      uint8 A1_depandancy       = 0x00;
 
-  uint32 AuthenticationVector = 0; */
-  int CounterList = 0;
+      uint32 AuthenticationVector = 0; */
+    int CounterList = 0;
 
-  while(CommandPermissionList[CounterList].Group != 0)
-  {
-    if(CmdData_p-&gt;ApplicationNr==CommandPermissionList[CounterList].Group &amp;&amp; CmdData_p-&gt;CommandNr==CommandPermissionList[CounterList].Command)
-    {
-      CommandPermissionList[CounterList].DataParam_p = CmdData_p-&gt;Payload.Data_p;
-      return (&amp;CommandPermissionList[CounterList]);
+    while (CommandPermissionList[CounterList].Group != 0) {
+        if (CmdData_p-&gt;ApplicationNr == CommandPermissionList[CounterList].Group &amp;&amp; CmdData_p-&gt;CommandNr == CommandPermissionList[CounterList].Command) {
+
+            CommandPermissionList[CounterList].DataParam_p = CmdData_p-&gt;Payload.Data_p;
+            return (&amp;CommandPermissionList[CounterList]);
+        }
+
+        CounterList++;
     }
-    CounterList++;
-  }
-  return NULL;
+
+    return NULL;
 }
 
 #ifdef CFG_ENABLE_AUDIT_CMD
-ErrorCode_e CommandAudit(CommandData_t * CmdData_p)
+ErrorCode_e CommandAudit(CommandData_t *CmdData_p)
 {
-  ErrorCode_e ReturnValue = E_GENERAL_FATAL_ERROR;
-  CommandPermissionList_t* CmdPermission_p = NULL;
+    ErrorCode_e ReturnValue = E_GENERAL_FATAL_ERROR;
+    CommandPermissionList_t *CmdPermission_p = NULL;
 
-  CmdPermission_p = GetAuditData(CmdData_p);
-  if(NULL == CmdPermission_p)
-  {
-    ReturnValue = E_UNSUPPORTED_CMD;
-    goto ErrorExit;
-  }
+    CmdPermission_p = GetAuditData(CmdData_p);
 
-  ReturnValue = (ErrorCode_e)Do_LoaderSecLib_Audit_Permission_Levels(CmdPermission_p);
-  if(ReturnValue != E_SUCCESS)
-  {
-    ReturnValue = E_AUDITING_FAILED;
-  }
+    if (NULL == CmdPermission_p) {
+        ReturnValue = E_UNSUPPORTED_CMD;
+        goto ErrorExit;
+    }
+
+    ReturnValue = (ErrorCode_e)Do_LoaderSecLib_Audit_Permission_Levels(CmdPermission_p);
+
+    if (ReturnValue != E_SUCCESS) {
+        ReturnValue = E_AUDITING_FAILED;
+    }
 
 ErrorExit:
-  return ReturnValue;
+    return ReturnValue;
 }
 #endif
 </template>
@@ -255,8 +257,7 @@ ErrorExit:
   <variable name="group" select="../@number" />
   <variable name="command" select="@number" />
 <if test="contains(@source, 'ME') and not(contains(@source, 'PC')) and permissions">
-CommandPermission_e PermArray_<value-of select="concat(../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />[]  = 
-{
+CommandPermission_e PermArray_<value-of select="concat(../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />[]  = {
   <choose>
   <when test='not($supported_commands/group[@number=$group]/command[@number=$command]/permissions)'><apply-templates select="permissions/value" mode="perm" />
   </when>
@@ -267,8 +268,7 @@ CommandPermission_e PermArray_<value-of select="concat(../interface[@type='loade
 };
 </if>
 <if test="contains(@source, 'PC') and permissions">
-CommandPermission_e PermArray_<value-of select="concat( ../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />[] =
-{
+CommandPermission_e PermArray_<value-of select="concat( ../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />[] = {
   <choose>
   <when test='not($supported_commands/group[@number=$group]/command[@number=$command]/permissions)'><apply-templates select="permissions/value" mode="perm" />
   </when>
@@ -286,14 +286,14 @@ CommandPermission_e PermArray_<value-of select="concat( ../interface[@type='load
 <variable name="command" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]/command[@number=$command]'>
 <if test="contains(@source, 'ME') and not(contains(@source, 'PC')) and authentication">
-CommandAuthentication_e AuthArray_<value-of select="concat(../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />[]  =
-{
+CommandAuthentication_e AuthArray_<value-of select="concat(../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />[]  = {
+
   <apply-templates select="authentication/value" mode="auth" />
 };
 </if>
 <if test="contains(@source, 'PC') and authentication">
-CommandAuthentication_e AuthArray_<value-of select="concat( ../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />[] =
-{
+CommandAuthentication_e AuthArray_<value-of select="concat( ../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />[] = {
+
   <apply-templates select="authentication/value" mode="auth" />
 };
 </if>

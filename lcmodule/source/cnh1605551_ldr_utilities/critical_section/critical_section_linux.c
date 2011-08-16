@@ -39,10 +39,11 @@
 CriticalSection_t Do_CriticalSection_Create(void)
 {
     int result = -1;
-    pthread_mutex_t* cs = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_t *cs = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
 
     if (NULL != cs) {
         result = pthread_mutex_init(cs, NULL);
+
         if (0 != result) {
             free(cs);
             cs = NULL;
@@ -64,10 +65,11 @@ CriticalSection_t Do_CriticalSection_Create(void)
  */
 void Do_CriticalSection_Destroy(CriticalSection_t *CriticalSectionObject)
 {
-    pthread_mutex_t** cs = (pthread_mutex_t**)CriticalSectionObject;
+    pthread_mutex_t **cs = (pthread_mutex_t **)CriticalSectionObject;
 
     if (NULL != *cs) {
         while (0 != pthread_mutex_destroy(*cs));
+
         free(*cs);
         *cs = NULL;
     }
@@ -86,7 +88,8 @@ void Do_CriticalSection_Destroy(CriticalSection_t *CriticalSectionObject)
  */
 boolean Do_CriticalSection_Enter(CriticalSection_t CriticalSectionObject)
 {
-    pthread_mutex_t* cs = (pthread_mutex_t*)CriticalSectionObject;
+    pthread_mutex_t *cs = (pthread_mutex_t *)CriticalSectionObject;
+
     if (NULL != cs) {
         while (0 != pthread_mutex_lock(cs));
     }
@@ -108,7 +111,8 @@ boolean Do_CriticalSection_Enter(CriticalSection_t CriticalSectionObject)
  */
 void Do_CriticalSection_Leave(CriticalSection_t CriticalSectionObject)
 {
-    pthread_mutex_t* cs = (pthread_mutex_t*)CriticalSectionObject;
+    pthread_mutex_t *cs = (pthread_mutex_t *)CriticalSectionObject;
+
     if (NULL != cs) {
         while (0 != pthread_mutex_unlock(cs));
     }

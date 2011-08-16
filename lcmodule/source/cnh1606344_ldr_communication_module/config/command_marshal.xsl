@@ -25,9 +25,9 @@
 <template match="group/documentation" mode="unmarshal">
 <variable name="group" select="../@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]'>
- /*
-  * <value-of select="normalize-space(.)"/>
-  */
+        /*
+         * <value-of select="normalize-space(.)"/>
+         */
 </if>
 </template>
 
@@ -53,27 +53,24 @@
 </choose>
 <choose>
 <when test="name($direction)='input'">
-    /* Command <value-of select="../@name"/> / <value-of select="@name"/> (<value-of select="../@number"/> / <value-of select="@number"/>) */ 
-    case COMMAND(FALSE, <call-template name="groupid"><with-param name="path" select=".."/></call-template>, <call-template name="commandid"/>):
-    { 
-  <apply-templates select="input/value" mode="deserialize_size" />
-      
-  <apply-templates select="input/value" mode="deserialize" />
-      Status = <value-of select="$name" />(Session<if test="count(input/value) > 0">, </if><apply-templates select="input/value" mode="call" />);
-      <apply-templates select="input/value" mode="clean"/>
+    /* Command <value-of select="../@name"/> / <value-of select="@name"/> (<value-of select="../@number"/> / <value-of select="@number"/>) */
+    case COMMAND(FALSE, <call-template name="groupid"><with-param name="path" select=".."/></call-template>, <call-template name="commandid"/>): {
+<apply-templates select="input/value" mode="deserialize_size" />
+<apply-templates select="input/value" mode="deserialize" />
+        Status = <value-of select="$name" />(Session<if test="count(input/value) > 0">, </if><apply-templates select="input/value" mode="call" />);
+<apply-templates select="input/value" mode="clean"/>
     }
     break;
 </when>
 <when test="name($direction)='output'">
-    /* Response to <value-of select="../@name"/> / <value-of select="@name"/> (<value-of select="../@number"/> / <value-of select="@number"/>) */ 
-    case COMMAND(TRUE, <call-template name="groupid"><with-param name="path" select=".."/></call-template>, <call-template name="commandid"/>):
-    { 
+        /* Response to <value-of select="../@name"/> / <value-of select="@name"/> (<value-of select="../@number"/> / <value-of select="@number"/>) */
+    case COMMAND(TRUE, <call-template name="groupid"><with-param name="path" select=".."/></call-template>, <call-template name="commandid"/>): {
+
   <apply-templates select="output/value" mode="deserialize_size" />
-      
-      ResponseStatus = (ErrorCode_e)get_uint32_le(&amp;Data_p);
-  <apply-templates select="output/value" mode="deserialize" />
-      Status = <value-of select="$name" />(Session, ResponseStatus<if test="count(output/value) > 0">, </if><apply-templates select="output/value" mode="call"></apply-templates>);
-      <apply-templates select="output/value" mode="clean"/>
+        ResponseStatus = (ErrorCode_e)get_uint32_le(&amp;Data_p);
+<apply-templates select="output/value" mode="deserialize" />
+        Status = <value-of select="$name" />(Session, ResponseStatus<if test="count(output/value) > 0">, </if><apply-templates select="output/value" mode="call"></apply-templates>);
+<apply-templates select="output/value" mode="clean"/>
     }
     break;
 </when>
@@ -118,7 +115,7 @@
 #include "r_adbg_applications.h"
 #endif
 
-#ifdef CFG_ENABLE_AUDIT_CMD 
+#ifdef CFG_ENABLE_AUDIT_CMD
 #include "audit.h"
 #endif
 
@@ -126,7 +123,7 @@
 #include "r_adbg_command.h"
 #endif
 
-#define COMMAND(response, group, id) ((((int)(response)) &lt;&lt; 30) | (((int)(group)) &lt;&lt; 16) | ((int)(id))) 
+#define COMMAND(response, group, id) ((((int)(response)) &lt;&lt; 30) | (((int)(group)) &lt;&lt; 16) | ((int)(id)))
 #define COMMANDDATA(TypeP,ApplicationP,CommandP,SessionP,SizeP)\
   memset((uint8*)&amp;CmdData, 0x00, sizeof(CommandData_t));\
   CmdData.Type           = TypeP;\
@@ -141,7 +138,7 @@
     A_(printf("command_marshal.c (%d): ** memory allocation failed! **\n",__LINE__);)\
     return E_ALLOCATE_FAILED;\
   }\
-
+ 
 #define COMMANDDATAOUT(TypeP,ApplicationP,CommandP,SizeP)\
   memset((uint8*)&amp;CmdData, 0x00, sizeof(CommandData_t));\
   CmdData.Type           = TypeP;\
@@ -165,100 +162,103 @@
 void disable_interrupt(void)
 {
 #ifndef WIN32
-/* todo implement this */
-//#warning This is disable_interrupt
+    /* todo implement this */
+    //#warning This is disable_interrupt
 #endif
 }
 void enable_interrupt(void)
 {
 #ifndef WIN32
-/* todo implement this */
-//#warning This is enable_interrupt  
+    /* todo implement this */
+    //#warning This is enable_interrupt
 #endif
 }
 
 ErrorCode_e Do_CEH_Call(void *Object_p, CommandData_t *CmdData_p)
 {
-  ErrorCode_e Status = E_GENERAL_FATAL_ERROR;
-//  uint32 PL_GRSize = 0;
-  ErrorCode_e ResponseStatus = E_GENERAL_FATAL_ERROR;
-  boolean response = FALSE;
-//  CommandPermissionList_t* CmdPermission_p;
-  void *Data_p = CmdData_p-&gt;Payload.Data_p;
-  uint16 Session = CmdData_p-&gt;SessionNr;
+    ErrorCode_e Status = E_GENERAL_FATAL_ERROR;
+    //  uint32 PL_GRSize = 0;
+    ErrorCode_e ResponseStatus = E_GENERAL_FATAL_ERROR;
+    boolean response = FALSE;
+    //  CommandPermissionList_t* CmdPermission_p;
+    void *Data_p = CmdData_p-&gt;Payload.Data_p;
+    uint16 Session = CmdData_p-&gt;SessionNr;
 
-  if (CmdData_p-&gt;Type == GENERAL_RESPONSE_PACKAGE)
-  {
-    response = TRUE;
-//    PL_GRSize = CmdData_p-&gt;Payload.Size;
-//    ResponseStatus = (ErrorCode_e)get_uint16(&amp;Data_p);
-  }
+    if (CmdData_p-&gt;Type == GENERAL_RESPONSE_PACKAGE) {
+
+        response = TRUE;
+        //    PL_GRSize = CmdData_p-&gt;Payload.Size;
+        //    ResponseStatus = (ErrorCode_e)get_uint16(&amp;Data_p);
+    }
 
 #ifdef CFG_ENABLE_AUDIT_CMD
-  if(COMMAND_TYPE == CmdData_p-&gt;Type)
-  {
-    ErrorCode_e AuditResponse = CommandAudit(CmdData_p);
-    CommandData_t CmdData = {0};
-    uint32 PLSize = sizeof(ErrorCode_e);
 
-    if (E_SUCCESS != AuditResponse)
-    {
-      memset((uint8*)&amp;CmdData, 0x00, sizeof(CommandData_t));
+    if (COMMAND_TYPE == CmdData_p-&gt;Type) {
+        ErrorCode_e AuditResponse = CommandAudit(CmdData_p);
+        CommandData_t CmdData = {0};
+        uint32 PLSize = sizeof(ErrorCode_e);
 
-      CmdData.Type           = GENERAL_RESPONSE;
-      CmdData.CommandNr      = CmdData_p-&gt;CommandNr;
-      CmdData.ApplicationNr  = CmdData_p-&gt;ApplicationNr;
-      CmdData.SessionNr      = CmdData_p-&gt;SessionNr;
-      CmdData.Payload.Size   = PLSize;
-      CmdData.Payload.Data_p = NULL;
-      CmdData.Payload.Data_p = (uint8*)malloc(PLSize);
-      if (NULL == CmdData.Payload.Data_p)
-      {
-        A_(printf("command_marshal.c (%d): ** memory allocation failed! **\n",__LINE__);)
-        return  E_ALLOCATE_FAILED;
-      }
+        if (E_SUCCESS != AuditResponse) {
 
-      Data_p = CmdData.Payload.Data_p;
-      put_uint32(&amp;Data_p, AuditResponse);
+            memset((uint8 *)&amp;CmdData, 0x00, sizeof(CommandData_t));
 
-      Status = Do_R15_Command_Send(GlobalCommunication_p, &amp;CmdData);
-      if (NULL != CmdData.Payload.Data_p)
-      {
-        free(CmdData.Payload.Data_p);
-      }
+            CmdData.Type           = GENERAL_RESPONSE;
+            CmdData.CommandNr      = CmdData_p-&gt;CommandNr;
+            CmdData.ApplicationNr  = CmdData_p-&gt;ApplicationNr;
+            CmdData.SessionNr      = CmdData_p-&gt;SessionNr;
+            CmdData.Payload.Size   = PLSize;
+            CmdData.Payload.Data_p = NULL;
+            CmdData.Payload.Data_p = (uint8 *)malloc(PLSize);
 
-      if (E_SUCCESS != Status)
-      {
-        return Status;
-      }
+            if (NULL == CmdData.Payload.Data_p) {
+                A_(printf("command_marshal.c (%d): ** memory allocation failed! **\n", __LINE__);)
+                return  E_ALLOCATE_FAILED;
+            }
 
-      if (E_UNSUPPORTED_CMD == AuditResponse)
-      {
-        Status = Do_System_ShutDownImpl(CmdData.SessionNr);
-      }
-      return Status;
+            Data_p = CmdData.Payload.Data_p;
+            put_uint32(&amp;Data_p, AuditResponse);
+
+            Status = Do_R15_Command_Send(GlobalCommunication_p, &amp;CmdData);
+
+            if (NULL != CmdData.Payload.Data_p) {
+
+                free(CmdData.Payload.Data_p);
+            }
+
+            if (E_SUCCESS != Status) {
+
+                return Status;
+            }
+
+            if (E_UNSUPPORTED_CMD == AuditResponse) {
+
+                Status = Do_System_ShutDownImpl(CmdData.SessionNr);
+            }
+
+            return Status;
+        }
     }
-  }
+
 #endif
 
-  switch(COMMAND(response, CmdData_p-&gt;ApplicationNr, CmdData_p-&gt;CommandNr))
-  {
-  <apply-templates select="group" mode="unmarshal"/>
-  default:
-    {
-      Status = Do_CustomCEH_Call(CmdData_p);
-      if (E_SUCCESS != Status)
-      {
-        Status = Do_System_ShutDownImpl(Session);
-      }
+    switch (COMMAND(response, CmdData_p-&gt;ApplicationNr, CmdData_p-&gt;CommandNr)) {
+
+<apply-templates select="group" mode="unmarshal"/>
+    default: {
+
+        Status = Do_CustomCEH_Call(CmdData_p);
+
+        if (E_SUCCESS != Status) {
+            Status = Do_System_ShutDownImpl(Session);
+        }
     }
     break;
-  }
+    }
 
-  return Status;
+    return Status;
 }
 
-  <apply-templates select="group" mode="marshal"/>
+<apply-templates select="group" mode="marshal"/>
 
 </template>
 
@@ -273,56 +273,59 @@ ErrorCode_e Do_CEH_Call(void *Object_p, CommandData_t *CmdData_p)
   <if test="contains(@source, 'ME')">
 ErrorCode_e <value-of select="concat('Do_', ../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />(<choose><when test="count(input/value) > 0"><apply-templates select="input/value" mode="declare" /></when><otherwise>void</otherwise></choose>)
 {
-  ErrorCode_e Answer;
-  CommandData_t CmdData;
-  void *Data_p;
-  uint32 PLSize =0;
-  <apply-templates select="input/value" mode="serialize_size_declaration" />
+    ErrorCode_e Answer;
+    CommandData_t CmdData;
+    void *Data_p;
+    uint32 PLSize = 0;
+    <apply-templates select="input/value" mode="serialize_size_declaration" />
+    <apply-templates select="input/value" mode="serialize_size"/>
+    COMMANDDATAOUT(COMMAND_TYPE, <call-template name="groupidmain"/>, <call-template name="commandid"/>, PLSize);
+    Data_p = CmdData.Payload.Data_p;
+    (void)(Data_p);  //XVSZOAN Temporary solution!
+    <apply-templates select="input/value" mode="serialize"/>
+    Answer = Do_R15_Command_Send(GlobalCommunication_p, &amp;CmdData);
+    if (NULL != CmdData.Payload.Data_p) {
+        free(CmdData.Payload.Data_p);
+    }
 
-  <apply-templates select="input/value" mode="serialize_size"/>
-  COMMANDDATAOUT(COMMAND_TYPE, <call-template name="groupidmain"/>, <call-template name="commandid"/>, PLSize);
-  Data_p = CmdData.Payload.Data_p;
-  (void)(Data_p);  //XVSZOAN Temporary solution!
-  <apply-templates select="input/value" mode="serialize"/>
-  Answer = Do_R15_Command_Send(GlobalCommunication_p, &amp;CmdData);
-  if(NULL != CmdData.Payload.Data_p)
-    free(CmdData.Payload.Data_p);
-  return Answer;
+    return Answer;
 }
 </if>
   <if test="contains(@source, 'PC')">
 ErrorCode_e <value-of select="concat('Done_', ../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />(uint16 Session, ErrorCode_e Status<if test="count(output/value) > 0">, </if><apply-templates select="output/value" mode="declare"></apply-templates>)
 {
-  ErrorCode_e Answer;
-  CommandData_t CmdData;
-  void *Data_p;
-  uint32 PLSize =0;
-  <apply-templates select="output/value" mode="serialize_size_declaration" />
-  PLSize += sizeof(ErrorCode_e);
-  <apply-templates select="output/value" mode="serialize_size"/>
-  COMMANDDATA(GENERAL_RESPONSE, <call-template name="groupidmain"/>, <call-template name="commandid"/>, Session, PLSize);
-  Data_p = CmdData.Payload.Data_p;
+    ErrorCode_e Answer;
+    CommandData_t CmdData;
+    void *Data_p;
+    uint32 PLSize = 0;
+    <apply-templates select="output/value" mode="serialize_size_declaration" />
+    PLSize += sizeof(ErrorCode_e);
+    <apply-templates select="output/value" mode="serialize_size"/>
+    COMMANDDATA(GENERAL_RESPONSE, <call-template name="groupidmain"/>, <call-template name="commandid"/>, Session, PLSize);
+    Data_p = CmdData.Payload.Data_p;
 
-  put_uint32(&amp;Data_p, Status);
-  <apply-templates select="output/value" mode="serialize"/>
-  <choose>
-  <when test="@ADbg!='true'">
+    put_uint32(&amp;Data_p, Status);
+    <apply-templates select="output/value" mode="serialize"/>
+    <choose>
+    <when test="@ADbg!='true'">
 #ifdef CFG_ENABLE_ADBG_LOADER
-  Answer = ReleaseADbg_AppFunc(Status);</when>
-  </choose>
-  Answer = E_SUCCESS;
-  <choose>
-  <when test="@ADbg!='true'">
-#else </when>
-  </choose>
-  Answer = Do_R15_Command_Send(GlobalCommunication_p, &amp;CmdData);
-  <choose>
-  <when test="@ADbg!='true'">
+    Answer = ReleaseADbg_AppFunc(Status);</when>
+    </choose>
+    Answer = E_SUCCESS;
+    <choose>
+    <when test="@ADbg!='true'">
+#else</when>
+    </choose>
+    Answer = Do_R15_Command_Send(GlobalCommunication_p, &amp;CmdData);
+    <choose>
+    <when test="@ADbg!='true'">
 #endif</when>
-  </choose>
-  if(NULL != CmdData.Payload.Data_p)
-    free(CmdData.Payload.Data_p);
-  return Answer;
+    </choose>
+    if (NULL != CmdData.Payload.Data_p) {
+        free(CmdData.Payload.Data_p);
+    }
+
+    return Answer;
 }
   </if>
 <choose>
@@ -332,7 +335,7 @@ ErrorCode_e <value-of select="concat('Done_', ../interface[@type='loader']/@name
 </if>
 </template>
   
-<template match="group/command" mode="unmarshal">
+<template match="group/command"        mode="unmarshal">
 <variable name="group" select="../@number" />
 <variable name="command" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]/command[@number=$command]'>

@@ -115,7 +115,7 @@ ErrorCode_e Protrom_Network_Shutdown(const Communication_t *const Communication_
  */
 void Protrom_Network_ReadCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
-    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
+    Communication_t *Communication_p = (Communication_t *)(((CommunicationDevice_t *)Param_p)->Object_p);
 
     A_(printf("protrom_family.c (%d) RecLength(%d) RecBackupData (%d)\n", __LINE__, Length, PROTROM_NETWORK(Communication_p)->Inbound.RecBackupData);)
     PROTROM_NETWORK(Communication_p)->Inbound.RecData = Length + PROTROM_NETWORK(Communication_p)->Inbound.RecBackupData;
@@ -125,10 +125,9 @@ void Protrom_Network_ReadCallback(const void *Data_p, const uint32 Length, void 
         ErrorCode_e ReturnValue = E_GENERAL_COMMUNICATION_ERROR;
 
         if (PROTROM_NETWORK(Communication_p)->Inbound.StopTransfer) {
-            if (PROTROM_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop){
+            if (PROTROM_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop) {
                 PROTROM_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop--;
-            }
-            else {
+            } else {
                 PROTROM_NETWORK(Communication_p)->Inbound.State = PROTROM_RECEIVE_IDLE;
             }
         }
@@ -138,16 +137,18 @@ void Protrom_Network_ReadCallback(const void *Data_p, const uint32 Length, void 
         case PROTROM_RECEIVE_IDLE:
             ReturnValue = E_SUCCESS;
             break;
-        
+
         case PROTROM_RECEIVE_HEADER:
             ReturnValue = Protrom_Network_ReceiveHeader(Communication_p);
             break;
 
         case PROTROM_RECEIVE_PAYLOAD:
             ReturnValue = Protrom_Network_ReceivePayload(Communication_p);
-            if((PROTROM_NETWORK(Communication_p)->Inbound.StopTransfer) && (0 == PROTROM_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop)) {
+
+            if ((PROTROM_NETWORK(Communication_p)->Inbound.StopTransfer) && (0 == PROTROM_NETWORK(Communication_p)->Inbound.PacketsBeforeReceiverStop)) {
                 PROTROM_NETWORK(Communication_p)->Inbound.ReqData = 0;
             }
+
             break;
 
         default:
@@ -195,21 +196,23 @@ void Protrom_Network_ReceiverHandler(Communication_t *Communication_p)
                 C_(printf("protrom_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
 
 #ifdef CFG_ENABLE_LOADER_TYPE
+
                 if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(
-                        In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
-                        ReqData - In_p->RecBackupData, Protrom_Network_ReadCallback,
-                        Communication_p->CommunicationDevice_p)) {
+                            In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
+                            ReqData - In_p->RecBackupData, Protrom_Network_ReadCallback,
+                            Communication_p->CommunicationDevice_p)) {
                     /* Read failed! Return to previous state. */
                     In_p->ReqData = ReqData;
                     In_p->ReqBuffOffset = ReqBufferOffset;
                     Communication_p->BackupCommBufferSize = In_p->RecBackupData;
                     In_p->RecBackupData = 0;
                 }
+
 #else
                 (void)Communication_p->CommunicationDevice_p->Read(
-                        In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
-                        ReqData - In_p->RecBackupData, Protrom_Network_ReadCallback,
-                        Communication_p->CommunicationDevice_p);
+                    In_p->Target_p + ReqBufferOffset + In_p->RecBackupData,
+                    ReqData - In_p->RecBackupData, Protrom_Network_ReadCallback,
+                    Communication_p->CommunicationDevice_p);
 #endif
             } else {
                 /* Copy content of backup buffer into receive buffer */
@@ -236,17 +239,19 @@ void Protrom_Network_ReceiverHandler(Communication_t *Communication_p)
             C_(printf("protrom_network.c (%d) Communication_p->BackupCommBufferSize(%d) RecBackupData (%d)\n", __LINE__, Communication_p->BackupCommBufferSize, In_p->RecBackupData);)
 
 #ifdef CFG_ENABLE_LOADER_TYPE
+
             if (E_SUCCESS != Communication_p->CommunicationDevice_p->Read(
-                    In_p->Target_p + ReqBufferOffset, ReqData, Protrom_Network_ReadCallback,
-                    Communication_p->CommunicationDevice_p)) {
+                        In_p->Target_p + ReqBufferOffset, ReqData, Protrom_Network_ReadCallback,
+                        Communication_p->CommunicationDevice_p)) {
                 /* Read failed! Return to previous state. */
                 In_p->ReqData = ReqData;
                 In_p->ReqBuffOffset = ReqBufferOffset;
             }
+
 #else
             (void)Communication_p->CommunicationDevice_p->Read(
-                    In_p->Target_p + ReqBufferOffset, ReqData, Protrom_Network_ReadCallback,
-                    Communication_p->CommunicationDevice_p);
+                In_p->Target_p + ReqBufferOffset, ReqData, Protrom_Network_ReadCallback,
+                Communication_p->CommunicationDevice_p);
 #endif
         }
     }
@@ -257,11 +262,13 @@ void Protrom_Network_ReceiverHandler(Communication_t *Communication_p)
         In_p->RecData = 0;
         In_p->ReqBuffOffset = 0;
 #ifdef CFG_ENABLE_LOADER_TYPE
+
         if (E_SUCCESS == Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
                 PROTROM_HEADER_LENGTH, Protrom_Network_ReadCallback,
                 Communication_p->CommunicationDevice_p)) {
             In_p->State = PROTROM_RECEIVE_HEADER;
         }
+
 #else
         (void)Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
                 PROTROM_HEADER_LENGTH, Protrom_Network_ReadCallback,
@@ -286,8 +293,9 @@ void Protrom_Network_ReceiverHandler(Communication_t *Communication_p)
  */
 void Protrom_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Param_p)
 {
-    Communication_t *Communication_p = (Communication_t*)(((CommunicationDevice_t*)Param_p)->Object_p);
+    Communication_t *Communication_p = (Communication_t *)(((CommunicationDevice_t *)Param_p)->Object_p);
     Protrom_Outbound_t *Out_p = &(PROTROM_NETWORK(Communication_p)->Outbound);
+
     if (Out_p->State == PROTROM_SENDING_PAYLOAD) {
         if (NULL != Out_p->Packet_p) {
             if (NULL != Out_p->Packet_p->Buffer_p) {
@@ -297,11 +305,12 @@ void Protrom_Network_WriteCallback(const void *Data_p, const uint32 Length, void
             free(Out_p->Packet_p);
             Out_p->Packet_p = NULL;
         }
+
         Out_p->State = PROTROM_SEND_IDLE;
-    }
-    else if (Out_p->State == PROTROM_SENDING_HEADER) {
+    } else if (Out_p->State == PROTROM_SENDING_HEADER) {
         Out_p->State = PROTROM_SEND_PAYLOAD;
     }
+
     /* check for more stuff to send. */
     (void)Protrom_Network_TransmiterHandler(Communication_p);
 }
@@ -404,6 +413,7 @@ static ErrorCode_e Protrom_Network_TransmiterHandler(Communication_t *Communicat
         break;
     case PROTROM_SEND_PAYLOAD:
         Out_p->State = PROTROM_SENDING_PAYLOAD;
+
         if (E_SUCCESS != Communication_p->CommunicationDevice_p->Write(Out_p->Packet_p->Buffer_p + PROTROM_HEADER_LENGTH,
                 Out_p->Packet_p->Header.PayloadLength + PROTROM_CRC_LENGTH,
                 Protrom_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {

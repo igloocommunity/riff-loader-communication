@@ -22,9 +22,9 @@
 </template>
 
 <template match="group/documentation">
-/*
- * <value-of select="normalize-space(.)"/>
- */
+        /*
+         * <value-of select="normalize-space(.)"/>
+         */
 </template>
 
 <template match="group/command">

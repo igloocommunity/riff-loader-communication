@@ -50,7 +50,7 @@ ErrorCode_e Protrom_Family_Init(Communication_t *Communication_p)
 
     Communication_p->CurrentFamilyHash = HASH_CRC16;
     PROTROM_NETWORK(Communication_p)->Inbound.StopTransfer = FALSE;
-    
+
     if (NULL != Communication_p->BackupCommBuffer_p) {
         if (Communication_p->BackupCommBufferSize < PROTROM_HEADER_LENGTH) {
             memcpy(PROTROM_NETWORK(Communication_p)->Inbound.Scratch, Communication_p->BackupCommBuffer_p, Communication_p->BackupCommBufferSize);

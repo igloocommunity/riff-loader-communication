@@ -42,17 +42,17 @@
   </typedef>
 
   <AuthenticationList>
-    <value number="1" name="A1">A1</value>
-    <value number="2" name="CA">CA</value>
+    <value number="1" name="  A1">A1</value>
+    <value number="2" name="  CA">CA</value>
   </AuthenticationList>
   
   <PermissionList>
-    <value number="0" name="ServiceModeLevel">ServiceModeLevel</value>
-    <value number="1" name="FlashModeLevel">FlashModeLevel</value>
-    <value number="64" name="AdvanceServiceModeLevel">AdvanceServiceModeLevel</value>
-    <value number="65" name="LimitedProductionModeLevel">LimitedProductionModeLevel</value>
-    <value number="66" name="VeryLimitedProductionModeLevel">VeryLimitedProductionModeLevel</value>
-    <value number="127" name="ProductionModeLevel">ProductionModeLevel</value>
+    <value number="0" name="  ServiceModeLevel">ServiceModeLevel</value>
+    <value number="1" name="  FlashModeLevel">FlashModeLevel</value>
+    <value number="64" name="  AdvanceServiceModeLevel">AdvanceServiceModeLevel</value>
+    <value number="65" name="  LimitedProductionModeLevel">LimitedProductionModeLevel</value>
+    <value number="66" name="  VeryLimitedProductionModeLevel">VeryLimitedProductionModeLevel</value>
+    <value number="127" name="  ProductionModeLevel">ProductionModeLevel</value>
   </PermissionList>
 
 <!--
@@ -73,11 +73,11 @@
       <documentation>
         The Loader Start-up Status command is sent by the ME to notify the host that it has started. The Status parameter indicates in what mode the Loader started.
       </documentation>
-      <input>
+        <input>
         <value type="uint32" name="Status">0 = started successfully, 1 = failed to start (lack of permissions), 2 = software module failed to initialize</value>
         <value type="string" name="LoaderVersion_p">Loader version identifier</value>
         <value type="string" name="ProtocolVersion_p">Protocol version identifier</value>
-      </input>
+        </input>
       <output>
       </output>
     </command>
@@ -93,14 +93,14 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -114,16 +114,16 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -139,16 +139,16 @@
         <value type="SupportedCommand" name="Commands" length="CommandCount">An array of command identifiers. The Permitted field indicates whether the command can be executed at the current time (non-zero value means allowed)</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -165,12 +165,12 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -185,16 +185,16 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -249,12 +249,12 @@
         <value type="buffer" name="CollectedData_p" length="DataLenght">Output data buffer. Contain debug data (printouts) or measurement data.</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
     
@@ -269,16 +269,16 @@
         <value type="uint32" name="ProgressStatus">Command progress status presented in percent.</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>  
     
@@ -293,11 +293,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -313,16 +313,16 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-        <value ref="A1"/>
-        <value ref="CA"/>
+        <value ref="  A1"/>
+        <value ref="  CA"/>
       </authentication>
       <permissions>
-        <value ref="ServiceModeLevel"/>
-        <value ref="FlashModeLevel"/>
-        <value ref="AdvanceServiceModeLevel"/>
-        <value ref="ProductionModeLevel"/>
-        <value ref="LimitedProductionModeLevel"/>
-        <value ref="VeryLimitedProductionModeLevel"/>
+        <value ref="  ServiceModeLevel"/>
+        <value ref="  FlashModeLevel"/>
+        <value ref="  AdvanceServiceModeLevel"/>
+        <value ref="  ProductionModeLevel"/>
+        <value ref="  LimitedProductionModeLevel"/>
+        <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -352,16 +352,16 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
   </group>
@@ -384,13 +384,13 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -406,13 +406,13 @@
         <value type="ListDevice" name="Devices" length="DeviceCount">Absolute device path, Type of the device, Block Size, Start address of the device, Length of the device</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -431,11 +431,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -452,11 +452,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -474,11 +474,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref ="A1"/>
-       <value ref ="CA"/>
+       <value ref ="  A1"/>
+       <value ref ="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -523,12 +523,12 @@
         <value type="uint64" name="Free">Available space (in bytes)</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -544,11 +544,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -565,12 +565,12 @@
         <value type="DirEntry" name="Entries" length="EntriesCount">Name and Size of file or directory, Mode as indicator if it is file or directory, Time of last modification</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -586,11 +586,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -605,12 +605,12 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -626,12 +626,12 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -646,11 +646,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -670,16 +670,16 @@
         <value type="uint32" name="CTime">Creation time stamp</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-        <value ref="A1"/>
-        <value ref="CA"/>
+        <value ref="  A1"/>
+        <value ref="  CA"/>
       </authentication>
       <permissions>
-        <value ref="ServiceModeLevel"/>
-        <value ref="FlashModeLevel"/>
-        <value ref="AdvanceServiceModeLevel"/>
-        <value ref="ProductionModeLevel"/>
-        <value ref="LimitedProductionModeLevel"/>
-        <value ref="VeryLimitedProductionModeLevel"/>
+        <value ref="  ServiceModeLevel"/>
+        <value ref="  FlashModeLevel"/>
+        <value ref="  AdvanceServiceModeLevel"/>
+        <value ref="  ProductionModeLevel"/>
+        <value ref="  LimitedProductionModeLevel"/>
+        <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -695,11 +695,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -714,12 +714,12 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -750,16 +750,16 @@
         <value type="buffer" name="LockStatus_p" length="LockStatusLength">A left-adjusted buffer of the lock status of each read bit. Padded with zeroes. Length of returned value (in bytes), equal to floor((Length + 7) / 8). </value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -778,11 +778,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -798,11 +798,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
     
@@ -818,11 +818,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -848,12 +848,12 @@
         <value type="buffer" name="DataBuff_p" length="DataBuffLength">The read data</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -871,12 +871,12 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -892,12 +892,12 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -914,12 +914,12 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -934,11 +934,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -961,11 +961,11 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -980,16 +980,16 @@
         <value type="uint32" name="CurrentDomain">The ME Domain</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -1006,16 +1006,16 @@
         <value type="buffer" name="DataBuff_p" length="DataBuffLength">The unit data</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -1032,12 +1032,12 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -1051,12 +1051,12 @@
       <output>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -1081,16 +1081,16 @@
         <value type="buffer" name="CmdDataPayLoad_p" length="CmdDataLength">CmdData</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -1106,16 +1106,16 @@
         <value type="buffer" name="CmdDataPayLoad_p" length="CmdDataLength">CmdData</value>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -1137,16 +1137,16 @@
 
       </output>
      <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -1165,16 +1165,16 @@
 
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
 
@@ -1194,16 +1194,16 @@
 
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
     
@@ -1220,16 +1220,16 @@
         <value type="uint32" name="ProtocolTestStatus"/>
       </output>
       <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
-       <value ref="A1"/>
-       <value ref="CA"/>
+       <value ref="  A1"/>
+       <value ref="  CA"/>
       </authentication>
       <permissions>
-       <value ref="ServiceModeLevel"/>
-       <value ref="FlashModeLevel"/>
-       <value ref="AdvanceServiceModeLevel"/>
-       <value ref="ProductionModeLevel"/>
-       <value ref="LimitedProductionModeLevel"/>
-       <value ref="VeryLimitedProductionModeLevel"/>       
+       <value ref="  ServiceModeLevel"/>
+       <value ref="  FlashModeLevel"/>
+       <value ref="  AdvanceServiceModeLevel"/>
+       <value ref="  ProductionModeLevel"/>
+       <value ref="  LimitedProductionModeLevel"/>
+       <value ref="  VeryLimitedProductionModeLevel"/>       
       </permissions>
     </command>
 

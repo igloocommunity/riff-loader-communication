@@ -36,10 +36,12 @@
  */
 CriticalSection_t Do_CriticalSection_Create(void)
 {
-    CRITICAL_SECTION* cs = (CRITICAL_SECTION*)malloc(sizeof(CRITICAL_SECTION));
+    CRITICAL_SECTION *cs = (CRITICAL_SECTION *)malloc(sizeof(CRITICAL_SECTION));
+
     if (NULL != cs) {
         InitializeCriticalSection(cs);
     }
+
     return (CriticalSection_t)cs;
 }
 
@@ -55,7 +57,8 @@ CriticalSection_t Do_CriticalSection_Create(void)
  */
 void Do_CriticalSection_Destroy(CriticalSection_t *CriticalSectionObject)
 {
-    CRITICAL_SECTION** cs = (CRITICAL_SECTION**)CriticalSectionObject;
+    CRITICAL_SECTION **cs = (CRITICAL_SECTION **)CriticalSectionObject;
+
     if (NULL != *cs) {
         DeleteCriticalSection(*cs);
         free(*cs);
@@ -76,7 +79,8 @@ void Do_CriticalSection_Destroy(CriticalSection_t *CriticalSectionObject)
  */
 boolean Do_CriticalSection_Enter(CriticalSection_t CriticalSectionObject)
 {
-    CRITICAL_SECTION* cs = (CRITICAL_SECTION*)CriticalSectionObject;
+    CRITICAL_SECTION *cs = (CRITICAL_SECTION *)CriticalSectionObject;
+
     if (NULL != cs) {
         EnterCriticalSection(cs);
     }
@@ -98,7 +102,8 @@ boolean Do_CriticalSection_Enter(CriticalSection_t CriticalSectionObject)
  */
 void Do_CriticalSection_Leave(CriticalSection_t CriticalSectionObject)
 {
-    CRITICAL_SECTION* cs = (CRITICAL_SECTION*)CriticalSectionObject;
+    CRITICAL_SECTION *cs = (CRITICAL_SECTION *)CriticalSectionObject;
+
     if (NULL != cs) {
         LeaveCriticalSection(cs);
     }
