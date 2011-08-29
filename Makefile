@@ -78,13 +78,13 @@ ifeq ($(LBITS),64)
 # do 64 bit stuff here, like set some CFLAGS
 #
 CXXFLAGS += -DLINUX_64
-build: configfile setup_folders $(LIB_x32) $(LIB_x64)
+build: configfile setup_folders $(LIB_x32) $(LIB_x64) lcmodule
 else
 #
 # do 32 bit stuff here
 #
 CXXFLAGS += -DLINUX_32
-build: configfile setup_folders $(LIB_x32)
+build: configfile setup_folders $(LIB_x32) lcmodule
 endif
 
 $(LIB_x32): $(LIBOBJ_x32)
@@ -255,7 +255,7 @@ config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
 config: CXX := $(CROSS_PREFIX)g++
 config: LCD_INSTALLDIR := $(shell pwd)/dist
-config:
+config: lcmodule-config
 	@echo Generating config file...
 	@rm -f $(config_file)
 	@touch $(config_file)
@@ -328,3 +328,11 @@ coverity:
 	@cov-commit-defects --datadir $(COV_DATA_DIR) --product lcd --user admin --dir $(COV_INTER_DATA_DIR)
 	@cov-start-gui --datadir $(COV_DATA_DIR) --port 1122
 	echo Go to localhost port 1122 in webbrowser and login with username admin and password admin to review result
+
+.PHONY: lcmodule-config
+lcmodule-config:
+	make -C lcmodule config BUILDFOLDER=$(BUILDFOLDER) LCMLIB_INSTALLDIR=$(LCD_INSTALLDIR) LCMLDR_INSTALLDIR=$(LCD_INSTALLDIR)
+
+.PHONY: lcmodule
+lcmodule:
+	make -C lcmodule
