@@ -161,13 +161,13 @@ ifeq ($(LBITS),64)
 # do 64 bit stuff here, like set some CFLAGS
 #
 CXXFLAGS += -DLINUX_64
-start-build: configfile setup_folders $(LIB_x32) $(LIB_x64)
+start-build: configfile setup_folders $(LIB_x32) $(LIB_x64) lcmodule
 else
 #
 # do 32 bit stuff here
 #
 CXXFLAGS += -DLINUX_32
-start-build: configfile setup_folders $(LIB_x32)
+start-build: configfile setup_folders $(LIB_x32) lcmodule
 endif
 
 else
@@ -384,6 +384,7 @@ ifeq ($(CONFIG_DIR),)
 else
     BUILDOUT := $(CONFIG_DIR)/out
 endif
+config: lcmodule-config
 config:
 	@echo Generating config file...
 	@rm -f $(config_file)
@@ -508,3 +509,11 @@ astyle:
 	astyle --style=k/r --indent=spaces  --break-blocks --convert-tabs --add-brackets \
 	--unpad-paren --pad-header --pad-oper --indent-col1-comments --align-pointer=name \
 	-R "*.h" -R "*.c" -R "*.cpp"
+
+.PHONY: lcmodule-config
+lcmodule-config:
+	make -C lcmodule config BUILDFOLDER=$(BUILDFOLDER) LCMLIB_INSTALLDIR=$(LCD_INSTALLDIR) LCMLDR_INSTALLDIR=$(LCD_INSTALLDIR)
+
+.PHONY: lcmodule
+lcmodule:
+	make -C lcmodule
