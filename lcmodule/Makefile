@@ -17,7 +17,6 @@ SECURITY_ALGORITHMS_PATH:=$(LOADER_DIR)/src/loader_code_base/cnh1605721_ldr_secu
 LCM_CONFIG:=$(LCM_CNH_PATH)/config
 LCM_CUST_CONFIG:=$(LCM_PATH)/customer_config
 SUPPORTED_CMDS_PATH:=$(LOADER_DIR)/src/platform_support/stn8500/config/supported_commands.xml
-WIN_BINARIES=./win_binaries/
 
 AUTOGEN_FILES := $(AUTO_DIR_LIB)/commands.h\
 		$(AUTO_DIR_LIB)/command_ids.h\
@@ -319,7 +318,6 @@ install: build
 ifeq ($(LBITS),64)
 	install -p -m 0755 -t ${LCMLIB_INSTALLDIR} ${BUILDFOLDER}/liblcm_x64.so.*
 endif
-	install -p -m 0755 -t $(LCMLIB_INSTALLDIR) $(WIN_BINARIES)/*.dll
 	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${AUTO_DIR_LOADER}/*
 	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${TRANSPORT_PATH}/source/*.c
 	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${NETWORK_PATH}/source/*.c

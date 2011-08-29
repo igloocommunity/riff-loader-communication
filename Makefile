@@ -7,7 +7,6 @@ endif
 
 XALAN_PATH:=./lcmodule/tools/xalan-j_2_7_1/
 LCD_CONFIG:=./source/config/
-WIN_BINARIES=./win_binaries/
 
 LIBSRC := \
 	source/utilities/Serialization.cpp\
@@ -282,7 +281,6 @@ install: build
 ifeq ($(LBITS),64)
 	install -m 0755 -t $(LCD_INSTALLDIR) $(BUILDFOLDER)/liblcdriver_x64.so
 endif
-	install -m 0755 -t $(LCD_INSTALLDIR) $(WIN_BINARIES)/*.dll
 
 clean:
 	$(if $(BUILDFOLDER), \
