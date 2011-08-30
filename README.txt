@@ -7,3 +7,17 @@ serializer.jar
 xalan.jar
 xercesImpl.jar
 xml-apis.jar
+
+To build, first run
+
+ make config
+
+to create/update build path configuration.
+
+To build the libraries, run
+
+ make
+
+To build debian packages, run
+
+ make debian
