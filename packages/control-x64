@@ -1,0 +1,9 @@
+Package: riff-loadercomm
+Version: 0.4.3
+Priority: optional
+Architecture: amd64
+Recommends: 
+Installed-Size: 
+Maintainer: packages@igloocommunity.org
+Section: 
+Description: Loader communication driver library, Loader communication module library and loader binary

@@ -295,6 +295,8 @@ ifeq ($(LBITS),64)
 endif
 	$(if $(BUILDFOLDER), \
 		@rm -f $(BUILDFOLDER)/*.so*,)
+	$(if $(BUILDFOLDER), \
+		@rm -f $(BUILDFOLDER)/*.deb,)
 
 distclean: clean
 	$(if $(AUTO_DIR_LIB), \
@@ -336,3 +338,28 @@ lcmodule-config:
 .PHONY: lcmodule
 lcmodule:
 	make -C lcmodule
+
+DEB_VERSION := custom
+.PHONY: debian
+debian: build lcmodule
+	mkdir -p debian/DEBIAN
+	mkdir -p debian/usr/lib
+
+	cp packages/control debian/DEBIAN/control
+	cp $(BUILDFOLDER)/liblcdriver.so $(BUILDFOLDER)/liblcm.so.1 debian/usr/lib
+
+	fakeroot dpkg-deb --build debian $(BUILDFOLDER)/riff-loadercomm-${DEB_VERSION}.deb || error
+
+	rm -rf debian
+
+	mkdir -p debian/DEBIAN
+	mkdir -p debian/usr/lib
+
+	cp packages/control-x64 debian/DEBIAN/control
+	cp $(BUILDFOLDER)/liblcdriver_x64.so $(BUILDFOLDER)/liblcm_x64.so.1 debian/usr/lib
+	ln -s liblcdriver_x64.so debian/usr/lib/liblcdriver.so
+	ln -s liblcm_x64.so.1 debian/usr/lib/liblcm.so.1
+
+	fakeroot dpkg-deb --build debian $(BUILDFOLDER)/riff-loadercomm-${DEB_VERSION}_x64.deb || error
+
+	rm -rf debian
