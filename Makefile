@@ -247,14 +247,14 @@ configfile: $(if $(wildcard $(config_file)),,config)
 	@echo $< > /dev/null
 
 .PHONY: config
-config: BUILDFOLDER := $(if $(strip $(BUILDFOLDER)),$(BUILDFOLDER),$(shell bash -c "mktemp -d"))
+config: BUILDFOLDER := $(if $(strip $(BUILDFOLDER)),$(BUILDFOLDER),$(shell bash -c "pwd")/build)
 config: AUTO_DIR_LIB :=$(BUILDFOLDER)/autogen/
 config: LIB_x32 := $(BUILDFOLDER)/liblcdriver.so
 config: LIB_x64 := $(BUILDFOLDER)/liblcdriver_x64.so
 config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
 config: CXX := $(CROSS_PREFIX)g++
-config: LCD_INSTALLDIR := /tmp/
+config: LCD_INSTALLDIR := $(shell pwd)/dist
 config:
 	@echo Generating config file...
 	@rm -f $(config_file)

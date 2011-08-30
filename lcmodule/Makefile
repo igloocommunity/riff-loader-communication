@@ -270,14 +270,14 @@ configfile: $(if $(wildcard $(config_file)),,config)
 	@echo $< > /dev/null
 
 .PHONY: config
-config: BUILDFOLDER := $(if $(strip $(BUILDFOLDER)),$(BUILDFOLDER),$(shell bash -c "mktemp -d"))
+config: BUILDFOLDER := $(if $(strip $(BUILDFOLDER)),$(BUILDFOLDER),$(shell bash -c "pwd"))
 config: LCM_AUTO_DIR:=$(BUILDFOLDER)/autogen
 config: AUTO_DIR_LIB:=$(LCM_AUTO_DIR)/lib
 config: AUTO_DIR_LOADER:=$(LCM_AUTO_DIR)/loader
 config: LIB_x32 := $(BUILDFOLDER)/liblcm.so.1
 config: LIB_x64 := $(BUILDFOLDER)/liblcm_x64.so.1
-config: LCMLIB_INSTALLDIR := /tmp/
-config: LCMLDR_INSTALLDIR := /tmp/
+config: LCMLIB_INSTALLDIR := $(shell pwd)/dist
+config: LCMLDR_INSTALLDIR := $(shell pwd)/dist
 config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
 config: CC := gcc
