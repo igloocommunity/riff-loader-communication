@@ -348,7 +348,7 @@ debian: build lcmodule
 	cp packages/control debian/DEBIAN/control
 	cp $(BUILDFOLDER)/liblcdriver.so $(BUILDFOLDER)/liblcm.so.1 debian/usr/lib
 
-	fakeroot dpkg-deb --build debian $(BUILDFOLDER)/riff-loadercomm-${DEB_VERSION}.deb || error
+	fakeroot dpkg-deb --build debian $(BUILDFOLDER)/riff-loadercomm-${DEB_VERSION}_i386.deb || error
 
 	rm -rf debian
 
