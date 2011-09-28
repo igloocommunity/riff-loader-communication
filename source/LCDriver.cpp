@@ -205,6 +205,13 @@ LCDRIVER_API int __cdecl System_LoaderStartupStatus(LCDContext Context, char *pc
     return Context->m_pObject->Done_System_LoaderStartupStatus(pchVersion, piVersionSize, pchProtocol, piProtocolSize);
 }
 
+LCDRIVER_API int __cdecl System_ChangeBaudrate(LCDContext Context, int iBaudRate)
+{
+    VERIFY_CONTEXT_STARTED(Context);
+
+    return Context->m_pObject->Do_System_ChangeBaudRate(iBaudRate);
+}
+
 LCDRIVER_API int __cdecl System_Reboot(LCDContext Context, int iMode)
 {
     VERIFY_CONTEXT_STARTED(Context);

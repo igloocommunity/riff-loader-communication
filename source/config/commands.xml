@@ -80,6 +80,30 @@
       </output>
     </command>
 
+    <command number="2" name="Change Uart Baud Rate" ADbg="false" source="PC" supportedcmdtype="longrunning">
+      <interface type="loader" name="ChangeBaudRate"/>
+      <documentation>
+        This command is used to change the loader UART baudrate.
+      </documentation>
+      <input>
+        <value type="uint32" name="BaudRate">Baud rate.</value>
+      </input>
+      <output>
+      </output>
+      <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
+        <value ref="A1"/>
+        <value ref="CA"/>
+      </authentication>
+      <permissions>
+        <value ref="ServiceModeLevel"/>
+        <value ref="FlashModeLevel"/>
+        <value ref="AdvanceServiceModeLevel"/>
+        <value ref="ProductionModeLevel"/>
+        <value ref="LimitedProductionModeLevel"/>
+        <value ref="VeryLimitedProductionModeLevel"/>
+      </permissions>
+    </command>
+
     <command number="3" name="System Reboot" ADbg="false" source="PC">
       <interface type="loader" name="Reboot"/>
       <documentation>

@@ -537,6 +537,26 @@ ErrorExit:
 }
 
 /// <summary>
+/// The ChangeBaudrate command is used to instruct the loader to change the UART baud rate.
+/// The ME does not return GeneralResponse to this command. It changes to new BaudRate
+/// and expects the further communication over UART to be realized using the new BaudRate.
+/// </summary>
+/// <param name="Context">LCD context on which to execute the operation.</param>
+/// <param name="iBaudRate">Indicates the new UART baud rate.</param>
+/// <returns>Status of the command.</returns>
+int CLCDriverMethods::Do_System_ChangeBaudRate(int iBaudRate)
+{
+    uint16 uiSessionOut = 0;
+    int ReturnValue = E_SUCCESS;
+
+    VERIFY_SUCCESS(IsMainThreadAlive());
+    VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_ChangeBaudRate(uiSessionOut, iBaudRate));
+
+ErrorExit:
+    return ReturnValue;
+}
+
+/// <summary>
 /// The Reboot command is used to instruct the loader to reset the ME. Upon receiving this command,
 /// the loader shuts down in a controlled fashion and restarts the ME. The Mode parameter is used to
 /// select the mode of reset. The ME does not accept any further communication after a successful

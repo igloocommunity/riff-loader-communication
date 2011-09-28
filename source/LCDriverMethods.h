@@ -57,6 +57,7 @@ public:
 
     // Loader methods
     int Done_System_LoaderStartupStatus(char *pchVersion, int *piVersionSize, char *pchProtocol, int *piProtocolSize);
+    int Do_System_ChangeBaudRate(int iBaudRate);
     int Do_System_Reboot(int iMode);
     int Do_System_Shutdown();
     int Do_System_SupportedCommands(TSupportedCmd *pCmdList, int *piCmdListSize);

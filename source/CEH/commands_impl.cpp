@@ -24,6 +24,13 @@ ErrorCode_e LoaderRpcInterfaceImpl::DoRPC_System_LoaderStartUpStatusImpl(uint16 
     return E_SUCCESS;
 }
 
+ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_System_ChangeBaudRateImpl(uint16 Session, ErrorCode_e Status)
+{
+    cmdResult_->GeneralResponse_Session = Session;
+
+    return E_SUCCESS;
+}
+
 ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_System_RebootImpl(uint16 Session, ErrorCode_e Status)
 {
     cmdResult_->GeneralResponse_Session = Session;

@@ -289,6 +289,16 @@ extern "C"
     LCDRIVER_API int __cdecl System_LoaderStartupStatus(LCDContext Context, char *pchVersion, int *piVersionSize, char *pchProtocol, int *piProtocolSize);
 
     /// <summary>
+    /// The ChangeBaudrate command is used to instruct the loader to change the UART baud rate.
+    /// The ME does not return GeneralResponse to this command. It changes to new BaudRate
+    /// and expects the further communication over UART to be realized using the new BaudRate.
+    /// </summary>
+    /// <param name="Context">LCD context on which to execute the operation.</param>
+    /// <param name="iBaudRate">Indicates the new UART baud rate.</param>
+    /// <returns>Status of the command.</returns>
+    LCDRIVER_API int __cdecl System_ChangeBaudrate(LCDContext Context, int iBaudRate);
+
+    /// <summary>
     /// The Reboot command is used to instruct the loader to reset the ME. Upon receiving this command,
     /// the loader shuts down in a controlled fashion and restarts the ME. The Mode parameter is used to
     /// select the mode of reset. The ME does not accept any further communication after a successful
