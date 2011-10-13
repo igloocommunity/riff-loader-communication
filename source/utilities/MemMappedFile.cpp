@@ -116,9 +116,9 @@ int MemMappedFile::LoadFileData(const char *path)
 
     size_ = fileStat.st_size;
 
-        /* Map file in memory, BUT DON"T Reserve SWAP memory, use only physical memory */
-        mappedData_ = static_cast<uint8 *>(mmap(0, size_, PROT_READ, MAP_PRIVATE | MAP_NORESERVE /*| MAP_POPULATE*/, descriptor_, 0));
-    
+    /* Map file in memory, BUT DON"T Reserve SWAP memory, use only physical memory */
+    mappedData_ = static_cast<uint8 *>(mmap(0, size_, PROT_READ, MAP_PRIVATE | MAP_NORESERVE /*| MAP_POPULATE*/, descriptor_, 0));
+
     if (MAP_FAILED != mappedData_) {
         isMapped_ = true;
     } else {

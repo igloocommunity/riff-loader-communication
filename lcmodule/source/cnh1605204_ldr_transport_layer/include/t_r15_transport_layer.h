@@ -25,36 +25,44 @@
  * Types, constants and external variables
  ******************************************************************************/
 
-/** Structure for transfer input parameters in R15 protocol family. */
+/** Structure for transfer input parameters in R15 prototcol family. */
 typedef struct {
     R15_Header_t          *Header_p;         /**< Pointer to R15 header data. */
     void                  *ExtendedHeader_p; /**< Pointer to Extended header data.*/
     void                  *Payload_p;        /**< Pointer to payload data.*/
-    uint32                Time;              /**< Used time for retransmission.*/
+    uint32                Time;              /**< Used tim for retransmission.*/
     HandleFunction_t      TimerCallBackFn_p; /**< Timer call back function for
                                                 retransmission.*/
 } SendData_LP_t;
 
 /** R15 Transport context. */
 typedef struct {
-    /** Session/State for Incoming packet. */
+    /**< Session/State for Incoming packet. */
     uint16                SessionStateIn;
-    /** Session/State for Outgoing packet. */
+    /**< Session/State for Outgoing packet. */
     uint16                SessionStateOut;
-    /** Bulk Session counter. */
+    /**< Bulk Session counter. */
     uint16                BulkSessionCounter;
-    /** Bulk Vector List. */
+    /**< Bulk Vector List. */
     TL_BulkVectorList_t   BulkVectorList[MAX_BULK_TL_PROCESSES];
-    /** Bulk handle for the Current bulk transfer. */
+    /**< Bulk handle for the Current bulk transfer. */
     BulkHandle_t          BulkHandle;
-    /** Bulk vector for previous current bulk transfer. */
+    /**< Bulk vector for previous current bulk transfer. */
     TL_BulkVectorList_t   PreviousBulkVector;
-    /** Callback function pointer for bulk command handling.*/
+    /**< Callback function pointer for bulk command handling.*/
     void                  *BulkCommandCallback_p;
-    /** Callback function pointer for bulk data command handling.*/
+    /**< Callback function pointer for bulk data command handling.*/
     void                  *BulkDataCallback_p;
-    /** Callback function pointer for handling end of bulk transfer.*/
+    /**< Callback function pointer for handling end of bulk transfer.*/
     void                  *EndOfDump_p;
+    /**< Length of payload data transfered with bulk transfer. */
+    uint32                Length;
+    /**< Offset in the cuurent opened file.*/
+    uint64                Offset;
+    /**< requested size of payload. */
+    uint32                ChunkSize;
+    /**< Current bulk session ID. */
+    uint16                Session;
 } R15_TransportContext_t;
 
 /** @} */

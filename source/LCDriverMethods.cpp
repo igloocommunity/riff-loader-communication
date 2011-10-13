@@ -92,7 +92,6 @@ CLCDriverMethods::CLCDriverMethods(const char *pchInterfaceId):
 CLCDriverMethods::~CLCDriverMethods()
 {
     m_EventQueue.SignalEvent();
-    CLockCS lock(LCDMethodsCS);
     OS::Sleep(200);
 
     if (0 != m_pMainThread) {
@@ -331,16 +330,16 @@ ErrorCode_e CLCDriverMethods::CEH_A2_CallbackFunction(void *pObject, CommandData
 
 //----------------------------------------
 
-void CLCDriverMethods::BulkCommandReqCallback(void *pObject, uint16 uiSession, uint32 uiChunkSize, uint64 uiOffset, uint32 uiLength, boolean bAckRead)
+void CLCDriverMethods::BulkCommandReqCallback(void *pObject, uint16 *puiSession, uint32 *puiChunkSize, uint64 *puiOffset, uint32 *puiLength, boolean bAckRead)
 {
     CLCDriverMethods *pLcdMethods = static_cast<CLCDriverMethods *>(pObject);
-    return pLcdMethods->m_pBulkHandler->HandleCommandRequest(uiSession, uiChunkSize, uiOffset, uiLength, bAckRead ? true : false);
+    return pLcdMethods->m_pBulkHandler->HandleCommandRequest(*puiSession, *puiChunkSize, *puiOffset, *puiLength, bAckRead ? true : false);
 }
 
-void CLCDriverMethods::BulkDataReqCallback(void *pObject, uint16 uiSession, uint32 uiChunkSize, uint64 uiOffset, uint32 uiLength, uint64 uiTotalLength, uint32 uiTransferedLength)
+void CLCDriverMethods::BulkDataReqCallback(void *pObject, uint16 *puiSession, uint32 *puiChunkSize, uint64 *puiOffset, uint32 *puiLength, uint64 *puiTotalLength, uint32 *puiTransferedLength)
 {
     CLCDriverMethods *pLcdMethods = static_cast<CLCDriverMethods *>(pObject);
-    return pLcdMethods->Do_BulkDataReqCallback(uiSession, uiChunkSize, uiOffset, uiLength, uiTotalLength, uiTransferedLength);
+    return pLcdMethods->Do_BulkDataReqCallback(puiSession, puiChunkSize, puiOffset, puiLength, puiTotalLength, puiTransferedLength);
 }
 
 void CLCDriverMethods::BulkDataEndOfDumpCallback(void *pObject)
@@ -908,7 +907,6 @@ int CLCDriverMethods::Do_Flash_ProcessFile(const char *pchPath, const char *pchT
 #endif
 
     if (iUseBulk) {
-        CLockCS lock(LCDMethodsCS);
         m_pLcmInterface->BulkSetCallbacks((void *)BulkCommandReqCallback, (void *)BulkDataReqCallback, (void *)BulkDataEndOfDumpCallback);
         VERIFY_SUCCESS(m_pBuffers->AllocateBulkFile(pchPath));
         uint64 uiLength = m_pBuffers->GetBulkFileLength();
@@ -2603,9 +2601,9 @@ int CLCDriverMethods::WaitForPROTROMResponseOrCancelOrTimeout(int iReceivePdu)
     return iResult;
 }
 
-void CLCDriverMethods::Do_BulkDataReqCallback(uint16 Session, uint32 ChunkSize, uint64 Offset, uint32 Length, uint64 TotalLength, uint32 TransferredLength)
+void CLCDriverMethods::Do_BulkDataReqCallback(uint16 *Session_p, uint32 *ChunkSize_p, uint64 *Offset_p, uint32 *Length_p, uint64 *TotalLength_p, uint32 *TransferredLength_p)
 {
-    m_uiBulkTransferred += ChunkSize;
+    m_uiBulkTransferred += *ChunkSize_p;
 }
 
 void CLCDriverMethods::UpdateBulkProgress()
