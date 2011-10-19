@@ -421,3 +421,10 @@ ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_Security_BindPropertiesImpl(uint16 S
 
     return E_SUCCESS;
 }
+
+ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_Security_InitARBTableImpl(uint16 Session, ErrorCode_e Status)
+{
+    cmdResult_->GeneralResponse_Session = Session;
+
+    return E_SUCCESS;
+}

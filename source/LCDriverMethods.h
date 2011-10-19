@@ -105,6 +105,7 @@ public:
     int Do_Security_GetProperties(int iUnitId, int *piSize, unsigned char *puchDataBuffer);
     int Do_Security_SetProperties(int iUnitId, int iSize, const unsigned char *puchDataBuffer);
     int Do_Security_BindProperties();
+    int Do_Security_InitARBTable(int iType, int iLength, const unsigned char *puarbdata);
 
     // A2 Protocol Methods
     int Do_A2_System_Shutdown();

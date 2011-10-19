@@ -506,6 +506,13 @@ LCDRIVER_API int __cdecl Security_StoreSecureObject(LCDContext Context, const ch
     return Context->m_pObject->Do_OTP_StoreSecureObject(pchSourcePath, iDestination, iUseBulk);
 }
 
+LCDRIVER_API int __cdecl Security_InitARBTable(LCDContext Context, int iType, int iLength, unsigned char *puarbdata)
+{
+    VERIFY_CONTEXT_STARTED(Context);
+
+    return Context->m_pObject->Do_Security_InitARBTable(iType, iLength, puarbdata);
+}
+
 LCDRIVER_API int __cdecl A2_System_Shutdown(LCDContext Context)
 {
     VERIFY_CONTEXT_STARTED(Context);

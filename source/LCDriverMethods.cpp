@@ -703,7 +703,7 @@ ErrorExit:
 /// </summary>
 /// <param name="iType">Authentication type:0 = control key authentication,1 = certificate authentication.</param>
 /// <param name="piSize">Size of puchData.</param>
-/// <param name="puchdata">Data challange. </param>
+/// <param name="puchdata">Data challenge. </param>
 /// <returns> Status of the command.</returns>
 int CLCDriverMethods::Do_System_Authenticate(int iType, int *piSize, unsigned char *puchdata)
 {
@@ -1746,6 +1746,23 @@ ErrorExit:
 }
 
 /// <summary>
+/// This command is used to initialize a SW version table, intended for checking the ARB functionality.
+/// </summary>
+/// <returns> Status of the command.</returns>
+int CLCDriverMethods::Do_Security_InitARBTable(int iType, int iLength, const unsigned char *puarbdata)
+{
+    uint16 uiSessionOut = 0;
+    int ReturnValue = E_SUCCESS;
+
+    VERIFY_SUCCESS(IsMainThreadAlive());
+    VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_Security_InitARBTable(uiSessionOut, iType, iLength, puarbdata));
+    VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_SECURITY, COMMAND_SECURITY_INITARBTABLE));
+
+ErrorExit:
+    return ReturnValue;
+}
+
+/// <summary>
 /// The A2 loader shuts down in a controlled fashion and proceeds to shut down the ME itself.
 /// The ME does not accept any further communication after a successful response from this
 /// command has been returned.
@@ -2179,7 +2196,7 @@ ErrorExit:
 }
 
 /// <summary>
-/// Exit Z-protocol and start uing PROTROM-protocol.
+/// Exit Z-protocol and start using PROTROM-protocol.
 /// </summary>
 /// <returns> Status of the command.</returns>
 int CLCDriverMethods::Do_Z_Exit_Z_Protocol()

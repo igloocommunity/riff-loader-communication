@@ -1085,6 +1085,28 @@
       </permissions>
     </command>
 
+    <command number="6" name="Init ARBTable" ADbg="false" source="PC">
+      <documentation>
+        Initialize a SW version table, intended for checking the ARB functionality.
+      </documentation>
+      <interface type="loader" name="InitARBTable"/>
+      <input>
+        <value type="uint32" name="Type">ARB Type to update</value>
+        <value type="uint32" name="DataLength">Length of the Data buffer</value>
+        <value type="buffer" name="DataBuff_p" length="DataLength">The data to write</value>
+      </input>
+      <output>
+      </output>
+      <authentication depandancy="or" factory="TRUE" rd="TRUE" product="TRUE" service="TRUE">
+        <value ref="A1"/>
+        <value ref="CA"/>
+      </authentication>
+      <permissions>
+        <value ref="AdvanceServiceModeLevel"/>
+        <value ref="ProductionModeLevel"/>
+      </permissions>
+    </command>
+
   </group>
 
   <group number="8" name="ADbg application">

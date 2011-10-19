@@ -165,12 +165,12 @@ extern "C"
     /// </summary>
     /// <param name="pContext">A pointer to a LCDContext where to store the newly created context or to put
     /// the previously created context if the context with the specified interface id already exists.</param>
-    /// <param name="InterfaceId">A zero terminated string conaining the interface unique ID.</param>
+    /// <param name="InterfaceId">A zero terminated string containing the interface unique ID.</param>
     /// <param name="Read_fn">A pointer to a communication device read function.</param>
     /// <param name="Write_fn">A pointer to a communication device write function.</param>
     /// <param name="Cancel_fn">A pointer to a communication device cancel function.</param>
     /// <param name="Instance">A pointer to a pointer where to store the adress of the loader communication module instance.</param>
-    /// <param name="Message_fn">A pointer to a message loging function.</param>
+    /// <param name="Message_fn">A pointer to a message logging function.</param>
     /// <param name="LCMLibPath">A zero terminated string containing the path to the LCM library.</param>
     /// <param name="ProgressBar_fn">A pointer to function which receives the progress updates.</param>
     /// <returns>0 if OK, otherwise non-zero.</returns>
@@ -221,10 +221,10 @@ extern "C"
     LCDRIVER_API int __cdecl ConfigureCommunicationDevice(LCDContext Context, void *Read_fn, void *Write_fn, void *Cancel_fn);
 
     /// <summary>
-    /// Sets the callback for message loging.
+    /// Sets the callback for message logging.
     /// </summary>
     /// <param name="Context">LCD context on which to execute the operation.</param>
-    /// <param name="Callback_fn">A pointer to a message loging function.</param>
+    /// <param name="Callback_fn">A pointer to a message logging function.</param>
     /// <returns>0 if OK, otherwise non-zero.</returns>
     LCDRIVER_API int __cdecl SetMessageCallback(LCDContext Context, void *Callback_fn);
 
@@ -240,7 +240,7 @@ extern "C"
     /// Starts the context. Should be called after the required parameters are previously configured.
     /// </summary>
     /// <param name="Context">LCD context on which to execute the operation.</param>
-    /// <param name="Instance">A pointer to a pointer where to store the adress of the started communication instance.</param>
+    /// <param name="Instance">A pointer to a pointer where to store the address of the started communication instance.</param>
     /// <returns>0 if OK, otherwise non-zero.</returns>
     LCDRIVER_API int __cdecl StartContext(LCDContext Context, void **Instance);
 
@@ -370,7 +370,7 @@ extern "C"
     /// <param name="Context">LCD context on which to execute the operation.</param>
     /// <param name="iType">Authentication type:0 = control key authentication,1 = certificate authentication.</param>
     /// <param name="piSize">Size of puchData.</param>
-    /// <param name="puchdata">Data challange. </param>
+    /// <param name="puchdata">Data challenge. </param>
     /// <returns>Status of the command.</returns>
     LCDRIVER_API int __cdecl System_Authenticate(LCDContext Context, int iType, int *piSize, unsigned char *puchdata);
 
@@ -425,7 +425,7 @@ extern "C"
     /// The Loader shuts down the global communication and enters in a Relay working mode.
     /// </summary>
     /// <param name="HostDeviceId">Communication device number of the relay input (host device).</param>
-    /// <param name="TargetDeviceId">Communication device number of the relay ouptut (target device).</param>
+    /// <param name="TargetDeviceId">Communication device number of the relay output (target device).</param>
     /// <param name="ControlDeviceId">Communication device number for the loader commands (control device).</param>
     /// <returns>Status of the command.</returns>
     LCDRIVER_API int __cdecl System_StartCommRelay(LCDContext Context, uint32 HostDeviceId, uint32 TargetDeviceId, uint32 ControlDeviceId);
@@ -736,6 +736,16 @@ extern "C"
     /// <param name="iUseBulk">Source on PC -> iUseBulk= 1. Source on ME -> iUseBulk= 0.</param>
     /// <returns>Status of the command.</returns>
     LCDRIVER_API int __cdecl Security_StoreSecureObject(LCDContext Context, const char *pchSourcePath, int iDestination, int iUseBulk);
+
+    /// <summary>
+    /// This command is used to initialize a SW version table, intended for checking the ARB functionality.
+    /// </summary>
+    /// <param name="Context">LCD context on which to execute the operation.</param>
+    /// <param name="iType">ARB data type:0 = COPS_ARB_DATA_TYPE_MODELID.</param>
+    /// <param name="iLength">Length of puarbData.</param>
+    /// <param name="puarbdata">For arb_data_type = COPS_ARB_DATA_TYPE_MODELID the data is a 16 bit modelid.</param>
+    /// <returns>Status of the command.</returns>
+    LCDRIVER_API int __cdecl Security_InitARBTable(LCDContext Context, int iType, int iLength, unsigned char *puarbdata);
 
     /// <summary>
     /// The A2 loader shuts down in a controlled fashion and proceeds to shut down the ME itself.
