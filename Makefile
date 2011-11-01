@@ -7,6 +7,7 @@ endif
 
 XALAN_PATH:=./lcmodule/tools/xalan-j_2_7_1/
 LCD_CONFIG:=./source/config/
+LCD_DIR:=./
 WIN_BINARIES=./win_binaries/
 
 LIBSRC := \
@@ -248,7 +249,7 @@ configfile: $(if $(wildcard $(config_file)),,config)
 	@echo $< > /dev/null
 
 .PHONY: config
-config: BUILDFOLDER := $(if $(strip $(BUILDFOLDER)),$(BUILDFOLDER),$(shell bash -c "mktemp -d"))
+config: BUILDFOLDER := $(LCD_DIR)/out
 config: AUTO_DIR_LIB :=$(BUILDFOLDER)/autogen/
 config: LIB_x32 := $(BUILDFOLDER)/liblcdriver.so
 config: LIB_x64 := $(BUILDFOLDER)/liblcdriver_x64.so
@@ -288,15 +289,18 @@ clean:
 	$(if $(BUILDFOLDER), \
 		$(if $(LIB_x32_OBJ_DIR), \
 			@rm -f $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/*.o \
-			@rm -rf $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR),),)
+			@rm -rf $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR) \
+			@rm -rf $(BUILDFOLDER),),)
 ifeq ($(LBITS),64)
 	$(if $(BUILDFOLDER), \
 		$(if $(LIB_x64_OBJ_DIR), \
 			@rm -f $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/*.o \
-			@rm -rf $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR),),)
+			@rm -rf $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR) \
+			@rm -rf $(BUILDFOLDER),),)
 endif
 	$(if $(BUILDFOLDER), \
-		@rm -f $(BUILDFOLDER)/*.so*,)
+		@rm -f $(BUILDFOLDER)/*.so* \
+		@rm -rf $(BUILDFOLDER),)
 
 distclean: clean
 	$(if $(AUTO_DIR_LIB), \

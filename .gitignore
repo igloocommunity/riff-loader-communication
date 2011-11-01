@@ -1,4 +1,6 @@
 lcmodule/.config
+lcmodule/out
+out
 .config
 cov_data
 cov_inter

@@ -271,7 +271,7 @@ configfile: $(if $(wildcard $(config_file)),,config)
 	@echo $< > /dev/null
 
 .PHONY: config
-config: BUILDFOLDER := $(if $(strip $(BUILDFOLDER)),$(BUILDFOLDER),$(shell bash -c "mktemp -d"))
+config: BUILDFOLDER := $(LCM_PATH)/out
 config: LCM_AUTO_DIR:=$(BUILDFOLDER)/autogen
 config: AUTO_DIR_LIB:=$(LCM_AUTO_DIR)/lib
 config: AUTO_DIR_LOADER:=$(LCM_AUTO_DIR)/loader
@@ -333,15 +333,18 @@ clean:
 	$(if ${BUILDFOLDER}, \
 		$(if ${LIB_x32_OBJ_DIR}, \
 			@rm -f ${BUILDFOLDER}/${LIB_x32_OBJ_DIR}/*.o \
-			@rm -rf ${BUILDFOLDER}/${LIB_x32_OBJ_DIR},),)
+			@rm -rf ${BUILDFOLDER}/${LIB_x32_OBJ_DIR} \
+			@rm -rf ${BUILDFOLDER},),)
 ifeq ($(LBITS),64)
 	$(if ${BUILDFOLDER}, \
 		$(if ${LIB_x64_OBJ_DIR}, \
 			@rm -f ${BUILDFOLDER}/${LIB_x64_OBJ_DIR}/*.o \
-			@rm -rf ${BUILDFOLDER}/${LIB_x64_OBJ_DIR},),)
+			@rm -rf ${BUILDFOLDER}/${LIB_x64_OBJ_DIR} \
+			@rm -rf ${BUILDFOLDER},),)
 endif
 	$(if ${BUILDFOLDER}, \
-		@rm -f ${BUILDFOLDER}/*.so*,)
+		@rm -f ${BUILDFOLDER}/*.so* \
+		@rm -rf ${BUILDFOLDER},)
 
 distclean: clean
 	$(if ${LCMLDR_INSTALLDIR}, \
