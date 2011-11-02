@@ -22,6 +22,7 @@
 #include "t_time_utilities.h"
 #include "r_debug.h"
 #include "r_debug_macro.h"
+#include "r_memory_utils.h"
 #include "r_r15_header.h"
 #include "r_command_protocol.h"
 #include "r_bulk_protocol.h"
@@ -29,6 +30,7 @@
 #include "r_r15_family.h"
 #include "r_communication_service.h"
 #include "t_security_algorithms.h"
+#include "r_critical_section.h"
 
 /*******************************************************************************
  * Declaration of file local functions
@@ -57,14 +59,14 @@ ErrorCode_e R15_Transport_Initialize(const Communication_t *const Communication_
 {
     int VectorCounter;
 
-    /* Iintialize the session counters for command protocol*/
+    /* Initialize the session counters for command protocol*/
     R15_TRANSPORT(Communication_p)->SessionStateIn  = 0;
     R15_TRANSPORT(Communication_p)->SessionStateOut = 0;
 
-    /* Iintialize the session counter for bulk protocol*/
+    /* Initialize the session counter for bulk protocol*/
     R15_TRANSPORT(Communication_p)->BulkSessionCounter = 0;
 
-    /* initialize the default timeouts */
+    /* Initialize the default timeouts */
     R15_TIMEOUTS(Communication_p)->TCACK = ACK_TIMEOUT_IN_MS;
     R15_TIMEOUTS(Communication_p)->TBCR = BULK_COMMAND_RECEIVING_TIMEOUT;
     R15_TIMEOUTS(Communication_p)->TBDR = BULK_DATA_RECEIVING_TIMEOUT;
@@ -75,6 +77,8 @@ ErrorCode_e R15_Transport_Initialize(const Communication_t *const Communication_
 
     memset(&(R15_TRANSPORT(Communication_p)->PreviousBulkVector), 0x00, sizeof(TL_BulkVectorList_t));
     R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p = NULL;
+    R15_TRANSPORT(Communication_p)->BulkHandle.BulkTransferCS = Do_CriticalSection_Create();
+    R15_TRANSPORT(Communication_p)->BulkHandle.PendingBulkHeader_p = NULL;
 
     return E_SUCCESS;
 }
@@ -88,6 +92,8 @@ ErrorCode_e R15_Transport_Initialize(const Communication_t *const Communication_
  */
 ErrorCode_e R15_Transport_Shutdown(const Communication_t *const Communication_p)
 {
+    BUFFER_FREE(R15_TRANSPORT(Communication_p)->BulkHandle.PendingBulkHeader_p);
+    Do_CriticalSection_Destroy(&(R15_TRANSPORT(Communication_p)->BulkHandle.BulkTransferCS));
     return E_SUCCESS;
 }
 

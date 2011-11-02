@@ -156,6 +156,7 @@ private:
     LoaderRpcInterfaceImpl   *m_pLoaderRpcFunctions;
     A2LoaderRpcInterfaceImpl *m_pA2LoaderRpcFunctions;
     CLCDriverThread          *m_pMainThread;
+    CCriticalSectionObject    LCDMethodsCS;
 
     //------------------------------------------
     // Static methods for support modules: timers, hash, buffers and queue
@@ -205,11 +206,11 @@ public:
     //-----------------------------------------
     //  Bulk Transfer Protocol callbacks
     //-----------------------------------------
-    static void   BulkCommandReqCallback(void *pObject, uint16 *puiSession, uint32 *puiChunkSize, uint64 *puiOffset, uint32 *puiLength, boolean bAckRead);
-    void          Do_BulkCommandReqCallback(uint16 *puiSession, uint32 *puiChunkSize, uint64 *puiOffset, uint32 *puiLength);
+    static void   BulkCommandReqCallback(void *pObject, uint16 uiSession, uint32 uiChunkSize, uint64 uiOffset, uint32 uiLength, boolean bAckRead);
+    void          Do_BulkCommandReqCallback(uint16 uiSession, uint32 uiChunkSize, uint64 uiOffset, uint32 uiLength);
 
-    static void   BulkDataReqCallback(void *pObject, uint16 *puiSession, uint32 *puiChunkSize, uint64 *puiOffset, uint32 *puiLength, uint64 *puiTotalLength, uint32 *puiTransferedLength);
-    void          Do_BulkDataReqCallback(uint16 *puiSession, uint32 *puiChunkSize, uint64 *puiOffset, uint32 *puiLength, uint64 *puiTotalLength, uint32 *puiTransferedLength);
+    static void   BulkDataReqCallback(void *pObject, uint16 uiSession, uint32 uiChunkSize, uint64 uiOffset, uint32 uiLength, uint64 uiTotalLength, uint32 uiTransferedLength);
+    void          Do_BulkDataReqCallback(uint16 uiSession, uint32 uiChunkSize, uint64 uiOffset, uint32 uiLength, uint64 uiTotalLength, uint32 uiTransferedLength);
 
     static void   BulkDataEndOfDumpCallback(void *pObject);
     void          Do_BulkDataEndOfDumpCallback();
