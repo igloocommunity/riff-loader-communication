@@ -51,10 +51,10 @@ static ErrorCode_e R15_Bulk_SendReadRequest(Communication_t *Communication_p, TL
 static ErrorCode_e R15_Bulk_SendWriteRequest(Communication_t *Communication_p);
 static void R15_Bulk_SerializeChunk(Communication_t *Communication_p, PacketMeta_t *Packet_p, uint32 ChunkId);
 static void R15_Bulk_SendData(Communication_t *Communication_p, PacketMeta_t *Packet_p);
-static boolean R15_Bulk_CheckTransmitedChunks(const TL_BulkVectorList_t *BulkVector_p);
-static boolean R15_Bulk_CheckIdInList(const TL_BulkVectorList_t *BulkVector_p, const uint32 ChunkId, const uint8 *const Data_p, const uint32 Length);
-static uint32 R15_Bulk_GetChunkForSending(const TL_BulkVectorList_t *BulkVector_p);
-static uint32 R15_Bulk_GetChunkForSeriazliation(const TL_BulkVectorList_t *BulkVector_p);
+__inline static boolean R15_Bulk_CheckTransmitedChunks(const TL_BulkVectorList_t *BulkVector_p);
+__inline static boolean R15_Bulk_CheckIdInList(const TL_BulkVectorList_t *BulkVector_p, const uint32 ChunkId, const uint8 *const Data_p, const uint32 Length);
+__inline static uint32 R15_Bulk_GetChunkForSending(const TL_BulkVectorList_t *BulkVector_p);
+__inline static uint32 R15_Bulk_GetChunkForSeriazliation(const TL_BulkVectorList_t *BulkVector_p);
 static void R15_Bulk_GetListOfReceivedChunks(const TL_BulkVectorList_t *const BulkVector_p, uint32 *Chunks_p, uint8 *ChunkList_p);
 static uint32 R15_Bulk_GetChunkId(const PacketMeta_t *const Packet_p);
 static uint32 R15_Bulk_GetTimerChunkRetransmision(const Communication_t *const Communication_p, uint32 Time, HandleFunction_t CallBack_p);
@@ -63,17 +63,17 @@ static void R15_Bulk_MarkNotAckAllChunks(TL_BulkVectorList_t *BulkVector_p);
 static void R15_Bulk_OutHashCallback(const void *const Data_p, uint32 Length, const uint8 *const Hash_p, void *Param_p);
 static TL_BulkVectorStatus_t R15_Bulk_GetVectorStatus(TL_BulkVectorList_t *BulkVector_p);
 static boolean R15_Bulk_VectorNeedsRetransmission(TL_BulkVectorList_t *BulkVector_p, uint32 CurrentChunkId);
-static void R15_Bulk_VectorClearRetransmissionRequested(TL_BulkVectorList_t *BulkVector_p);
+__inline static void R15_Bulk_VectorClearRetransmissionRequested(TL_BulkVectorList_t *BulkVector_p);
 static TL_BulkSessionID_Status_t R15_Bulk_CheckBulkSession(Communication_t *Communication_p, uint16 SessionId);
 static ErrorCode_e R15_Bulk_DataRequestHandler(Communication_t *Communication_p, PacketMeta_t *Packet_p);
 static ErrorCode_e R15_Bulk_ReadRequestHandler(Communication_t *Communication_p, PacketMeta_t *Packet_p);
-static boolean R15_Bulk_AllChunksProcessed(const TL_BulkVectorList_t *const BulkVector_p);
+__inline static boolean R15_Bulk_AllChunksProcessed(const TL_BulkVectorList_t *const BulkVector_p);
 
 #ifdef  CFG_ENABLE_LOADER_TYPE
 static boolean R15_Bulk_CheckAcknowledgedChunks(const TL_BulkVectorList_t *BulkVector_p, const uint8 *const Payload_p);
 #else
 static boolean R15_Bulk_SessionTxDone(const TL_BulkVectorList_t *const BulkVector_p);
-static boolean IsChunkReceived(Communication_t *Communication_p, uint32 ChunkId);
+__inline static boolean IsChunkReceived(Communication_t *Communication_p, uint32 ChunkId);
 #endif // CFG_ENABLE_LOADER_TYPE
 
 /***********************************************************************
@@ -85,6 +85,11 @@ void Do_R15_Bulk_SetCallbacks(Communication_t *Communication_p, void *BulkComman
     R15_TRANSPORT(Communication_p)->BulkCommandCallback_p = BulkCommandCallback_p;
     R15_TRANSPORT(Communication_p)->BulkDataCallback_p = BulkDataCallback_p;
     R15_TRANSPORT(Communication_p)->EndOfDump_p = EndOfDump_p;
+}
+
+void Do_R15_Bulk_SetBuffersRelease(Communication_t *Communication_p, void *BulkBufferRelease_p)
+{
+    R15_TRANSPORT(Communication_p)->BulkBufferRelease_p = BulkBufferRelease_p;
 }
 #endif
 
@@ -265,6 +270,7 @@ uint32 Do_R15_Bulk_DestroyVector(const Communication_t *const Communication_p, T
     uint32 ReturnValue = E_SUCCESS;
     uint32 Counter;
     int BuffersNr = 0;
+    R15_Outbound_t *Out_p = &(R15_NETWORK(Communication_p)->Outbound);
 
     if (NULL == Communication_p) {
         return BULK_ERROR;
@@ -312,6 +318,8 @@ uint32 Do_R15_Bulk_DestroyVector(const Communication_t *const Communication_p, T
     BulkVector_p->Buffers = 0;
     BulkVector_p->ChunkSize = 0;
     BulkVector_p->Offset = 0;
+    BulkVector_p->State = BULK_IDLE_STATE;
+    Out_p->State = SEND_IDLE;
 
     return ReturnValue;
 }
@@ -559,13 +567,13 @@ uint16 Do_R15_Bulk_GenerateBulkSessionID(Communication_t *Communication_p)
  * @retval ChunkID Chunk ID for the next ready for transmitting packet.
  *                 If none chunk is ready return last Chunk ID + 1.
  */
-static uint32 R15_Bulk_GetChunkForSending(const TL_BulkVectorList_t *BulkVector_p)
+__inline static uint32 R15_Bulk_GetChunkForSending(const TL_BulkVectorList_t *BulkVector_p)
 {
     uint32 ChunkId = 0;
 
     for (ChunkId = 0; ChunkId < BulkVector_p->Buffers; ChunkId++) {
         if (CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, BUF_TX_READY) &&
-            CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, BUF_PAYLOAD_CRC_CALCULATED)) {
+                CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, BUF_PAYLOAD_CRC_CALCULATED)) {
             break;
         }
     }
@@ -584,14 +592,14 @@ static uint32 R15_Bulk_GetChunkForSending(const TL_BulkVectorList_t *BulkVector_
  * @retval ChunkID Chunk ID for the next ready for transmitting packet.
  *                 If none chunk is ready return last Chunk ID + 1.
  */
-static uint32 R15_Bulk_GetChunkForSeriazliation(const TL_BulkVectorList_t *BulkVector_p)
+__inline static uint32 R15_Bulk_GetChunkForSeriazliation(const TL_BulkVectorList_t *BulkVector_p)
 {
     uint32 ChunkId = 0;
 
     for (ChunkId = 0; ChunkId < BulkVector_p->Buffers; ChunkId++) {
-        if ( (CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, (BUF_ALLOCATED | BUF_TX_READY))) &&
-            !(CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, BUF_CRC_CALCULATING)) &&
-            !(CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, BUF_PAYLOAD_CRC_CALCULATED)) ) {
+        if ((CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, (BUF_ALLOCATED | BUF_TX_READY))) &&
+                !(CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, BUF_CRC_CALCULATING)) &&
+                !(CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, BUF_PAYLOAD_CRC_CALCULATED))) {
             break;
         }
     }
@@ -608,13 +616,13 @@ static uint32 R15_Bulk_GetChunkForSeriazliation(const TL_BulkVectorList_t *BulkV
  * @retval  TRUE  If all created chunks are transmitted.
  * @retval  FALSE If all created chunks are not transmitted.
  */
-static boolean R15_Bulk_CheckTransmitedChunks(const TL_BulkVectorList_t *BulkVector_p)
+__inline static boolean R15_Bulk_CheckTransmitedChunks(const TL_BulkVectorList_t *BulkVector_p)
 {
     uint32 ChunkId;
 
     for (ChunkId = 0; ChunkId < BulkVector_p->Buffers; ChunkId++) {
         if (!CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, BUF_TX_SENT) &&
-            !CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, BUF_TX_DONE)) {
+                !CHECK_PACKET_FLAGS(BulkVector_p->Entries[ChunkId].Buffer_p, BUF_TX_DONE)) {
             return FALSE;
         }
     }
@@ -682,7 +690,7 @@ static void R15_Bulk_MarkNotAckAllChunks(TL_BulkVectorList_t *BulkVector_p)
     }
 }
 
-static boolean R15_Bulk_CheckIdInList(const TL_BulkVectorList_t *BulkVector_p, const uint32 ChunkId, const uint8 *const Data_p, const uint32 Length)
+__inline static boolean R15_Bulk_CheckIdInList(const TL_BulkVectorList_t *BulkVector_p, const uint32 ChunkId, const uint8 *const Data_p, const uint32 Length)
 {
     uint32 i;
 
@@ -789,6 +797,7 @@ static ErrorCode_e R15_Bulk_Process_Read(Communication_t *Communication_p, TL_Bu
         } else if (VECTOR_MISSING_CHUNK == ChunkReceivedStatus) {
             uint32 CurrentChunkId = R15_Bulk_GetChunkId(Packet_p);
             boolean RetransmissionNeeded = R15_Bulk_VectorNeedsRetransmission(BulkVector_p, CurrentChunkId);
+
             if (RetransmissionNeeded) {
                 A_(printf("bulk_protocol.c(%d) RetransmissionNeeded\n", __LINE__);)
                 // Send ReadRequest for the missing chunk(s).
@@ -823,6 +832,9 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
 {
     ErrorCode_e ReturnValue = E_SUCCESS;
     uint32 ProcessingChunkId;
+#ifndef  CFG_ENABLE_LOADER_TYPE
+    BulkBuffersRelease_t pcbf;
+#endif
 
     if (!Do_CriticalSection_Enter(R15_TRANSPORT(Communication_p)->BulkHandle.BulkTransferCS)) {
         return ReturnValue;
@@ -860,12 +872,14 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
         case PROCESSING_CHUNKS:
             /* Find ChunkId for a package that needs processing. */
             ProcessingChunkId = R15_Bulk_GetChunkForSeriazliation(BulkVector_p);
+
             if (ProcessingChunkId <= BulkVector_p->Buffers - 1) {
                 R15_Bulk_SerializeChunk(Communication_p, BulkVector_p->Entries[ProcessingChunkId].Buffer_p, ProcessingChunkId);
             }
 
             /* Find ChunkId for a package that is processed and ready for sending. */
             BulkVector_p->SendingChunkId = R15_Bulk_GetChunkForSending(BulkVector_p);
+
             if (BulkVector_p->SendingChunkId <= BulkVector_p->Buffers - 1) {
                 /* Move to state to process remaining chunks while waiting
                    for the current chunk to be sent */
@@ -873,11 +887,13 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
                 /* Send packet with chunk ID */
                 R15_Bulk_SendData(Communication_p, BulkVector_p->Entries[BulkVector_p->SendingChunkId].Buffer_p);
 #ifndef  CFG_ENABLE_LOADER_TYPE
+
                 if (NULL != R15_TRANSPORT(Communication_p)->BulkDataCallback_p) {
                     BulkDataReqCallback_t pcbf = (BulkDataReqCallback_t)R15_TRANSPORT(Communication_p)->BulkDataCallback_p;
                     BulkVector_p->TransferedLength += BulkVector_p->ChunkSize;
                     pcbf(Communication_p->Object_p, BulkVector_p->SessionId, BulkVector_p->ChunkSize, BulkVector_p->Offset, BulkVector_p->Length, BulkVector_p->TotalLength, BulkVector_p->TransferedLength);
                 }
+
 #endif
                 C_(printf("bulk_protocol.c(%d) Sent chunk (%d) session (%d)\n", __LINE__, ChunkId, BulkVector_p->SessionId);)
             }
@@ -885,12 +901,14 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
             break;
 
         case WAIT_CHUNK_SENT:
+
             /* Wait for the chunk to be sent in order to continue sending next chunks */
             if (CHECK_PACKET_FLAGS(BulkVector_p->Entries[BulkVector_p->SendingChunkId].Buffer_p, BUF_TX_SENT)) {
                 BulkVector_p->State = PROCESSING_CHUNKS;
             } else {
                 /* While sending the chunk prepare other chunks for sending. */
                 ProcessingChunkId = R15_Bulk_GetChunkForSeriazliation(BulkVector_p);
+
                 if (ProcessingChunkId <= BulkVector_p->Buffers - 1) {
                     R15_Bulk_SerializeChunk(Communication_p, BulkVector_p->Entries[ProcessingChunkId].Buffer_p, ProcessingChunkId);
                 } else if (R15_Bulk_AllChunksProcessed(BulkVector_p)) {
@@ -901,6 +919,7 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
             break;
 
         case SENDING_CHUNKS:
+
             if (R15_Bulk_CheckTransmitedChunks(BulkVector_p)) {
                 /* save the current bulk vector before bulk session is closed */
                 memcpy(&(R15_TRANSPORT(Communication_p))->PreviousBulkVector, BulkVector_p, sizeof(TL_BulkVectorList_t));
@@ -910,15 +929,18 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
             } else if (CHECK_PACKET_FLAGS(BulkVector_p->Entries[BulkVector_p->SendingChunkId].Buffer_p, BUF_TX_SENT)) {
                 /* Get Chunk ID of next packet! */
                 BulkVector_p->SendingChunkId = R15_Bulk_GetChunkForSending(BulkVector_p);
+
                 if (BulkVector_p->SendingChunkId <= BulkVector_p->Buffers - 1) {
                     /* Send packet with chunk ID */
                     R15_Bulk_SendData(Communication_p, BulkVector_p->Entries[BulkVector_p->SendingChunkId].Buffer_p);
 #ifndef  CFG_ENABLE_LOADER_TYPE
+
                     if (NULL != R15_TRANSPORT(Communication_p)->BulkDataCallback_p) {
                         BulkDataReqCallback_t pcbf = (BulkDataReqCallback_t)R15_TRANSPORT(Communication_p)->BulkDataCallback_p;
                         BulkVector_p->TransferedLength += BulkVector_p->ChunkSize;
                         pcbf(Communication_p->Object_p, BulkVector_p->SessionId, BulkVector_p->ChunkSize, BulkVector_p->Offset, BulkVector_p->Length, BulkVector_p->TotalLength, BulkVector_p->TransferedLength);
                     }
+
 #endif
                     C_(printf("bulk_protocol.c(%d) Sent chunk (%d) session (%d)\n", __LINE__, ChunkId, BulkVector_p->SessionId);)
                 }
@@ -931,6 +953,7 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
 
 #ifndef  CFG_ENABLE_LOADER_TYPE
         case WAIT_TX_DONE:
+
             /* Wait for all chunks in the current session to be send before closing
                the current session and notifying start of the new session */
             if (R15_Bulk_SessionTxDone(BulkVector_p)) {
@@ -942,12 +965,14 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
                 (void)Do_R15_Bulk_CloseSession(Communication_p, BulkVector_p); //TODO: da se hendla return vrednosta!
 
                 BulkExtendedHeader_t *PendingHeader_p = R15_TRANSPORT(Communication_p)->BulkHandle.PendingBulkHeader_p;
+
                 if (NULL != PendingHeader_p) {
                     // set bulk parameters for new bulk session if request for starting new session was received
                     pcbf(Communication_p->Object_p, PendingHeader_p->Session, PendingHeader_p->ChunkSize, PendingHeader_p->Offset, PendingHeader_p->Length, FALSE);
                     BUFFER_FREE(R15_TRANSPORT(Communication_p)->BulkHandle.PendingBulkHeader_p);
                 }
             }
+
             break;
 #endif
 
@@ -956,13 +981,35 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
             BulkVector_p->Status = BULK_SESSION_FINISHED;
             C_(printf("bulk_protocol.c(%d) Write bulk process finished! \n", __LINE__);)
             break;
+#ifndef  CFG_ENABLE_LOADER_TYPE
+        case CANCEL_BULK: {
+            uint32 Counter;
 
+            for (Counter = 0 ; (Counter < BulkVector_p->Buffers); Counter++) {
+                if (CHECK_PACKET_FLAGS(BulkVector_p->Entries[Counter].Buffer_p, BUF_CRC_CALCULATING)) {
+                    goto ErrExit;
+                }
+
+                if (CHECK_PACKET_FLAGS(BulkVector_p->Entries[Counter].Buffer_p, BUF_TX_SENDING)) {
+                    goto ErrExit;
+                }
+            }
+
+            (void)Do_R15_Bulk_CloseSession(Communication_p, BulkVector_p);
+            (void)Do_R15_Bulk_DestroyVector(Communication_p, BulkVector_p, FALSE);
+            BulkVector_p->State = BULK_IDLE_STATE;
+            pcbf = (BulkBuffersRelease_t)R15_TRANSPORT(Communication_p)->BulkBufferRelease_p;
+            pcbf(Communication_p->Object_p, BulkVector_p);
+        }
+        break;
+#endif
         default:
             BulkVector_p->State = BULK_IDLE_STATE;
             break;
         }
     }
 
+ErrExit:
     Do_CriticalSection_Leave(R15_TRANSPORT(Communication_p)->BulkHandle.BulkTransferCS);
 
     return ReturnValue;
@@ -1171,7 +1218,7 @@ static void R15_Bulk_GetListOfReceivedChunks(const TL_BulkVectorList_t *const Bu
     }
 }
 
-static boolean R15_Bulk_AllChunksProcessed(const TL_BulkVectorList_t *const BulkVector_p)
+__inline static boolean R15_Bulk_AllChunksProcessed(const TL_BulkVectorList_t *const BulkVector_p)
 {
     boolean Status = TRUE;
     uint32 ChunkId;
@@ -1211,7 +1258,7 @@ static boolean R15_Bulk_SessionTxDone(const TL_BulkVectorList_t *const BulkVecto
     return Status;
 }
 
-static boolean IsChunkReceived(Communication_t *Communication_p, uint32 ChunkId)
+__inline static boolean IsChunkReceived(Communication_t *Communication_p, uint32 ChunkId)
 {
     PacketMeta_t *Packet_p = R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p->Entries[ChunkId].Buffer_p;
 
@@ -1243,7 +1290,7 @@ static TL_BulkVectorStatus_t R15_Bulk_GetVectorStatus(TL_BulkVectorList_t *BulkV
         Packet_p = BulkVector_p->Entries[ChunkCounter].Buffer_p;
 
         if (Packet_p == NULL ||
-            !(CHECK_PACKET_FLAGS(Packet_p, BUF_ACK_READY) || CHECK_PACKET_FLAGS(Packet_p, BUF_ACKNOWLEDGED))) {
+                !(CHECK_PACKET_FLAGS(Packet_p, BUF_ACK_READY) || CHECK_PACKET_FLAGS(Packet_p, BUF_ACKNOWLEDGED))) {
             Status = VECTOR_NOT_COMPLETE;
         } else {
             if (Status == VECTOR_NOT_COMPLETE) {
@@ -1269,12 +1316,12 @@ static boolean R15_Bulk_VectorNeedsRetransmission(TL_BulkVectorList_t *BulkVecto
     uint32 ChunkId;
 
     for (ChunkId = 0; ChunkId <= CurrentChunkId; ChunkId++) {
-       if (NULL == BulkVector_p->Entries[ChunkId].Buffer_p) {
-           if (FALSE == BulkVector_p->Entries[ChunkId].RetransmissionRequested) {
-               BulkVector_p->Entries[ChunkId].RetransmissionRequested = TRUE;
-               Status = TRUE;
-           }
-       }
+        if (NULL == BulkVector_p->Entries[ChunkId].Buffer_p) {
+            if (FALSE == BulkVector_p->Entries[ChunkId].RetransmissionRequested) {
+                BulkVector_p->Entries[ChunkId].RetransmissionRequested = TRUE;
+                Status = TRUE;
+            }
+        }
     }
 
     return Status;
@@ -1284,7 +1331,7 @@ static boolean R15_Bulk_VectorNeedsRetransmission(TL_BulkVectorList_t *BulkVecto
  *  Clear RetransmissionRequested flag for all chunks in the given bulk vector.
  *
  */
-static void R15_Bulk_VectorClearRetransmissionRequested(TL_BulkVectorList_t *BulkVector_p)
+__inline static void R15_Bulk_VectorClearRetransmissionRequested(TL_BulkVectorList_t *BulkVector_p)
 {
     uint32 ChunkId;
 
@@ -1344,7 +1391,7 @@ static ErrorCode_e R15_Bulk_ReadRequestHandler(Communication_t *Communication_p,
             }
         } else {
             if ((BulkVector_p->State == PROCESSING_CHUNKS) || (BulkVector_p->State == SENDING_CHUNKS) ||
-                (BulkVector_p->State == WAIT_CHUNK_SENT) || (BulkVector_p->State == WAIT_BULK_ACK)) {
+                    (BulkVector_p->State == WAIT_CHUNK_SENT) || (BulkVector_p->State == WAIT_BULK_ACK)) {
                 /* mark all chunks for retransmission */
                 R15_Bulk_MarkNotAckAllChunks(BulkVector_p);
             } else {
@@ -1414,18 +1461,18 @@ static ErrorCode_e R15_Bulk_ReadRequestHandler(Communication_t *Communication_p,
             Buffers = ((ExtendedHeader.Length + ExtendedHeader.ChunkSize - 1) / ExtendedHeader.ChunkSize);
 
             if ((0 == ExtendedHeader.AcksChunk) &&
-                (Do_R15_Bulk_GetStatusSession(R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p) == BULK_SESSION_IDLE)) {
-                    C_(printf("bulk_protocol.c(%d) Request for new bulk session(%d)!\n", __LINE__, ExtendedHeader.Session);)
+                    (Do_R15_Bulk_GetStatusSession(R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p) == BULK_SESSION_IDLE)) {
+                C_(printf("bulk_protocol.c(%d) Request for new bulk session(%d)!\n", __LINE__, ExtendedHeader.Session);)
 
-                    /* Try to release the timer for the bulk session acknowledge */
-                    if (R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey > 0) {
-                        (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey); // LCM MB bug fix: Timer should be released on request for retransmission
-                        R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = 0;
-                    }
+                /* Try to release the timer for the bulk session acknowledge */
+                if (R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey > 0) {
+                    (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey); // LCM MB bug fix: Timer should be released on request for retransmission
+                    R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = 0;
+                }
 
-                    ACK_Read = FALSE;
-                    pcbf = (BulkCommandReqCallback_t)R15_TRANSPORT(Communication_p)->BulkCommandCallback_p;
-                    pcbf(Communication_p->Object_p, ExtendedHeader.Session, ExtendedHeader.ChunkSize, ExtendedHeader.Offset, ExtendedHeader.Length, ACK_Read);
+                ACK_Read = FALSE;
+                pcbf = (BulkCommandReqCallback_t)R15_TRANSPORT(Communication_p)->BulkCommandCallback_p;
+                pcbf(Communication_p->Object_p, ExtendedHeader.Session, ExtendedHeader.ChunkSize, ExtendedHeader.Offset, ExtendedHeader.Length, ACK_Read);
             } else if (Buffers == ExtendedHeader.AcksChunk) {
                 C_(printf("bulk_protocol.c(%d) ACK for bulk session(%d)!\n", __LINE__, ExtendedHeader.Session);)
                 (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey);

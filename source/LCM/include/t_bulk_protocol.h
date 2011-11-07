@@ -35,13 +35,6 @@
 /** Defined bulk error in 64 bits format. */
 #define BULK_ERROR_64 0xffffffffffffffff
 
-#ifndef CFG_ENABLE_LOADER_TYPE
-/** Defined Callback functions used for bulk transfer in the LCM on PC side. */
-typedef void (*BulkCommandReqCallback_t)(void *Object_p, uint16 Session, uint32 ChunkSize, uint64 Offset, uint32 Length, boolean ACK_Read);
-typedef void (*BulkDataReqCallback_t)(void *Object_p, uint16 Session, uint32 ChunkSize, uint64 Offset, uint32 Length, uint64 TotalLength, uint32 TransferedLength);
-typedef void (*BulkDataEndOfDump_t)(void *Object_p);
-#endif // CFG_ENABLE_LOADER_TYPE
-
 /** Defined bulk commands. */
 typedef enum {
     CMD_BULK_STATUS   = 0x00,  /**< Status packet type command. */
@@ -71,7 +64,8 @@ TYPEDEF_ENUM {
     WAIT_TX_DONE               = 9,  /**< Wait all chunks to be sent. */
     WRITE_BULK_FINISH          = 10, /**< Bulk acknowledge has been received,
                                           finish the write bulk process. */
-    WAIT_WRITE_REQUEST         = 11  /**< Wait bulk request command. */
+    WAIT_WRITE_REQUEST         = 11,  /**< Wait bulk request command. */
+    CANCEL_BULK                = 12
 } ENUM8(TL_BulkProtocolState_t);
 
 /** Defined bulk process states. */
@@ -161,6 +155,15 @@ typedef struct {
                                                     opening new session, received while
                                                     current session is in process of sending. */
 } BulkHandle_t;
+
+#ifndef CFG_ENABLE_LOADER_TYPE
+/** Defined Callback functions used for bulk transfer in the LCM on PC side. */
+typedef void (*BulkCommandReqCallback_t)(void *Object_p, uint16 Session, uint32 ChunkSize, uint64 Offset, uint32 Length, boolean ACK_Read);
+typedef void (*BulkDataReqCallback_t)(void *Object_p, uint16 Session, uint32 ChunkSize, uint64 Offset, uint32 Length, uint64 TotalLength, uint32 TransferedLength);
+typedef void (*BulkDataEndOfDump_t)(void *Object_p);
+typedef void (*BulkBuffersRelease_t)(void *Object_p, TL_BulkVectorList_t *BulkVector_p);
+#endif // CFG_ENABLE_LOADER_TYPE
+
 
 /** @} */
 /** @} */

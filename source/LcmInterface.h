@@ -24,6 +24,7 @@ typedef ErrorCode_e(*CommunicationSetFamily_t)(Communication_t *Communication_p,
 typedef ErrorCode_e(*CommunicationSend_t)(Communication_t *Communication_p, void *InputData_p);
 typedef ErrorCode_e(*CommunicationSetProtocolTimeouts_t)(Communication_t *Communication_p, void *TimeoutData_p);
 typedef ErrorCode_e(*CommunicationGetProtocolTimeouts_t)(Communication_t *Communication_p, void *TimeoutData_p);
+typedef char*(*CommunicationGetVersion_t)(Communication_t *Communication_p);
 typedef ErrorCode_e(*CommunicationCancelReceiver_t)(Communication_t *Communication_p, uint8 PacketsBeforeTransferStop);
 
 typedef ErrorCode_e(*R15CommandSend_t)(Communication_t *Communication_p, CommandData_t *CmdData_p);
@@ -36,6 +37,7 @@ typedef TL_BulkSessionState_t (*R15BulkGetStatusSession_t)(const Communication_t
 typedef uint32(*R15BulkDestroyVector_t)(const Communication_t *const Communication_p, TL_BulkVectorList_t *BulkVector_p, boolean ReqReleaseBuffer);
 typedef uint32(*R15BulkOpenSession_t)(const Communication_t *const Communication_p, const uint16 SessionId, const TL_SessionMode_t Mode, uint32 Length);
 typedef void (*R15BulkSetCallbacks_t)(Communication_t *Communication_p, void *BulkCommandCallback_p, void *BulkDataCallback_p, void *BulkDataEndOfDump_p);
+typedef void (*R15BulkBuffersRelease_t)(Communication_t *Communication_p, void *BulkBuffersRelease_p);
 
 typedef ErrorCode_e(*A2CommandSend_t)(Communication_t *Communication_p, A2_CommandData_t *CmdData_p);
 typedef void (*A2SpeedflashStart_t)(Communication_t *Communication_p);
@@ -50,6 +52,7 @@ typedef struct {
     CommunicationSend_t                 Send_Fn;
     CommunicationSetProtocolTimeouts_t  SetProtocolTimeouts_Fn;
     CommunicationGetProtocolTimeouts_t  GetProtocolTimeouts_Fn;
+    CommunicationGetVersion_t           GetVersion_Fn;
     CommunicationCancelReceiver_t       CancelReceiver_Fn;
 } CommunicationInterface_t;
 
@@ -66,6 +69,7 @@ typedef struct {
     R15BulkDestroyVector_t          DestroyVector_Fn;
     R15BulkOpenSession_t            OpenSession_Fn;
     R15BulkSetCallbacks_t           SetCallbacks_Fn;
+    R15BulkBuffersRelease_t         SetBuffersRelease_Fn;
 } R15BulkInterface_t;
 
 typedef struct {
@@ -74,6 +78,13 @@ typedef struct {
     A2SpeedflashSetLastBlock_t      SpeedflashSetLastBlock_Fn;
     A2SpeedflashWriteBlock_t        SpeedflashWriteBlock_Fn;
 } A2CommandInterface_t;
+
+
+typedef enum {
+    UNKNOWN_LCM = 0,
+    LDR_LCM = 1,
+    PC_LCM = 2
+} LCM_t;
 
 class LcmInterface
 {
@@ -87,6 +98,7 @@ public:
     ErrorCode_e CommunicationSetFamily(Family_t family, Do_CEH_Call_t CEHCallback);
     ErrorCode_e CommunicationSetProtocolTimeouts(void *TimeoutData_p);
     ErrorCode_e CommunicationGetProtocolTimeouts(void *TimeoutData_p);
+    ErrorCode_e CommunicationCheckVersion(char *LCMVersion_p, LCM_t LCM_type);
     ErrorCode_e CommunicationShutdown();
     ErrorCode_e CommunicationCancelReceiver(uint8 PacketsBeforeReceiverStop);
 
@@ -94,6 +106,7 @@ public:
     ErrorCode_e CommandResetSessionCounters();
 
     void BulkSetCallbacks(void *BulkCommandCallback_p, void *BulkDataCallback_p, void *BulkDataEndOfDump_p);
+    void BulkBuffersRelease(void *BulkBufferRelease_p);
     uint32 BulkOpenSession(const uint16 SessionId, const TL_SessionMode_t Mode, uint32 Length);
     TL_BulkVectorList_t *BulkCreateVector(const uint32 BulkVector, uint32 Length, const uint32 BuffSize, TL_BulkVectorList_t *CreatedBulkVector_p);
     ErrorCode_e BulkStartSession(TL_BulkVectorList_t *BulkVector_p, const uint64 Offset);

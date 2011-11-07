@@ -385,6 +385,10 @@
 					RelativePath=".\cnh1606344_ldr_communication_module\source\z_family.c"
 					>
 				</File>
+				<File
+					RelativePath=".\cnh1606344_ldr_communication_module\source\lcm_version.c"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="cnh1605204_ldr_transport_layer"

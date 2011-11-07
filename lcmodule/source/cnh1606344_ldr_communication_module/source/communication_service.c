@@ -34,6 +34,10 @@
 #include "r_z_transport.h"
 #endif
 
+
+extern char LCM_CurrentVersion[];
+
+
 /*******************************************************************************
  * File scope types, constants and variables
  ******************************************************************************/
@@ -461,6 +465,18 @@ ErrorCode_e Do_Communication_Cancel_Receiver(Communication_t *Communication_p, u
 
 ErrorExit:
     return ReturnValue;
+}
+
+/*
+ * Function used to get the LCM version.
+ *
+ * LCM version string for the current version is placed in lcm_version.c file
+ *
+ * @retval char LCM_CurrentVersion[]             After successful execution.
+ */
+char *Do_Communication_GetVersion()
+{
+    return LCM_CurrentVersion;
 }
 
 void Do_CommunicationInternalErrorHandler(const ErrorCode_e IntError)

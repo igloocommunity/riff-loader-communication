@@ -215,6 +215,9 @@ public:
     static void   BulkDataEndOfDumpCallback(void *pObject);
     void          Do_BulkDataEndOfDumpCallback();
 
+    static void   BulkReleaseBuffers(void *pObject, TL_BulkVectorList_t *BulkVector_p);
+
+
     int           MapLcmError(int error);
 
     void          SignalError(int error);

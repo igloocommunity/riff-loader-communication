@@ -83,6 +83,8 @@
     -->
     <value number="10401" name="LCM_DLL_LOAD_LOADLIBRARY_ERROR" fatal="true" short="Failed to load LCM library.">Loading of dependant library failed. Make sure that it is placed on correct location.</value>
     <value number="10402" name="LCM_DLL_LOAD_FUNCTION_NOT_FOUND" fatal="true" short="Failed to import LCM functionality.">Some of dependend functions was not found in the given LCM library. Make sure that the version that is used is compatible.</value>
+    <value number="10426" name="LCM_DLL_LOAD_INCOMPATIBLE_PC_VERSION" fatal="false" short="Incompatible PC LCM version.">Some of functions may not work in the given LCM library. Make sure that the PC LCM version that is used is compatible.</value>
+    <value number="10427" name="LCM_DLL_LOAD_INCOMPATIBLE_LDR_VERSION" fatal="false" short="Incompatible LDR LCM version.">Some of functions may not work in the given LCM library. Make sure that the LDR LCM version that is used is compatible.</value>
 
     <!--
     * Exceptions Fatal 10451-10475

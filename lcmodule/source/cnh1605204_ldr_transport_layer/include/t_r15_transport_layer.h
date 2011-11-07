@@ -55,6 +55,7 @@ typedef struct {
     void                  *BulkDataCallback_p;
     /** Callback function pointer for handling end of bulk transfer.*/
     void                  *EndOfDump_p;
+    void                  *BulkBufferRelease_p;
 } R15_TransportContext_t;
 
 /** @} */

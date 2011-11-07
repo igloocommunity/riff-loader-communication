@@ -91,7 +91,7 @@ int BulkHandler::Receive(const string &destinationFile)
     return 0;
 }
 
-void BulkHandler::Finish()
+void BulkHandler::Finish(bool ForceFinish)
 {
     if (BULK_RX == m_State) {
         m_State = BULK_INACTIVE;
@@ -99,6 +99,10 @@ void BulkHandler::Finish()
         m_pFileWriteThread->WaitToDie(INFINITE);
     } else {
         m_State = BULK_INACTIVE;
+
+        if (ForceFinish) {
+            m_pBulkVector->State = CANCEL_BULK;
+        }
     }
 }
 

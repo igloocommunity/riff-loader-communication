@@ -539,6 +539,10 @@
 				RelativePath=".\LCDriverThread.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\LcdVersion.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="api_wrappers"

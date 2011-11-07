@@ -57,6 +57,8 @@
 extern Communication_t *GlobalCommunication_p;
 
 extern Communication_t DebugCommunication;
+
+
 /*******************************************************************************
  * Declaration of functions
  ******************************************************************************/
@@ -215,6 +217,15 @@ extern "C"
      *                    protocol family dependant error code otherwise.
      */
     LCM_API ErrorCode_e Do_Communication_Cancel_Receiver(Communication_t *Communication_p, uint8 PacketsBeforeReceiverStop);
+
+    /**
+     * Function used to get the LCM version.
+     *
+     * LCM version string for the current version is placed in lcm_version.c file
+     *
+     * @retval char LCM_CurrentVersion[]             After successful execution.
+     */
+    LCM_API char *Do_Communication_GetVersion();
 
 #ifdef __cplusplus
 };

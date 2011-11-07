@@ -24,6 +24,7 @@ LIBSRC := \
 	source/LcmInterface.cpp\
 	source/LCDriverThread.cpp\
 	source/LCDriverMethods.cpp\
+	source/LcdVersion.cpp\
 	source/LCDriverEntry.cpp\
 	source/LCDriver.cpp\
 	source/LCM/Hash.cpp\

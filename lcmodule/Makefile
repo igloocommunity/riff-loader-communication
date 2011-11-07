@@ -55,6 +55,7 @@ LIBSRC :=${TRANSPORT_PATH}/source/bulk_protocol.c\
 	${NETWORK_PATH}/source/protrom_header.c\
 	${NETWORK_PATH}/source/protrom_network.c\
 	${LCM_CNH_PATH}/source/communication_service.c\
+	${LCM_CNH_PATH}/source/lcm_version.c\
 	${LCM_CNH_PATH}/source/protrom_family.c\
 	${LCM_CNH_PATH}/source/z_family.c\
 	${LCM_CNH_PATH}/source/r15_family.c\
@@ -390,6 +391,7 @@ distclean: clean
 		@rm -f ${LCMLDR_INSTALLDIR}/r_protrom_protocol.h \
 		@rm -f ${LCMLDR_INSTALLDIR}/t_protrom_network.h \
 		@rm -f ${LCMLDR_INSTALLDIR}/communication_service.c \
+		@rm -f ${LCMLDR_INSTALLDIR}/lcm_version.c \
 		@rm -f ${LCMLDR_INSTALLDIR}/r_protrom_transport.h \
 		@rm -f ${LCMLDR_INSTALLDIR}/t_protrom_protocol.h \
 		@rm -f ${LCMLDR_INSTALLDIR}/custom_command_ids.h \

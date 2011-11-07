@@ -330,7 +330,7 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
         /* check retransmission count before send */
         Out_p->Packet_p = (PacketMeta_t *)QUEUE(Communication_p, FifoDequeue_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Outbound_p);
 
-        if ((NULL == Out_p->Packet_p) || (CHECK_PACKET_FLAGS(Out_p->Packet_p, BUF_TX_DONE))) {
+        if ((NULL == Out_p->Packet_p) || (CHECK_PACKET_FLAGS(Out_p->Packet_p, BUF_FREE)) || (CHECK_PACKET_FLAGS(Out_p->Packet_p, BUF_TX_DONE))) {
             break;
         } else if (Out_p->Packet_p->Resend < MAX_RESENDS) {
             Out_p->Packet_p->Resend++;
@@ -437,6 +437,7 @@ ErrorCode_e R15_Network_CancelRetransmission(const Communication_t *const Commun
             (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_NETWORK(Communication_p)->RetransmissionList[Index]->TimerKey);
 
             free(R15_NETWORK(Communication_p)->RetransmissionList[Index]->Packet_p->Timer_p);
+            R15_NETWORK(Communication_p)->RetransmissionList[Index]->Packet_p->Timer_p = NULL;
             ReturnValue = R15_Network_PacketRelease(Communication_p, R15_NETWORK(Communication_p)->RetransmissionList[Index]->Packet_p);
 
             if (E_SUCCESS != ReturnValue) {
@@ -588,6 +589,7 @@ ErrorCode_e R15_Network_PacketRelease(const Communication_t *const Communication
 #endif
 
             memset(Meta_p, 0, sizeof(PacketMeta_t));
+            Meta_p = NULL;
             break;
         }
 

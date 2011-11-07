@@ -52,7 +52,7 @@ public:
 
     int Receive(const std::string &sourceFile);
     int Send(const std::string &destinationFile);
-    void Finish();
+    void Finish(bool ForceFinish);
     void HandleCommandRequest(uint16 session, uint32 chunkSize, uint64 offset, uint32 length, bool acknowledge);
 private:
     CLCDriverMethods *m_Methods;

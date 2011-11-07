@@ -343,6 +343,13 @@ void CLCDriverMethods::BulkDataReqCallback(void *pObject, uint16 uiSession, uint
     return pLcdMethods->Do_BulkDataReqCallback(uiSession, uiChunkSize, uiOffset, uiLength, uiTotalLength, uiTransferedLength);
 }
 
+void CLCDriverMethods::BulkReleaseBuffers(void *pObject, TL_BulkVectorList_t *BulkVector_p)
+{
+    CLCDriverMethods *pLcdMethods = static_cast<CLCDriverMethods *>(pObject);
+    return pLcdMethods->m_pBuffers->ReleaseBulkVector(BulkVector_p);
+}
+
+
 void CLCDriverMethods::BulkDataEndOfDumpCallback(void *pObject)
 {
     CLCDriverMethods *pLcdMethods = static_cast<CLCDriverMethods *>(pObject);
@@ -526,6 +533,10 @@ int CLCDriverMethods::Done_System_LoaderStartupStatus(char *pchVersion, int *piV
     CopyStringToArray(m_pCmdResult->System_LoaderStartupStatus_LoaderVersion, pchVersion, piVersionSize);
     CopyStringToArray(m_pCmdResult->System_LoaderStartupStatus_ProtocolVersion, pchProtocol, piProtocolSize);
 
+    //TODO: enable LCM_LDR Version check here!!!!
+    //LCM_t LCMType = LDR_LCM;
+    //VERIFY_SUCCESS(m_pLcmInterface->CommunicationCheckVersion(pchProtocol,LCMType));
+
 ErrorExit:
 
     if (E_SUCCESS != ReturnValue) {
@@ -688,7 +699,12 @@ int CLCDriverMethods::Do_System_ExecuteSoftware(const uint32 ExecuteMode, const 
 ErrorExit:
 
     if (iUseBulk) {
-        m_pBulkHandler->Finish();
+        if (E_SUCCESS != ReturnValue) {
+            m_pBulkHandler->Finish(TRUE);
+        } else {
+            m_pBulkHandler->Finish(FALSE);
+        }
+
         m_pBuffers->ReleaseBulkFile();
     }
 
@@ -910,6 +926,7 @@ int CLCDriverMethods::Do_Flash_ProcessFile(const char *pchPath, const char *pchT
     if (iUseBulk) {
         CLockCS lock(LCDMethodsCS);
         m_pLcmInterface->BulkSetCallbacks((void *)BulkCommandReqCallback, (void *)BulkDataReqCallback, (void *)BulkDataEndOfDumpCallback);
+        m_pLcmInterface->BulkBuffersRelease((void *)BulkReleaseBuffers);
         VERIFY_SUCCESS(m_pBuffers->AllocateBulkFile(pchPath));
         uint64 uiLength = m_pBuffers->GetBulkFileLength();
         m_uiBulkLength = uiLength;
@@ -927,10 +944,14 @@ int CLCDriverMethods::Do_Flash_ProcessFile(const char *pchPath, const char *pchT
 ErrorExit:
 
     if (iUseBulk) {
-        m_pBulkHandler->Finish();
+        if (E_SUCCESS != ReturnValue) {
+            m_pBulkHandler->Finish(TRUE);
+        } else {
+            m_pBulkHandler->Finish(FALSE);
 
-        if (0 != iDeleteBuffers) {
-            m_pBuffers->ReleaseBulkFile();
+            if (0 != iDeleteBuffers) {
+                m_pBuffers->ReleaseBulkFile();
+            }
         }
     }
 
@@ -1008,7 +1029,11 @@ int CLCDriverMethods::Do_Flash_DumpArea(const char *pchPathToDump, uint64 uiStar
 ErrorExit:
 
     if (iUseBulk) {
-        m_pBulkHandler->Finish();
+        if (E_SUCCESS != ReturnValue) {
+            m_pBulkHandler->Finish(TRUE);
+        } else {
+            m_pBulkHandler->Finish(FALSE);
+        }
     }
 
     return ReturnValue;
@@ -1081,7 +1106,11 @@ int CLCDriverMethods::Do_Flash_FlashRaw(const char *pchPath, uint64 uiStart, uin
 ErrorExit:
 
     if (iUseBulk) {
-        m_pBulkHandler->Finish();
+        if (E_SUCCESS != ReturnValue) {
+            m_pBulkHandler->Finish(TRUE);
+        } else {
+            m_pBulkHandler->Finish(FALSE);
+        }
 
         if (0 != iDeleteBuffers) {
             m_pBuffers->ReleaseBulkFile();
@@ -1282,7 +1311,11 @@ int CLCDriverMethods::Do_FileSystem_CopyFile(const char *pchSourcePath, int iSou
 ErrorExit:
 
     if (iSourceUseBulk || iDestinationUseBulk) {
-        m_pBulkHandler->Finish();
+        if (E_SUCCESS != ReturnValue) {
+            m_pBulkHandler->Finish(TRUE);
+        } else {
+            m_pBulkHandler->Finish(FALSE);
+        }
 
         if (iSourceUseBulk) {
             m_pBuffers->ReleaseBulkFile();
@@ -1376,7 +1409,13 @@ int CLCDriverMethods::Do_FileSystem_ReadLoadModuleManifests(const char *pchTarge
     VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_FILE_SYSTEM_OPERATIONS, COMMAND_FILE_SYSTEM_OPERATIONS_READLOADMODULESMANIFESTS));
 
 ErrorExit:
-    m_pBulkHandler->Finish();
+
+    if (E_SUCCESS != ReturnValue) {
+        m_pBulkHandler->Finish(TRUE);
+    } else {
+        m_pBulkHandler->Finish(FALSE);
+    }
+
     return ReturnValue;
 }
 
@@ -1495,7 +1534,12 @@ int CLCDriverMethods::Do_OTP_StoreSecureObject(const char *pchSourcePath, int iD
 ErrorExit:
 
     if (iUseBulk) {
-        m_pBulkHandler->Finish();
+        if (E_SUCCESS != ReturnValue) {
+            m_pBulkHandler->Finish(TRUE);
+        } else {
+            m_pBulkHandler->Finish(FALSE);
+        }
+
         m_pBuffers->ReleaseBulkFile();
     }
 
@@ -1580,7 +1624,11 @@ int CLCDriverMethods::Do_ParameterStorage_ReadGlobalDataSet(const char *pchGdfsI
 ErrorExit:
 
     if (iUseBulk) {
-        m_pBulkHandler->Finish();
+        if (E_SUCCESS != ReturnValue) {
+            m_pBulkHandler->Finish(TRUE);
+        } else {
+            m_pBulkHandler->Finish(FALSE);
+        }
     }
 
     return ReturnValue;
@@ -1618,7 +1666,12 @@ int CLCDriverMethods::Do_ParameterStorage_WriteGlobalDataSet(const char *pchGdfs
 ErrorExit:
 
     if (iUseBulk) {
-        m_pBulkHandler->Finish();
+        if (E_SUCCESS != ReturnValue) {
+            m_pBulkHandler->Finish(TRUE);
+        } else {
+            m_pBulkHandler->Finish(FALSE);
+        }
+
         m_pBuffers->ReleaseBulkFile();
     }
 

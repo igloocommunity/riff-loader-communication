@@ -185,7 +185,10 @@ extern "C"
      * @param [in] EndOfDump_p           Pointer to the callback function
                                          for handling a finished bulk transfer.
      */
+
     LCM_API void Do_R15_Bulk_SetCallbacks(Communication_t *Communication_p, void *BulkCommandCallback_p, void *BulkDataCallback_p, void *EndOfDump_p);
+
+    LCM_API void Do_R15_Bulk_SetBuffersRelease(Communication_t *Communication_p, void *BulkBufferRelease_p);
 #endif
 
 #ifdef __cplusplus

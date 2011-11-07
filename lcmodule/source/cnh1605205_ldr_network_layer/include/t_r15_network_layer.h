@@ -145,7 +145,7 @@ TYPEDEF_ENUM {
     (packet)->Flags |= (mask & flags); \
   } while (0)
 
-#define CHECK_PACKET_FLAGS(packet, flags) (((flags) == ((packet)->Flags & (flags))) ? TRUE : FALSE)
+#define CHECK_PACKET_FLAGS(packet, flags) ((0 != ((packet)->Flags & (flags))) ? TRUE : FALSE)
 
 /** Defined state of the receiver */
 typedef enum {

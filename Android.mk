@@ -162,6 +162,7 @@ LOCAL_SRC_FILES := \
 	source/LcmInterface.cpp\
 	source/LCDriverThread.cpp\
 	source/LCDriverMethods.cpp\
+	source/LcdVersion.cpp\
 	source/LCDriverEntry.cpp\
 	source/LCDriver.cpp\
 	source/LCM/Hash.cpp\
@@ -254,6 +255,7 @@ LOCAL_SRC_FILES := \
 	lcmodule/source/cnh1605205_ldr_network_layer/source/protrom_header.c\
 	lcmodule/source/cnh1605205_ldr_network_layer/source/protrom_network.c\
 	lcmodule/source/cnh1606344_ldr_communication_module/source/communication_service.c\
+	lcmodule/source/cnh1606344_ldr_communication_module/source/lcm_version.c\
 	lcmodule/source/cnh1606344_ldr_communication_module/source/protrom_family.c\
 	lcmodule/source/cnh1606344_ldr_communication_module/source/z_family.c\
 	lcmodule/source/cnh1606344_ldr_communication_module/source/r15_family.c\

@@ -15,7 +15,7 @@
 #endif
 
 char *LcmInterface::m_pchLCMLibPath = 0;
-
+extern char *LCD_VersionList[];
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -75,6 +75,7 @@ int LcmInterface::LoadLCMLibrary()
     Communication.Send_Fn                   = (CommunicationSend_t)GetProcAddress(m_hDLL, "Do_Communication_Send");
     Communication.SetProtocolTimeouts_Fn    = (CommunicationSetProtocolTimeouts_t)GetProcAddress(m_hDLL, "Do_Communication_SetProtocolTimeouts");
     Communication.GetProtocolTimeouts_Fn    = (CommunicationGetProtocolTimeouts_t)GetProcAddress(m_hDLL, "Do_Communication_GetProtocolTimeouts");
+    Communication.GetVersion_Fn             = (CommunicationGetVersion_t)GetProcAddress(m_hDLL, "Do_Communication_GetVersion");
     Communication.CancelReceiver_Fn         = (CommunicationCancelReceiver_t)GetProcAddress(m_hDLL, "Do_Communication_Cancel_Receiver");
 
     R15Command.Send_Fn                  = (R15CommandSend_t)GetProcAddress(m_hDLL, "Do_R15_Command_Send");
@@ -87,8 +88,9 @@ int LcmInterface::LoadLCMLibrary()
     R15Bulk.GetStatusSession_Fn         = (R15BulkGetStatusSession_t)GetProcAddress(m_hDLL, "Do_R15_Bulk_GetStatusSession");
     R15Bulk.CloseSession_Fn             = (R15BulkCloseSession_t)GetProcAddress(m_hDLL, "Do_R15_Bulk_CloseSession");
     R15Bulk.SetCallbacks_Fn             = (R15BulkSetCallbacks_t)GetProcAddress(m_hDLL, "Do_R15_Bulk_SetCallbacks");
+    R15Bulk.SetBuffersRelease_Fn        = (R15BulkBuffersRelease_t)GetProcAddress(m_hDLL, "Do_R15_Bulk_SetBuffersRelease");
 
-    A2Command.Send_Fn               = (A2CommandSend_t)GetProcAddress(m_hDLL, "Do_A2_Command_Send");
+    A2Command.Send_Fn                       = (A2CommandSend_t)GetProcAddress(m_hDLL, "Do_A2_Command_Send");
     A2Command.SpeedflashStart_Fn            = (A2SpeedflashStart_t)GetProcAddress(m_hDLL, "Do_A2_Speedflash_Start");
     A2Command.SpeedflashSetLastBlock_Fn     = (A2SpeedflashSetLastBlock_t)GetProcAddress(m_hDLL, "Do_A2_Speedflash_SetLastBlock");
     A2Command.SpeedflashWriteBlock_Fn       = (A2SpeedflashWriteBlock_t)GetProcAddress(m_hDLL, "Do_A2_Speedflash_WriteBlock");
@@ -101,6 +103,7 @@ int LcmInterface::LoadLCMLibrary()
         Communication.Send_Fn                == 0 ||
         Communication.SetProtocolTimeouts_Fn == 0 ||
         Communication.GetProtocolTimeouts_Fn == 0 ||
+        Communication.GetVersion_Fn          == 0 ||
         R15Command.Send_Fn                   == 0 ||
         R15Command.ResetSessionCounters_Fn   == 0 ||
         R15Bulk.OpenSession_Fn               == 0 ||
@@ -110,10 +113,10 @@ int LcmInterface::LoadLCMLibrary()
         R15Bulk.GetStatusSession_Fn          == 0 ||
         R15Bulk.CloseSession_Fn              == 0 ||
         R15Bulk.SetCallbacks_Fn              == 0 ||
-        A2Command.Send_Fn                == 0 ||
-        A2Command.SpeedflashStart_Fn             == 0 ||
-        A2Command.SpeedflashSetLastBlock_Fn      == 0 ||
-        A2Command.SpeedflashWriteBlock_Fn        == 0
+        A2Command.Send_Fn                    == 0 ||
+        A2Command.SpeedflashStart_Fn         == 0 ||
+        A2Command.SpeedflashSetLastBlock_Fn  == 0 ||
+        A2Command.SpeedflashWriteBlock_Fn    == 0
     ) {
         return LCM_DLL_LOAD_FUNCTION_NOT_FOUND;
     }
@@ -150,12 +153,16 @@ void LcmInterface::CloseLCMLibrary()
 ErrorCode_e LcmInterface::CommunicationInitialize(void *Object_p, Family_t Family, HashDevice_t *HashDevice_p, CommunicationDevice_t *CommunicationDevice_p, Do_CEH_Call_t CommandCallback_p, BuffersInterface_t *Buffers_p, TimersInterface_t *Timers_p, QueueInterface_t *Queue_p)
 {
     int ReturnValue = E_SUCCESS;
+    char *LCMVersion_p = NULL;
+    LCM_t LCMType = PC_LCM;
 
     if (m_hDLL == NULL) {
         CLockCS lock(m_CriticalSection);
 
         if (m_hDLL == NULL) {
             VERIFY_SUCCESS(LoadLCMLibrary());
+            //  LCMVersion_p = Communication.GetVersion_Fn(m_pCommunication);
+            //  VERIFY_SUCCESS(CommunicationCheckVersion(LCMVersion_p, LCMType));
         }
     }
 
@@ -185,6 +192,28 @@ ErrorCode_e LcmInterface::CommunicationGetProtocolTimeouts(void *TimeoutData_p)
     return Communication.GetProtocolTimeouts_Fn(m_pCommunication, TimeoutData_p);
 }
 
+ErrorCode_e LcmInterface::CommunicationCheckVersion(char *LCMVersion_p, LCM_t LCMType)
+{
+
+    int ReturnValue = LCM_DLL_LOAD_INCOMPATIBLE_PC_VERSION;
+    int i = 0;
+
+    if (LCMType == LDR_LCM) {
+        ReturnValue = LCM_DLL_LOAD_INCOMPATIBLE_LDR_VERSION;
+    }
+
+    do {
+        if (strcmp(LCMVersion_p, LCD_VersionList[i]) == 0) {
+            ReturnValue = E_SUCCESS;
+            break;
+        }
+
+        i++;
+    } while (LCD_VersionList[i] != NULL);
+
+    return static_cast<ErrorCode_e>(ReturnValue);
+}
+
 ErrorCode_e LcmInterface::CommunicationShutdown()
 {
     return Communication.Shutdown_Fn(&m_pCommunication);
@@ -212,6 +241,11 @@ ErrorCode_e LcmInterface::CommandResetSessionCounters()
 void LcmInterface::BulkSetCallbacks(void *BulkCommandCallback_p, void *BulkDataCallback_p, void *BulkDataEndOfDump_p)
 {
     R15Bulk.SetCallbacks_Fn(m_pCommunication, BulkCommandCallback_p, BulkDataCallback_p, BulkDataEndOfDump_p);
+}
+
+void LcmInterface::BulkBuffersRelease(void *BulkBufferRelease_p)
+{
+    R15Bulk.SetBuffersRelease_Fn(m_pCommunication, BulkBufferRelease_p);
 }
 
 uint32 LcmInterface::BulkOpenSession(const uint16 SessionId, const TL_SessionMode_t Mode, uint32 Length)

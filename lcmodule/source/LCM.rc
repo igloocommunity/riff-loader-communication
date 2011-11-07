@@ -75,9 +75,9 @@ BEGIN
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "Loader Communication Driver"
             VALUE "LegalCopyright", "Copyright (C) STEricsson AB 2011"
-            VALUE "PrivateBuild", "Change-Id: I0498cbaecea78651418d11ea2643fcafa3ac4880"
+            VALUE "PrivateBuild", "Change-Id:If5b3c993739f93276e2a76b012a1852d687ad746"
             VALUE "ProductName", "CXA1104507 Loader Communication Module"
-            VALUE "ProductVersion", "PV8"
+            VALUE "ProductVersion", "R1V"
         END
     END
     BLOCK "VarFileInfo"
