@@ -270,7 +270,6 @@ uint32 Do_R15_Bulk_DestroyVector(const Communication_t *const Communication_p, T
     uint32 ReturnValue = E_SUCCESS;
     uint32 Counter;
     int BuffersNr = 0;
-    R15_Outbound_t *Out_p = &(R15_NETWORK(Communication_p)->Outbound);
 
     if (NULL == Communication_p) {
         return BULK_ERROR;
@@ -319,7 +318,6 @@ uint32 Do_R15_Bulk_DestroyVector(const Communication_t *const Communication_p, T
     BulkVector_p->ChunkSize = 0;
     BulkVector_p->Offset = 0;
     BulkVector_p->State = BULK_IDLE_STATE;
-    Out_p->State = SEND_IDLE;
 
     return ReturnValue;
 }
