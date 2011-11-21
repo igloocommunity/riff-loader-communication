@@ -77,6 +77,13 @@ ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_System_AuthenticateImpl(uint16 Sessi
     return E_SUCCESS;
 }
 
+ErrorCode_e LoaderRpcInterfaceImpl::DoneRPC_System_DeauthenticateImpl(uint16 Session, ErrorCode_e Status)
+{
+    cmdResult_->GeneralResponse_Session = Session;
+
+    return E_SUCCESS;
+}
+
 ErrorCode_e LoaderRpcInterfaceImpl::DoRPC_System_GetControlKeysImpl(uint16 Session)
 {
     cmdResult_->GeneralResponse_Session = Session;

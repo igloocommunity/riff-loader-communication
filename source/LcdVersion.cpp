@@ -16,6 +16,6 @@
  * var char *LCD_VersionList[]
  * brief ASCII string list variable holding the LCD version/build time/product number..
  */
-char *LCD_VersionList[] = {"R1V",
+char *LCD_VersionList[] = {"PX2",
                            NULL
                           };

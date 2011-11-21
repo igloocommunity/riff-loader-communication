@@ -745,6 +745,25 @@ ErrorExit:
 }
 
 /// <summary>
+/// This command deauthenticates the ME from prior
+/// authentications to prevent unauthorized access.
+/// </summary>
+/// <param name="iType">Deauthentication type:0 = deauthenticate until next reboot of the ME,1 = permanent deauthentication.</param>
+/// <returns> Status of the command.</returns>
+int CLCDriverMethods::Do_System_Deauthenticate(int iType)
+{
+    uint16 uiSessionOut = 0;
+    int ReturnValue = E_SUCCESS;
+
+    VERIFY_SUCCESS(IsMainThreadAlive());
+    VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_Deauthenticate(uiSessionOut, iType));
+    VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED | EVENT_CMD_RECEIVED, GROUP_SYSTEM, COMMAND_SYSTEM_DEAUTHENTICATE));
+
+ErrorExit:
+    return ReturnValue;
+}
+
+/// <summary>
 /// This command is used by the loader to retrieve the SimLock control keys from the host to authenticate a user.
 /// The command is used in the authentication context.
 /// </summary>

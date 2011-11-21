@@ -388,6 +388,18 @@
        <value ref="  VeryLimitedProductionModeLevel"/>
       </permissions>
     </command>
+
+    <command number="16" name="System Deauthenticate" ADbg="false" source="PC"> supportedcmdtype="longrunning">
+      <interface type="loader" name="Deauthenticate"/>
+      <documentation>
+        This command is used by the Loader to deauthenticates the ME from prior authentications to prevent unauthorized access.
+      </documentation>
+      <input>
+        <value type="uint32" name="Type">Deauthentication type: 1 = permanent deauthentication, 0 = deauthenticate until next reboot of the ME.</value>
+      </input>
+      <output>
+      </output>
+    </command>
   </group>
 
   <group number="02" name="Flash application" supportedcmdtype="longrunning,shortrunning">

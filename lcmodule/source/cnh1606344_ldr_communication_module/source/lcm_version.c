@@ -11,6 +11,6 @@
  * brief ASCII string variable holding the LCM version/build time/product number..
  */
 
-char LCM_CurrentVersion[] = "R1V";
+char LCM_CurrentVersion[] = "PX2";
 
 /** @} */

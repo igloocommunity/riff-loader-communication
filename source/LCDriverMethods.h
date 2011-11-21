@@ -70,6 +70,7 @@ public:
     int Do_System_SetSystemTime(uint32 EpochTime);
     int Do_System_SwitchCommunicationDevice(uint32 Device, uint32 DeviceParam);
     int Do_System_StartCommRelay(uint32 HostDeviceId, uint32 TargetDeviceId, uint32 ControlDeviceId);
+    int Do_System_Deauthenticate(int iType);
 
     int Do_Flash_ProcessFile(const char *pchPath, const char *pchType, int iUseBulk, int iDeleteBuffers);
     int Do_Flash_ListDevices(TDevices *pDevices, int *piDeviceSize);

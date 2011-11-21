@@ -375,6 +375,14 @@ extern "C"
     LCDRIVER_API int __cdecl System_Authenticate(LCDContext Context, int iType, int *piSize, unsigned char *puchdata);
 
     /// <summary>
+    /// This command deauthenticates the ME from prior
+    /// authentications to prevent unauthorized access.
+    /// </summary>
+    /// <param name="iType">Deauthentication type:0 = deauthenticate until next reboot of the ME,1 = permanent deauthentication.</param>
+    /// <returns> Status of the command.</returns>
+    LCDRIVER_API int __cdecl System_Deauthenticate(LCDContext Context, int iType);
+
+    /// <summary>
     /// This command is used by the loader to retrieve the SimLock control keys from the host to authenticate a user.
     /// The command is used in the authentication context.
     /// </summary>

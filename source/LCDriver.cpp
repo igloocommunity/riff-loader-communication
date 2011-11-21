@@ -254,6 +254,14 @@ LCDRIVER_API int __cdecl System_Authenticate(LCDContext Context, int iType, int 
     return Context->m_pObject->Do_System_Authenticate(iType, piSize, puchdata);
 }
 
+LCDRIVER_API int __cdecl System_Deauthenticate(LCDContext Context, int iType)
+{
+    VERIFY_CONTEXT_STARTED(Context);
+
+    return Context->m_pObject->Do_System_Deauthenticate(iType);
+
+}
+
 LCDRIVER_API int __cdecl System_GetControlKeys(LCDContext Context, TSIMLockKeys *pSIMLockKeys)
 {
     VERIFY_CONTEXT_STARTED(Context);
