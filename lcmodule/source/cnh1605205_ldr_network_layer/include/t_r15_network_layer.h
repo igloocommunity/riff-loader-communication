@@ -158,11 +158,13 @@ typedef enum {
 
 /** Defined state of the transmitter */
 typedef enum {
-    SEND_IDLE,       /**< Transmiter idle state.*/
-    SEND_HEADER,     /**< Transmiter send header and extended header. */
-    SENDING_HEADER,  /**< Transmiter is in process sending the header and extended header. */
-    SEND_PAYLOAD,    /**< Transmiter send payload. */
-    SENDING_PAYLOAD  /**< Transmiter is in process sending payload.*/
+    SEND_IDLE,         /**< Transmitter idle state.*/
+    SEND_HEADER,       /**< Transmitter send header. */
+    SENDING_HEADER,    /**< Transmitter is in process sending header. */
+    SEND_EX_HEADER,    /**< Transmitter send extended header. */
+    SENDING_EX_HEADER, /**< Transmitter is in process sending extended header. */
+    SEND_PAYLOAD,      /**< Transmitter send payload. */
+    SENDING_PAYLOAD    /**< Transmitter is in process sending payload.*/
 } R15_OutboundState_t;
 
 /**

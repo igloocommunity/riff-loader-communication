@@ -314,12 +314,13 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
 {
     ErrorCode_e ReturnValue = E_SUCCESS;
     R15_Outbound_t *Out_p = &(R15_NETWORK(Communication_p)->Outbound);
-    uint8 *HeaderStartInBuffer_p = NULL;
+    uint8  *HeaderStartInBuffer_p = NULL;
+    uint8  *ExHeaderStartInBuffer_p = NULL;
     boolean IsBufferContinuous = FALSE;
+    uint32  ContinuousBufferLength = 0;
     boolean RegisterRetransmission = FALSE;
-    uint32 ContinuousBufferLength = 0;
-    uint32 ExtHdrLen = 0;
-    uint32 Aligned_Length = 0;
+    uint32  ExtHdrLen = 0;
+    uint32  Aligned_Length = 0;
 
     if (!Do_CriticalSection_Enter(Out_p->TxCriticalSection)) {
         return ReturnValue;
@@ -345,6 +346,7 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
     case SEND_HEADER:
         HeaderStartInBuffer_p = Out_p->Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER;
 
+#ifdef CFG_ENABLE_LOADER_TYPE
         if (Out_p->Packet_p->Header.ExtendedHeaderLength == COMMAND_EXTENDED_HEADER_LENGTH) {
             ExtHdrLen = ALIGNED_COMMAND_EXTENDED_HEADER_LENGTH;
         } else {
@@ -370,10 +372,13 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
             ContinuousBufferLength = ALIGNED_HEADER_LENGTH + ExtHdrLen;
             Out_p->State = SENDING_HEADER;
         }
+#else
+        ContinuousBufferLength = ALIGNED_HEADER_LENGTH;
+        Out_p->State = SENDING_HEADER;
+#endif
 
         if (E_SUCCESS == Communication_p->CommunicationDevice_p->Write((Out_p->Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER),
-        ContinuousBufferLength,
-        R15_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
+                         ContinuousBufferLength, R15_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
             C_(printf("r15_network_layer.c (%d) Header Sent to comm device! \n", __LINE__);)
         } else {
             Out_p->State = SEND_HEADER;
@@ -383,6 +388,36 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
 
         break;
     case SENDING_HEADER:
+        /* nothing to do, wait until sending is finished and state changed by write callback */
+        break;
+    case SEND_EX_HEADER:
+        ExHeaderStartInBuffer_p = Out_p->Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH;
+
+        if (Out_p->Packet_p->Header.ExtendedHeaderLength == COMMAND_EXTENDED_HEADER_LENGTH) {
+            ExtHdrLen = ALIGNED_COMMAND_EXTENDED_HEADER_LENGTH;
+        } else {
+            ExtHdrLen = ALIGNED_BULK_EXTENDED_HEADER_LENGTH;
+        }
+
+        if (Out_p->Packet_p->Header.PayloadLength != 0) {
+            Out_p->State = SENDING_EX_HEADER;
+        } else {
+            /* if there is no payload, just go directly to SENDING_PAYLOAD state */
+            Out_p->State = SENDING_PAYLOAD;
+            RegisterRetransmission = TRUE;
+        }
+
+        if (E_SUCCESS == Communication_p->CommunicationDevice_p->Write(ExHeaderStartInBuffer_p, ExtHdrLen,
+        R15_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
+            C_(printf("r15_network_layer.c (%d) ExHeader Sent to comm device! \n", __LINE__);)
+        } else {
+            Out_p->State = SEND_EX_HEADER;
+            RegisterRetransmission = FALSE;
+            C_(printf("r15_network_layer.c (%d) Error sending ex_header to comm device! \n", __LINE__);)
+        }
+
+        break;
+    case SENDING_EX_HEADER:
         /* nothing to do, wait until sending is finished and state changed by write callback */
         break;
     case SEND_PAYLOAD:
@@ -620,6 +655,8 @@ void R15_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Pa
     B_(printf("r15_network_layer.c (%d): Device write finished!! \n", __LINE__);)
 
     if (SENDING_HEADER == Out_p->State) {
+        Out_p->State = SEND_EX_HEADER;
+    } else if (SENDING_EX_HEADER == Out_p->State) {
         Out_p->State = SEND_PAYLOAD;
     } else if (SENDING_PAYLOAD == Out_p->State) {
         if (NULL == Out_p->Packet_p->Timer_p) {
@@ -653,6 +690,7 @@ void R15_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Pa
 static ErrorCode_e R15_Network_ReceiveHeader(const Communication_t *const Communication_p)
 {
     R15_Inbound_t *In_p = &(R15_NETWORK(Communication_p)->Inbound);
+    A_(static uint8 print_header = 1;)
 
     if (In_p->RecData == 0) {
         In_p->ReqData = ALIGNED_HEADER_LENGTH;
@@ -661,8 +699,9 @@ static ErrorCode_e R15_Network_ReceiveHeader(const Communication_t *const Commun
     } else {
         if (R15_IsReceivedHeader(In_p)) {
             if (R15_IsValidHeader(In_p->Scratch)) {
-                R15_DeserializeHeader(&In_p->Header, In_p->Scratch);
+                A_(print_header = 1;)
 
+                R15_DeserializeHeader(&In_p->Header, In_p->Scratch);
                 In_p->Target_p += ALIGNED_HEADER_LENGTH;
 
                 if (In_p->Header.ExtendedHeaderLength == COMMAND_EXTENDED_HEADER_LENGTH) {
@@ -678,14 +717,15 @@ static ErrorCode_e R15_Network_ReceiveHeader(const Communication_t *const Commun
             }
         } else {
             A_(
-                uint32 Counter = 0;
+                if(print_header) {
+                    uint32 Counter = 0;
+                    printf("Invalid header! \n");
 
-                printf("Invalid header! ");
-
-            for (Counter = 0; Counter < 16; Counter++) {
-            printf(" %02X", In_p->Scratch[Counter]);
-            }
-            printf("\n\n");
+                    for (Counter = 0; Counter < 16; Counter++) {
+                        printf(" %02X", In_p->Scratch[Counter]);
+                    }
+                    printf("\n\n");
+                }
             )
         }
     }
@@ -765,6 +805,15 @@ static ErrorCode_e R15_Network_ReceiveExtendedHeader(Communication_t *Communicat
             C_(printf("r15_network_layer.c (%d) ReqData(%d) RecData(%d) \n", __LINE__, In_p->ReqData, In_p->RecData);)
         }
     } else {
+        A_(
+            uint32 Counter = 0;
+            printf("Invalid exheader! \n");
+
+            for (Counter = 0; Counter < 16; Counter++) {
+                printf(" %02X", In_p->Target_p[Counter]);
+            }
+            printf("\n\n");
+        )
         RESET_INBOUND(In_p, RECEIVE_HEADER);
         SYNC_HEADER(In_p, ALIGNED_HEADER_LENGTH, In_p->Scratch);
     }

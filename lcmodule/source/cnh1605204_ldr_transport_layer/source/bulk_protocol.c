@@ -116,6 +116,7 @@ uint32 Do_R15_Bulk_OpenSession(const Communication_t *const Communication_p, con
 
     if (MAX_BULK_TL_PROCESSES != VectorCounter) {
         if (R15_TRANSPORT(Communication_p)->BulkVectorList[VectorCounter].Status != BULK_SESSION_IDLE) {
+            A_(printf("bulk_protocol.c (%d): bulk error \n", __LINE__);)
             VectorCounter = BULK_ERROR;
         } else {
             R15_TRANSPORT(Communication_p)->BulkVectorList[VectorCounter].Status = BULK_SESSION_OPEN;
@@ -128,10 +129,11 @@ uint32 Do_R15_Bulk_OpenSession(const Communication_t *const Communication_p, con
             R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = 0;
         }
     } else {
+        A_(printf("bulk_protocol.c (%d): bulk error \n", __LINE__);)
         VectorCounter = BULK_ERROR;
     }
 
-    A_(printf("bulk_protocol.c (%d): Opened Bulk session(%d)with VId(%d)\n", __LINE__, SessionId, VectorCounter);)
+    B_(printf("bulk_protocol.c (%d): Opened Bulk session(%d)with VId(%d)\n", __LINE__, SessionId, VectorCounter);)
     return VectorCounter;
 }
 
@@ -432,6 +434,12 @@ ErrorCode_e Do_R15_Bulk_CloseSession(Communication_t *Communication_p, TL_BulkVe
     /* Verify that the requested bulk session is started. */
     VERIFY(NULL != BulkVector_p, E_FAILED_TO_CLOSE_BULK_SESSION);
 
+    /* Try to release the timer for the bulk read request */
+    if (R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey > 0) {
+        (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey);
+        R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = 0;
+    }
+
     R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p = NULL;
 
     C_(printf("bulk_protocol.c (%d): Bulk session(%d) closed! \n", __LINE__, BulkVector_p->SessionId);)
@@ -477,7 +485,10 @@ ErrorCode_e R15_Bulk_Process(Communication_t *Communication_p, PacketMeta_t *Pac
         A_(printf("bulk_protocol.c (%d): Session is not opened(%d) or wrong session(%d)! \n", __LINE__, R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p, ExtendedHeader.Session);)
 
         if ((CMD_BULK_DATA == (ExtendedHeader.TypeFlags & MASK_BULK_COMMAND_SELECT)) &&
-                NULL != PreviousBulkVector_p) {
+                (NULL != PreviousBulkVector_p) &&
+                (BulkVector_p->SessionId <= ExtendedHeader.Session)) {
+
+            A_(printf("bulk_protocol.c (%d): New session started \n", __LINE__);)
             // make the list of received chunks
             R15_Bulk_GetListOfReceivedChunks(PreviousBulkVector_p, &ChunksCount, ChunksList);
             // send read ACK for previous session
@@ -955,6 +966,9 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
             /* Wait for all chunks in the current session to be send before closing
                the current session and notifying start of the new session */
             if (R15_Bulk_SessionTxDone(BulkVector_p)) {
+                /* save the current bulk vector before bulk session is closed */
+                memcpy(&(R15_TRANSPORT(Communication_p))->PreviousBulkVector, BulkVector_p, sizeof(TL_BulkVectorList_t));
+
                 // notify session end
                 BulkCommandReqCallback_t pcbf = (BulkCommandReqCallback_t)R15_TRANSPORT(Communication_p)->BulkCommandCallback_p;
                 pcbf(Communication_p->Object_p, BulkVector_p->SessionId, BulkVector_p->ChunkSize, BulkVector_p->Offset, BulkVector_p->Length, TRUE);
@@ -1177,12 +1191,19 @@ static void R15_Bulk_ReadChunkCallBack(Communication_t *Communication_p, const v
 {
     TL_BulkVectorList_t *BulkVector_p = R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p;
 
+    if(NULL == BulkVector_p) {
+        A_(printf("bulk_protocol.c(%d) Bulk Vector released! \n", __LINE__);)
+        return;
+    }
+
     if (BULK_SESSION_FINISHED != BulkVector_p->Status) {
         uint32 ChunkId = 0;
         uint8 ChunksList[MAX_BULK_TL_PROCESSES] = {0};
 
         R15_Bulk_GetListOfReceivedChunks(BulkVector_p, &ChunkId, ChunksList);
         BulkVector_p->State = WAIT_CHUNKS;
+
+        A_(printf("bulk_protocol.c(%d) Timer Retransmission \n", __LINE__);)
 
         (void)R15_Bulk_SendReadRequest(Communication_p, BulkVector_p, ChunkId, ChunksList, NULL);
     }
