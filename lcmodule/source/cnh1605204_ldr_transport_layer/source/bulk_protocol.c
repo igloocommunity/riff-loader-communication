@@ -512,6 +512,7 @@ ErrorCode_e R15_Bulk_Process(Communication_t *Communication_p, PacketMeta_t *Pac
         break;
 
 #ifndef  CFG_ENABLE_LOADER_TYPE
+
     case CMD_BULK_WRITE:
 
         if (NULL != R15_TRANSPORT(Communication_p)->BulkCommandCallback_p) {
@@ -523,6 +524,7 @@ ErrorCode_e R15_Bulk_Process(Communication_t *Communication_p, PacketMeta_t *Pac
         ReturnValue = R15_Network_PacketRelease(Communication_p, Packet_p);
         break;
 #endif
+
     case CMD_BULK_STATUS:
         // not implemented.
         A_(printf("bulk_protocol.c (%d): ** Not implemented bulk command! **\n", __LINE__);)
@@ -733,6 +735,7 @@ static ErrorCode_e R15_Bulk_Process_Read(Communication_t *Communication_p, TL_Bu
         break;
 
 #ifndef  CFG_ENABLE_LOADER_TYPE
+
         /* coverity[unterminated_case] */
     case WAIT_WRITE_REQUEST:
         BulkVector_p->State = SEND_READ_REQUEST;
@@ -961,6 +964,7 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
             break;
 
 #ifndef  CFG_ENABLE_LOADER_TYPE
+
         case WAIT_TX_DONE:
 
             /* Wait for all chunks in the current session to be send before closing
@@ -994,6 +998,7 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
             C_(printf("bulk_protocol.c(%d) Write bulk process finished! \n", __LINE__);)
             break;
 #ifndef  CFG_ENABLE_LOADER_TYPE
+
         case CANCEL_BULK: {
             uint32 Counter;
 
@@ -1015,6 +1020,7 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
         }
         break;
 #endif
+
         default:
             BulkVector_p->State = BULK_IDLE_STATE;
             break;
@@ -1191,7 +1197,7 @@ static void R15_Bulk_ReadChunkCallBack(Communication_t *Communication_p, const v
 {
     TL_BulkVectorList_t *BulkVector_p = R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p;
 
-    if(NULL == BulkVector_p) {
+    if (NULL == BulkVector_p) {
         A_(printf("bulk_protocol.c(%d) Bulk Vector released! \n", __LINE__);)
         return;
     }

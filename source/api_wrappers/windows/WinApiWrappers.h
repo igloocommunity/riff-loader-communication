@@ -240,13 +240,16 @@ public:
         switch (::WaitForMultipleObjects(2, m_Handles, FALSE, mSecTimeout)) {
         case WAIT_OBJECT_0 + 0:
             return REMOVE_CANCEL;
+
         case WAIT_OBJECT_0 + 1: {
             CLockCS LocalCSLock(m_CSLock);
             *ppObject = RemoveFromQueueHead(); // Remove pObject from pObjectQueue head
             return REMOVE_SUCCESS;
         }
+
         case WAIT_TIMEOUT:
             return REMOVE_TIMEOUT;
+
         default:
             assert(false);
             return REMOVE_CANCEL;

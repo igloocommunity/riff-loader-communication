@@ -97,7 +97,7 @@ void BulkHandler::Finish(bool ForceFinish)
         m_State = BULK_INACTIVE;
         m_ReceiveQueue.SignalEvent();
         m_pFileWriteThread->WaitToDie(INFINITE);
-    } else {
+    } else if (m_State != BULK_INACTIVE) {
         m_State = BULK_INACTIVE;
 
         if (ForceFinish) {
@@ -112,15 +112,19 @@ void BulkHandler::HandleCommandRequest(uint16 session, uint32 chunkSize, uint64 
     case BULK_WRITE_REQUEST:
         HandleWriteRequest(session, chunkSize, offset, length);
         break;
+
     case BULK_READ_REQUEST:
         HandleReadRequest(session, chunkSize, offset, length);
         break;
+
     case BULK_RX_SESSION_END:
         HandleRxSessionEnd(session, chunkSize, offset, length);
         break;
+
     case BULK_TX_SESSION_END:
         HandleTxSessionEnd(session, chunkSize, offset, length);
         break;
+
     default:
         break;
     }

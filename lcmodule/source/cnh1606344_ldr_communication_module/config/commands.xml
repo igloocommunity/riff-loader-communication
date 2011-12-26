@@ -389,7 +389,7 @@
       </permissions>
     </command>
 
-    <command number="16" name="System Deauthenticate" ADbg="false" source="PC"> supportedcmdtype="longrunning">
+    <command number="16" name="System Deauthenticate" ADbg="false" source="PC" supportedcmdtype="longrunning">
       <interface type="loader" name="Deauthenticate"/>
       <documentation>
         This command is used by the Loader to deauthenticates the ME from prior authentications to prevent unauthorized access.

@@ -468,8 +468,8 @@ void SHA256_Transform(SHA256_CTX *context, const sha2_word32 *data)
         /* Apply the SHA-256 compression function to update a..h */
         T1 = h + Sigma1_256(e) + Ch(e, f, g) + K256[j] + W256[j];
 #else /* BYTE_ORDER == LITTLE_ENDIAN */
-/* Apply the SHA-256 compression function to update a..h with copy */
-T1 = h + Sigma1_256(e) + Ch(e, f, g) + K256[j] + (W256[j] = *data++);
+        /* Apply the SHA-256 compression function to update a..h with copy */
+        T1 = h + Sigma1_256(e) + Ch(e, f, g) + K256[j] + (W256[j] = *data++);
 #endif /* BYTE_ORDER == LITTLE_ENDIAN */
         T2 = Sigma0_256(a) + Maj(a, b, c);
         h = g;
@@ -486,14 +486,14 @@ T1 = h + Sigma1_256(e) + Ch(e, f, g) + K256[j] + (W256[j] = *data++);
 
     do {
         /* Part of the message block expansion: */
-        s0 = W256[(j+1)&0x0f];
+        s0 = W256[(j + 1) & 0x0f];
         s0 = sigma0_256(s0);
-        s1 = W256[(j+14)&0x0f];
+        s1 = W256[(j + 14) & 0x0f];
         s1 = sigma1_256(s1);
 
         /* Apply the SHA-256 compression function to update a..h */
         T1 = h + Sigma1_256(e) + Ch(e, f, g) + K256[j] +
-             (W256[j&0x0f] += s1 + W256[(j+9)&0x0f] + s0);
+             (W256[j & 0x0f] += s1 + W256[(j + 9) & 0x0f] + s0);
         T2 = Sigma0_256(a) + Maj(a, b, c);
         h = g;
         g = f;
@@ -810,8 +810,8 @@ void SHA512_Transform(SHA512_CTX *context, const sha2_word64 *data)
         /* Apply the SHA-512 compression function to update a..h */
         T1 = h + Sigma1_512(e) + Ch(e, f, g) + K512[j] + W512[j];
 #else /* BYTE_ORDER == LITTLE_ENDIAN */
-/* Apply the SHA-512 compression function to update a..h with copy */
-T1 = h + Sigma1_512(e) + Ch(e, f, g) + K512[j] + (W512[j] = *data++);
+        /* Apply the SHA-512 compression function to update a..h with copy */
+        T1 = h + Sigma1_512(e) + Ch(e, f, g) + K512[j] + (W512[j] = *data++);
 #endif /* BYTE_ORDER == LITTLE_ENDIAN */
         T2 = Sigma0_512(a) + Maj(a, b, c);
         h = g;
@@ -828,14 +828,14 @@ T1 = h + Sigma1_512(e) + Ch(e, f, g) + K512[j] + (W512[j] = *data++);
 
     do {
         /* Part of the message block expansion: */
-        s0 = W512[(j+1)&0x0f];
+        s0 = W512[(j + 1) & 0x0f];
         s0 = sigma0_512(s0);
-        s1 = W512[(j+14)&0x0f];
+        s1 = W512[(j + 14) & 0x0f];
         s1 =  sigma1_512(s1);
 
         /* Apply the SHA-512 compression function to update a..h */
         T1 = h + Sigma1_512(e) + Ch(e, f, g) + K512[j] +
-             (W512[j&0x0f] += s1 + W512[(j+9)&0x0f] + s0);
+             (W512[j & 0x0f] += s1 + W512[(j + 9) & 0x0f] + s0);
         T2 = Sigma0_512(a) + Maj(a, b, c);
         h = g;
         g = f;
@@ -957,7 +957,7 @@ void SHA512_Last(SHA512_CTX *context)
 
     /* Store the length of input data (in bits): */
     *(sha2_word64 *)&context->buffer[SHA512_SHORT_BLOCK_LENGTH] = context->bitcount[1];
-    *(sha2_word64 *)&context->buffer[SHA512_SHORT_BLOCK_LENGTH+8] = context->bitcount[0];
+    *(sha2_word64 *)&context->buffer[SHA512_SHORT_BLOCK_LENGTH + 8] = context->bitcount[0];
 
     /* Final transform: */
     SHA512_Transform(context, (sha2_word64 *)context->buffer);

@@ -24,7 +24,7 @@ typedef ErrorCode_e(*CommunicationSetFamily_t)(Communication_t *Communication_p,
 typedef ErrorCode_e(*CommunicationSend_t)(Communication_t *Communication_p, void *InputData_p);
 typedef ErrorCode_e(*CommunicationSetProtocolTimeouts_t)(Communication_t *Communication_p, void *TimeoutData_p);
 typedef ErrorCode_e(*CommunicationGetProtocolTimeouts_t)(Communication_t *Communication_p, void *TimeoutData_p);
-typedef char*(*CommunicationGetVersion_t)(Communication_t *Communication_p);
+typedef char *(*CommunicationGetVersion_t)(Communication_t *Communication_p);
 typedef ErrorCode_e(*CommunicationCancelReceiver_t)(Communication_t *Communication_p, uint8 PacketsBeforeTransferStop);
 
 typedef ErrorCode_e(*R15CommandSend_t)(Communication_t *Communication_p, CommandData_t *CmdData_p);
@@ -32,7 +32,7 @@ typedef ErrorCode_e(*R15CommandResetSessionCounters_t)(const Communication_t *co
 
 typedef ErrorCode_e(*R15BulkStartSession_t)(Communication_t *Communication_p, TL_BulkVectorList_t *BulkVector_p, const uint64 Offset);
 typedef ErrorCode_e(*R15BulkCloseSession_t)(Communication_t *Communication_p, TL_BulkVectorList_t *BulkVector_p);
-typedef TL_BulkVectorList_t*(*R15BulkCreateVector_t)(const Communication_t *const Communication_p, const uint32 BulkVector, uint32 Length, const uint32 BuffSize, TL_BulkVectorList_t *CreatedBulkVector_p);
+typedef TL_BulkVectorList_t *(*R15BulkCreateVector_t)(const Communication_t *const Communication_p, const uint32 BulkVector, uint32 Length, const uint32 BuffSize, TL_BulkVectorList_t *CreatedBulkVector_p);
 typedef TL_BulkSessionState_t (*R15BulkGetStatusSession_t)(const Communication_t *const Communication_p, const TL_BulkVectorList_t *BulkVector_p);
 typedef uint32(*R15BulkDestroyVector_t)(const Communication_t *const Communication_p, TL_BulkVectorList_t *BulkVector_p, boolean ReqReleaseBuffer);
 typedef uint32(*R15BulkOpenSession_t)(const Communication_t *const Communication_p, const uint16 SessionId, const TL_SessionMode_t Mode, uint32 Length);

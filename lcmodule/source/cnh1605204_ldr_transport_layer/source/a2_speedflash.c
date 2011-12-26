@@ -95,9 +95,11 @@ ErrorCode_e A2_Speedflash_Poll(Communication_t *Communication_p)
                 A2_SPEEDFLASH_REQ_SIZE, A2_Speedflash_ReadCallback, Communication_p->CommunicationDevice_p);
 #endif
         break;
+
     case A2_SPEEDFLASH_WAIT_READ_REQ:
         /* nothing to do */
         break;
+
     case A2_SPEEDFLASH_WRITE_BLOCK:
 
         if (NULL != A2_SPEEDFLASH(Communication_p)->Outbound_p) {
@@ -110,6 +112,7 @@ ErrorCode_e A2_Speedflash_Poll(Communication_t *Communication_p)
         }
 
         break;
+
     case A2_SPEEDFLASH_WAIT_WRITE_BLOCK:
         /* nothing to do */
         break;

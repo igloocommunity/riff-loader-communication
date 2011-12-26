@@ -81,15 +81,15 @@ BEGIN
     BEGIN
         BLOCK "000904b0"
         BEGIN
-            VALUE "Comments", "Build date: 2011-12-09"
+            VALUE "Comments", "Build date: 2011-12-26"
             VALUE "CompanyName", "STEricsson AB"
             VALUE "FileDescription", "LCDriver Dynamic Link Library"
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "Loader Communication Driver"
             VALUE "LegalCopyright", "Copyright (C) STEricsson AB 2011"
-            VALUE "PrivateBuild", "Change-Id: If0926da184dfefefcaad0d4e97080de283b7aabd"
+            VALUE "PrivateBuild", "Change-Id: Ia6539a7ebab97a078bc0d105b23b6a0545762194"
             VALUE "ProductName", "CXC 173 0865,  LCDriver DLL"
-            VALUE "ProductVersion", "PU3"
+            VALUE "ProductVersion", "PU4"
         END
     END
     BLOCK "VarFileInfo"

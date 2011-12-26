@@ -248,7 +248,7 @@ private:
     //  String and vector copy functions.
     //-----------------------------------------
     template<class T, class U>
-    void CopyVectorToArray(const std::vector<T>& Source, U *pDestination, int *piSize);
+    void CopyVectorToArray(const std::vector<T> &Source, U *pDestination, int *piSize);
 
     void CopyStringToArray(std::string &Source, char *pDestination, int *piSize);
 

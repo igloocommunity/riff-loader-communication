@@ -411,6 +411,7 @@ static ErrorCode_e Protrom_Network_TransmiterHandler(Communication_t *Communicat
 
     case PROTROM_SENDING_HEADER:
         break;
+
     case PROTROM_SEND_PAYLOAD:
         Out_p->State = PROTROM_SENDING_PAYLOAD;
 

@@ -149,9 +149,11 @@ void A2_Network_ReadCallback(const void *Data_p, const uint32 Length, void *Para
         case A2_RECEIVE_HEADER:
             ReturnValue = A2_Network_ReceiveHeader(Communication_p);
             break;
+
         case A2_RECEIVE_PAYLOAD:
             ReturnValue = A2_Network_ReceivePayload(Communication_p);
             break;
+
         default:
             A2_NETWORK(Communication_p)->Inbound.State = A2_RECEIVE_HEADER;
             A2_NETWORK(Communication_p)->Inbound.RecData = 0;
@@ -565,9 +567,11 @@ ErrorCode_e A2_Network_TransmiterHandler(Communication_t *Communication_p)
         }
 
         break;
+
     case A2_SENDING_HEADER:
         /* nothing to do, wait until sending is finished and state changed in write callback */
         break;
+
     case A2_SEND_PAYLOAD:
         Out_p->State = A2_SENDING_PAYLOAD;
 
@@ -582,6 +586,7 @@ ErrorCode_e A2_Network_TransmiterHandler(Communication_t *Communication_p)
         }
 
         break;
+
     case A2_SENDING_PAYLOAD:
         /* nothing to do, wait until sending is finished and state changed when packet ACK is received */
         break;

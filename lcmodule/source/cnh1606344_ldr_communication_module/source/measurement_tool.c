@@ -382,10 +382,12 @@ ErrorCode_e  Do_Measurement_AddMeasurementData(Measurement_t *Measurement_p, uin
         SessionMeasurement_p->OpenSessionTime = NewTime;
         ReturnValue = E_SUCCESS;
         break;
+
     case END_SESSION_TIME:
         SessionMeasurement_p->CloseSessionTime = NewTime;
         ReturnValue = E_SUCCESS;
         break;
+
     case RECEIVED_CHUNK_TIME :
         ChankDataBlock_p = FindChunkDataBlock(SessionMeasurement_p->ChunkMeasurement_p, ChunkID);
 
@@ -395,6 +397,7 @@ ErrorCode_e  Do_Measurement_AddMeasurementData(Measurement_t *Measurement_p, uin
         }
 
         break;
+
     case START_FLASH_CHUNK_TIME:
         ChankDataBlock_p = FindChunkDataBlock(SessionMeasurement_p->ChunkMeasurement_p, ChunkID);
 
@@ -404,6 +407,7 @@ ErrorCode_e  Do_Measurement_AddMeasurementData(Measurement_t *Measurement_p, uin
         }
 
         break;
+
     case END_FLASH_CHUNK_TIME:
         ChankDataBlock_p = FindChunkDataBlock(SessionMeasurement_p->ChunkMeasurement_p, ChunkID);
 
@@ -413,14 +417,17 @@ ErrorCode_e  Do_Measurement_AddMeasurementData(Measurement_t *Measurement_p, uin
         }
 
         break;
+
     case START_COMMAND_TIME:
         Measurement_p->StartCommandTime = NewTime;
         ReturnValue = E_SUCCESS;
         break;
+
     case END_COMMAND_TIME:
         Measurement_p->EndCommandTime = NewTime;
         ReturnValue = E_SUCCESS;
         break;
+
     default:
         //…
         break;
@@ -462,6 +469,7 @@ ErrorCode_e  Do_Measurement_CompleteResults(Measurement_t *Measurement_p)
         }
 
         break;
+
     default:
         //...
         break;
@@ -646,6 +654,7 @@ static uint32 CalculateSizeOfResults(SessionMeasurement_t *DataMeasurement_p, ui
         }
 
         break;
+
     default:
         Size = 0;
         break;

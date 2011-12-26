@@ -131,8 +131,10 @@ ErrorCode_e R15_Transport_Poll(Communication_t *Communication_p)
         switch (Packet_p->Header.Protocol) {
         case PROTO_BULK:
             return R15_Bulk_Process(Communication_p, Packet_p);
+
         case PROTO_COMMAND:
             return R15_Command_Process(Communication_p, Packet_p);
+
         default:
             return E_SUCCESS;
         }

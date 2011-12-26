@@ -46,7 +46,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)autogen&quot;;&quot;$(ProjectDir)cnh1606344_ldr_communication_module\config&quot;;&quot;$(ProjectDir)legacy_compatibility&quot;;&quot;$(ProjectDir)cnh1606344_ldr_communication_module\include&quot;;&quot;$(ProjectDir)cnh1605721_ldr_security_algorithms\include&quot;;&quot;$(ProjectDir)cnh1605720_ldr_time_utilities\include&quot;;&quot;$(ProjectDir)cnh1605551_ldr_utilities\include&quot;;&quot;$(ProjectDir)cnh1605205_ldr_network_layer\include&quot;;&quot;$(ProjectDir)cnh1605204_ldr_transport_layer\include&quot;;&quot;$(ProjectDir)cnh1605203_ldr_communication_buffer\include&quot;;&quot;$(ProjectDir)cnh1605551_ldr_utilities\critical_section&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;LCM_EXPORTS;PRINT_A_"
+				PreprocessorDefinitions="WIN32;_DEBUG;ENABLE_DEBUG;LCM_EXPORTS;PRINT_A_"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""

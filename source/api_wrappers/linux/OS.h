@@ -79,8 +79,10 @@ int _ultoa_s(unsigned long value, char(&str)[_Size], int radix)
     switch (radix) {
     case 10:
         return sprintf_s(str, "%ul", value);
+
     case 16:
         return sprintf_s(str, "%ulX", value);
+
     default:
         return -1;
     }

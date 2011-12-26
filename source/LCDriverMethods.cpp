@@ -52,7 +52,7 @@ extern uint32 DevicesNumber;
 CLCDriverMethods::CLCDriverMethods(const char *pchInterfaceId):
     m_EventQueue(256)
 {
-    m_pchId = new char[strlen(pchInterfaceId)+1];
+    m_pchId = new char[strlen(pchInterfaceId) + 1];
     strcpy_s(m_pchId, strlen(pchInterfaceId) + 1, pchInterfaceId);
 
     m_pCommunicationDevice = new CommunicationDevice_t;
@@ -694,8 +694,6 @@ int CLCDriverMethods::Do_System_ExecuteSoftware(const uint32 ExecuteMode, const 
         ReturnValue = INVALID_EXECUTION_MODE;
     }
 
-    //}
-
 ErrorExit:
 
     if (iUseBulk) {
@@ -757,7 +755,7 @@ int CLCDriverMethods::Do_System_Deauthenticate(int iType)
 
     VERIFY_SUCCESS(IsMainThreadAlive());
     VERIFY_SUCCESS(m_pLoaderRpcFunctions->DoRPC_System_Deauthenticate(uiSessionOut, iType));
-    VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED | EVENT_CMD_RECEIVED, GROUP_SYSTEM, COMMAND_SYSTEM_DEAUTHENTICATE));
+    VERIFY_SUCCESS(WaitForEvent(EVENT_GR_RECEIVED, GROUP_SYSTEM, COMMAND_SYSTEM_DEAUTHENTICATE));
 
 ErrorExit:
     return ReturnValue;
@@ -1948,7 +1946,7 @@ int CLCDriverMethods::Do_A2_System_LoaderOnLoader(const char *pchPath, int iPLOf
 
     NumberOfPackets = PL / PacketSize;
 
-    if (NumberOfPackets *PacketSize == PL) {
+    if (NumberOfPackets * PacketSize == PL) {
         NumberOfPackets--;
     }
 
@@ -2144,23 +2142,27 @@ int CLCDriverMethods::Do_SwitchProtocolFamily(TFamily family)
         strcat_s(strMessage, "Do_SetProtocolFamily(R15_FAMILY)");
         m_pMainThread->TimerOn();
         break;
+
     case PROTROM_PROTOCOL_FAMILY:
         m_CurrentProtocolFamily = PROTROM_FAMILY;
         m_CurrentCEHCallback = static_cast<Do_CEH_Call_t>(CEH_PROTROM_CallbackFunction);
         strcat_s(strMessage, "Do_SwitchProtocolFamily(PROTROM_FAMILY)");
         break;
+
     case Z_PROTOCOL_FAMILY:
         m_CurrentProtocolFamily = Z_FAMILY;
         m_CurrentCEHCallback = static_cast<Do_CEH_Call_t>(CEH_Z_CallbackFunction);
         strcat_s(strMessage, "Do_SwitchProtocolFamily(Z_FAMILY)");
         m_pZRpcFunctions->Z_IndataBuffer->Clear();
         break;
+
     case A2_PROTOCOL_FAMILY:
         m_CurrentProtocolFamily = A2_FAMILY;
         m_CurrentCEHCallback = static_cast<Do_CEH_Call_t>(CEH_A2_CallbackFunction);
         strcat_s(strMessage, "Do_SwitchProtocolFamily(A2_FAMILY)");
         //m_pMainThread->TimerOn();
         break;
+
     default:
         return INVALID_INPUT_PARAMETERS;
     }
@@ -2344,7 +2346,7 @@ int CLCDriverMethods::Do_PROTROM_DownloadLoader(const char *pchPath, int iPLOffs
     //Download all packet beside one
     NumberOfPackets = PL / PacketSize;
 
-    if (NumberOfPackets *PacketSize == PL) {
+    if (NumberOfPackets * PacketSize == PL) {
         NumberOfPackets--;
     }
 
@@ -2425,18 +2427,22 @@ int CLCDriverMethods::SetInitialProtocolFamily(TFamily family)
         m_CurrentProtocolFamily = R15_FAMILY;
         m_CurrentCEHCallback = CEHCallbackFunction;
         break;
+
     case PROTROM_PROTOCOL_FAMILY:
         m_CurrentProtocolFamily = PROTROM_FAMILY;
         m_CurrentCEHCallback = CEH_PROTROM_CallbackFunction;
         break;
+
     case Z_PROTOCOL_FAMILY:
         m_CurrentProtocolFamily = Z_FAMILY;
         m_CurrentCEHCallback = CEH_Z_CallbackFunction;
         break;
+
     case A2_PROTOCOL_FAMILY:
         m_CurrentProtocolFamily = A2_FAMILY;
         m_CurrentCEHCallback = CEH_A2_CallbackFunction;
         break;
+
     default:
         return INVALID_INPUT_PARAMETERS;
     }
@@ -2529,7 +2535,7 @@ int CLCDriverMethods::GetPcTimeouts(TR15Timeouts *R15_TOs, TLCDriverTimeouts *LC
 /// <param name="piSize">Size of data to write.</param>
 /// <returns> Void.</returns>
 template <class T, class U>
-void CLCDriverMethods::CopyVectorToArray(const vector<T>& Source, U *pDestination, int *piSize)
+void CLCDriverMethods::CopyVectorToArray(const vector<T> &Source, U *pDestination, int *piSize)
 {
     size_t copyLength = *piSize;
 
@@ -2607,6 +2613,7 @@ int CLCDriverMethods::WaitForEvent(uint32 event, int Group, int Command)
             }
 
             break;
+
         case EVENT_CMD_RECEIVED:
 
             if ((receivedEvent->group == Group && receivedEvent->command == Command) ||
@@ -2619,13 +2626,16 @@ int CLCDriverMethods::WaitForEvent(uint32 event, int Group, int Command)
             }
 
             break;
+
         case EVENT_SPEEDFLASH:
             m_pLogger->log("WaitForEvent: Speedflash request received.");
             iResult = 0;
             break;
+
         case EVENT_ERROR:
             iResult = receivedEvent->error;
             break;
+
         default:
             iResult = UNEXPECTED_EVENT_RECEIVED;
             break;
@@ -2716,8 +2726,10 @@ int CLCDriverMethods::MapLcmError(int error)
     switch (error) {
     case E_RETRANSMITION_FAILED:
         return LCM_RETRANSMISSION_ERROR;
+
     case E_GENERAL_COMMUNICATION_ERROR:
         return LCM_DEVICE_WRITE_ERROR;
+
     default:
         return error;
     }
