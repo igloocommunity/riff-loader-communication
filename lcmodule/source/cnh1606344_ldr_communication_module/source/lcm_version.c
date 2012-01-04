@@ -8,9 +8,11 @@
  */
 /**
  * var char LCM_CurrentVersion[]
- * brief ASCII string variable holding the LCM version/build time/product number..
+ * brief ASCII string holding the LCM version.
+ * The LCM_CurrentVersion string is compared with
+ * LCD_LCM_CompatibilityList in file LcdVersion.cpp in LCD code.
  */
 
-char LCM_CurrentVersion[] = "PX4";
+char LCM_CurrentVersion[] = "PX5";
 
 /** @} */

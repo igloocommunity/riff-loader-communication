@@ -6,6 +6,7 @@
 #include "lcdriver_error_codes.h"
 #include "LcmInterface.h"
 #include "Error.h"
+#include <string.h>
 #ifdef _WIN32
 #include "WinApiWrappers.h"
 #else
@@ -15,7 +16,7 @@
 #endif
 
 char *LcmInterface::m_pchLCMLibPath = 0;
-extern char *LCD_VersionList[];
+extern char *LCD_LCM_CompatibilityList[];
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -124,12 +125,14 @@ int LcmInterface::LoadLCMLibrary()
     return E_SUCCESS;
 }
 
+
 void LcmInterface::SetLCMLibPath(const char *lcmLibPath)
 {
     size_t pathLength = strlen(lcmLibPath);
 
     if (0 != m_pchLCMLibPath) {
         delete[] m_pchLCMLibPath;
+        m_pchLCMLibPath = NULL;
     }
 
     m_pchLCMLibPath = new char[pathLength + 1];
@@ -141,6 +144,7 @@ void LcmInterface::CloseLCMLibrary()
 {
     if (0 != m_pchLCMLibPath) {
         delete[] m_pchLCMLibPath;
+        m_pchLCMLibPath = NULL;
     }
 
 #ifdef _WIN32
@@ -158,17 +162,18 @@ ErrorCode_e LcmInterface::CommunicationInitialize(void *Object_p, Family_t Famil
 
     if (m_hDLL == NULL) {
         CLockCS lock(m_CriticalSection);
-
-        if (m_hDLL == NULL) {
-            VERIFY_SUCCESS(LoadLCMLibrary());
-            //  LCMVersion_p = Communication.GetVersion_Fn(m_pCommunication);
-            //  VERIFY_SUCCESS(CommunicationCheckVersion(LCMVersion_p, LCMType));
-        }
+        VERIFY_SUCCESS(LoadLCMLibrary());
+        LCMVersion_p = Communication.GetVersion_Fn(m_pCommunication);
+        VERIFY_SUCCESS(CommunicationCheckVersion(LCMVersion_p, LCMType));
     }
 
     ReturnValue = Communication.Initialize_Fn(Object_p, &m_pCommunication, Family, HashDevice_p, CommunicationDevice_p, CommandCallback_p, Buffers_p, Timers_p, Queue_p);
 
 ErrorExit:
+    if (ReturnValue != E_SUCCESS){
+        CloseLCMLibrary();
+        m_hDLL = NULL;
+    }
     return static_cast<ErrorCode_e>(ReturnValue);
 }
 
@@ -195,21 +200,20 @@ ErrorCode_e LcmInterface::CommunicationGetProtocolTimeouts(void *TimeoutData_p)
 ErrorCode_e LcmInterface::CommunicationCheckVersion(char *LCMVersion_p, LCM_t LCMType)
 {
 
-    int ReturnValue = LCM_DLL_LOAD_INCOMPATIBLE_PC_VERSION;
+    int ReturnValue = LCM_LOAD_INCOMPATIBLE_PC_VERSION;
     int i = 0;
 
     if (LCMType == LDR_LCM) {
-        ReturnValue = LCM_DLL_LOAD_INCOMPATIBLE_LDR_VERSION;
+        ReturnValue = LCM_LOAD_INCOMPATIBLE_LDR_VERSION;
     }
 
     do {
-        if (strcmp(LCMVersion_p, LCD_VersionList[i]) == 0) {
+        if (strcmp(LCMVersion_p, LCD_LCM_CompatibilityList[i]) == 0) {
             ReturnValue = E_SUCCESS;
             break;
         }
-
         i++;
-    } while (LCD_VersionList[i] != NULL);
+    } while (LCD_LCM_CompatibilityList[i] != NULL);
 
     return static_cast<ErrorCode_e>(ReturnValue);
 }

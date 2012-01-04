@@ -42,8 +42,8 @@ LCDRIVER_API int __cdecl Initialize(LCDContext *pContext, const char *InterfaceI
         SwitchProtocolFamily(*pContext, R15_PROTOCOL_FAMILY);
         SetMessageCallback(*pContext, Message_fn);
         SetProgressCallback(*pContext, ProgressBar_fn);
-
-        return StartContext(*pContext, Instance);
+        Result = StartContext(*pContext, Instance);
+        return Result;
     } else {
         return 0;
     }

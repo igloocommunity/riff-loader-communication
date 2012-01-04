@@ -13,9 +13,11 @@
 #define GetProcAddress dlsym
 #endif
 /**
- * var char *LCD_VersionList[]
- * brief ASCII string list variable holding the LCD version/build time/product number..
+ * var char *LCD_LCM_CompatibilityList[]
+ * brief ASCII string list holding the permitted LCM versions.
+ * This table contains compatibility information for the versions of LCM.
+ * Current LCM version is defined in file lcm_version.c in LCM code.
  */
-char *LCD_VersionList[] = {"PX4",
-                           NULL
-                          };
+char *LCD_LCM_CompatibilityList[] = {"PX5",
+                                      NULL
+                                    };
