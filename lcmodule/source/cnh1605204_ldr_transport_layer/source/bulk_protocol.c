@@ -1148,7 +1148,7 @@ static void R15_Bulk_SerializeChunk(Communication_t *Communication_p, PacketMeta
     /* Set extended header parameters */
     ExtendedHeader.Session = BulkVector_p->SessionId;
     ExtendedHeader.AcksChunk = (uint8)ChunkId;
-    ExtendedHeader.ChunkSize = BulkVector_p->ChunkSize;
+    ExtendedHeader.ChunkSize = Header.PayloadLength;
     ExtendedHeader.Offset = BulkVector_p->Offset;
     ExtendedHeader.Length = BulkVector_p->Length;
     ExtendedHeader.TypeFlags = CMD_BULK_DATA;
@@ -1598,8 +1598,8 @@ static ErrorCode_e R15_Bulk_DataRequestHandler(Communication_t *Communication_p,
             if (!IsChunkReceived(Communication_p, ChunkId)) {
                 BulkVector_p->TransferedLength += BulkVector_p->ChunkSize;
                 pcbf = (BulkDataReqCallback_t)R15_TRANSPORT(Communication_p)->BulkDataCallback_p;
-                pcbf(Communication_p->Object_p, BulkVector_p->SessionId, BulkVector_p->ChunkSize, BulkVector_p->Offset, BulkVector_p->Length, BulkVector_p->TotalLength, BulkVector_p->TransferedLength);
-                C_(printf("S(%d) L(%d) CS(%d)\n", BulkVector_p->SessionId, BulkVector_p->Length, BulkVector_p->ChunkSize);) //xvsvlpi
+                pcbf(Communication_p->Object_p, BulkVector_p->SessionId, ExtendedHeader.ChunkSize, BulkVector_p->Offset, BulkVector_p->Length, BulkVector_p->TotalLength, BulkVector_p->TransferedLength);
+                C_(printf("S(%d) L(%d) CS(%d)\n", BulkVector_p->SessionId, BulkVector_p->Length, BulkVector_p->ChunkSize);)
             }
         }
 
