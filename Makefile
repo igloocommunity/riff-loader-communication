@@ -335,3 +335,8 @@ coverity:
 	@cov-commit-defects --datadir $(COV_DATA_DIR) --product lcd --user admin --dir $(COV_INTER_DATA_DIR)
 	@cov-start-gui --datadir $(COV_DATA_DIR) --port 1122
 	echo Go to localhost port 1122 in webbrowser and login with username admin and password admin to review result
+
+astyle:
+	astyle --style=k/r --indent=spaces  --break-blocks --convert-tabs --add-brackets \
+	--unpad-paren --pad-header --pad-oper --indent-col1-comments --align-pointer=name \
+	-R "*.h" -R "*.c" -R "*.cpp"

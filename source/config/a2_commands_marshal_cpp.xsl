@@ -206,6 +206,7 @@ ErrorCode_e <value-of select="concat('A2LoaderRpcInterface::DoneRPC_', ../interf
 <apply-templates select="output/value" mode="serialize_size_declaration" />
 <apply-templates select="output/value" mode="serialize_size"/>
   A2_COMMANDDATA(A2_GENERAL_RESPONSE, <call-template name="groupidmain"/>, <call-template name="commandid"/>, Session, PLSize);
+  (void)(Data_p);
   Data_p = CmdData.Payload.Data_p;
 
 <apply-templates select="output/value" mode="serialize"/>

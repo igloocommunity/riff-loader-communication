@@ -30,7 +30,7 @@
 // Desc:  CEventObject constructor which initializes the class members
 // Ret:
 // ******************************************************************************
-CThreadWrapper::CThreadWrapper(void * (*pStartAddress)(void *), void *pArgument)
+CThreadWrapper::CThreadWrapper(void *(*pStartAddress)(void *), void *pArgument)
 {
     m_pStartAddress = pStartAddress;
     m_pArgument = pArgument;

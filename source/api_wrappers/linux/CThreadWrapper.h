@@ -15,7 +15,7 @@ typedef void *(*StartAddress_t)(void *);
 class CThreadWrapper : public CWaitableObject
 {
 public:
-    CThreadWrapper(void * (* pStartAddress)(void *), void *pArgument);
+    CThreadWrapper(void *(* pStartAddress)(void *), void *pArgument);
     ~CThreadWrapper();
     void ResumeThread();
     void SuspendThread();

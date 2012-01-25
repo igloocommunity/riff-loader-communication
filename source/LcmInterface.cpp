@@ -16,7 +16,7 @@
 #endif
 
 char *LcmInterface::m_pchLCMLibPath = 0;
-extern char *LCD_LCM_CompatibilityList[];
+extern const char *LCD_LCM_CompatibilityList[];
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -170,10 +170,12 @@ ErrorCode_e LcmInterface::CommunicationInitialize(void *Object_p, Family_t Famil
     ReturnValue = Communication.Initialize_Fn(Object_p, &m_pCommunication, Family, HashDevice_p, CommunicationDevice_p, CommandCallback_p, Buffers_p, Timers_p, Queue_p);
 
 ErrorExit:
-    if (ReturnValue != E_SUCCESS){
+
+    if (ReturnValue != E_SUCCESS) {
         CloseLCMLibrary();
         m_hDLL = NULL;
     }
+
     return static_cast<ErrorCode_e>(ReturnValue);
 }
 
@@ -212,6 +214,7 @@ ErrorCode_e LcmInterface::CommunicationCheckVersion(char *LCMVersion_p, LCM_t LC
             ReturnValue = E_SUCCESS;
             break;
         }
+
         i++;
     } while (LCD_LCM_CompatibilityList[i] != NULL);
 

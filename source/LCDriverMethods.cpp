@@ -1946,7 +1946,7 @@ int CLCDriverMethods::Do_A2_System_LoaderOnLoader(const char *pchPath, int iPLOf
 
     NumberOfPackets = PL / PacketSize;
 
-    if (NumberOfPackets * PacketSize == PL) {
+    if (NumberOfPackets *PacketSize == PL) {
         NumberOfPackets--;
     }
 
@@ -2346,7 +2346,7 @@ int CLCDriverMethods::Do_PROTROM_DownloadLoader(const char *pchPath, int iPLOffs
     //Download all packet beside one
     NumberOfPackets = PL / PacketSize;
 
-    if (NumberOfPackets * PacketSize == PL) {
+    if (NumberOfPackets *PacketSize == PL) {
         NumberOfPackets--;
     }
 

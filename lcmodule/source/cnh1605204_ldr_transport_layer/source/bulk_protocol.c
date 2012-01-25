@@ -876,6 +876,7 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
 #ifndef  CFG_ENABLE_LOADER_TYPE
             //TODO find end release timer for retransmission
             BulkVector_p->State = PROCESSING_CHUNKS;
+            /* coverity[fallthrough] */
 #else
             //...
             break;
@@ -1027,7 +1028,9 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
         }
     }
 
+#ifndef  CFG_ENABLE_LOADER_TYPE
 ErrExit:
+#endif
     Do_CriticalSection_Leave(R15_TRANSPORT(Communication_p)->BulkHandle.BulkTransferCS);
 
     return ReturnValue;

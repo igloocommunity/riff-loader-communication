@@ -160,6 +160,7 @@ ErrorCode_e <value-of select="concat('LoaderRpcInterface::DoRPC_', ../interface[
 <apply-templates select="input/value" mode="serialize_size_declaration" />
 <apply-templates select="input/value" mode="serialize_size"/>
   COMMANDDATAOUT(COMMAND_TYPE, <call-template name="groupidmain"/>, <call-template name="commandid"/>, SessionOut, PLSize);
+  (void)(Data_p);
   Data_p = CmdData.Payload.Data_p;
 <apply-templates select="input/value" mode="serialize"/>
   Answer = lcmInterface_->CommandSend(&amp;CmdData);
