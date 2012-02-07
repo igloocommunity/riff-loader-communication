@@ -7,7 +7,7 @@
 #include "MemMappedFile.h"
 #if defined(_WIN32)
 #include <windows.h>
-#elif defined(__linux__)
+#elif (defined(__linux__) || defined(__APPLE__))
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
@@ -15,6 +15,10 @@
 using namespace std;
 #else
 #error "Unknown target"
+#endif
+
+#ifdef __APPLE__
+#define lseek64 lseek
 #endif
 
 MemMappedFile::MemMappedFile(uint32 alignmentLength):

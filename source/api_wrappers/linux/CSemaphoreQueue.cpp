@@ -13,7 +13,7 @@
 CSemaphoreQueue::CSemaphoreQueue(unsigned int MaxCount) : m_MaximumCount(MaxCount)
 {
     m_pEventObject = new CEventObject();
-    m_pSemaphore = new CSemaphore();
+    m_pSemaphore = new CSemaphore(0);
 
     m_ObjectCollection.Add(m_pEventObject);
     m_ObjectCollection.Add(m_pSemaphore);
@@ -62,6 +62,7 @@ RemoveResult CSemaphoreQueue::RemoveHead(void **ppObject, size_t mSecTimeout)
     } else {
         // Should never occur
         assert(false);
+
         return REMOVE_CANCEL;;
     }
 }
@@ -99,6 +100,7 @@ void CSemaphoreQueue::AddToQueueTail(void *pObject)
 void *CSemaphoreQueue::RemoveFromQueueHead()
 {
     void *Object;
+
     Object = m_Queue[m_CurrentHead];
     IncrementHead();
     return Object;

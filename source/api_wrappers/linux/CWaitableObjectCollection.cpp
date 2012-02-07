@@ -9,6 +9,7 @@
 #include "Types.h"
 #include "CWaitableObjectCollection.h"
 #include <assert.h>
+#include <sys/time.h>
 
 CWaitableObjectCollection::CWaitableObjectCollection()
 {
@@ -30,11 +31,9 @@ CWaitableObject *CWaitableObjectCollection::Wait(DWORD dwTimeout)
     vector<CWaitableObject *>::iterator it;
     DWORD dwTimePassed = 0;
     struct timespec ts;
-    struct timespec curr_time, start_time;
+    struct timeval curr_time, start_time;
 
-    if (-1 == clock_gettime(CLOCK_REALTIME, &start_time)) {
-        return NULL;
-    }
+    gettimeofday(&start_time, NULL);
 
     do {
         for (it = m_objs.begin(); it != m_objs.end(); ++it) {
@@ -54,12 +53,10 @@ CWaitableObject *CWaitableObjectCollection::Wait(DWORD dwTimeout)
         // coverity[returned_null]
         while (-1 == nanosleep(&ts, &ts) && EINTR == errno);
 
-        if (-1 == clock_gettime(CLOCK_REALTIME, &curr_time)) {
-            return NULL;
-        }
+        gettimeofday(&curr_time, NULL);
 
         dwTimePassed = 1000 * (curr_time.tv_sec - start_time.tv_sec) + \
-                       (curr_time.tv_nsec - start_time.tv_nsec) / 1000000;
+                       (curr_time.tv_usec - start_time.tv_usec) / 1000;
 
     } while (dwTimePassed < dwTimeout);
 

@@ -17,5 +17,8 @@ typedef unsigned int DWORD;
 
 #define WINAPI
 
+#define SEM_NAME_MAX_LENGTH 16
+#define SEM_MAX_NR          1000
+
 #endif /* _TYPES_H */
 

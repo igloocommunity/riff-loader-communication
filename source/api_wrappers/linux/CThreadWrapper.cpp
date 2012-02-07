@@ -35,6 +35,7 @@ CThreadWrapper::CThreadWrapper(void *(*pStartAddress)(void *), void *pArgument)
     m_pStartAddress = pStartAddress;
     m_pArgument = pArgument;
     m_tid = (pthread_t)0;
+    m_ThreadEndedEvt = new CEventObject();
 }
 
 // ******************************************************************************
@@ -44,6 +45,7 @@ CThreadWrapper::CThreadWrapper(void *(*pStartAddress)(void *), void *pArgument)
 // ******************************************************************************
 CThreadWrapper::~CThreadWrapper()
 {
+    delete m_ThreadEndedEvt;
 }
 
 // ******************************************************************************
@@ -53,8 +55,8 @@ CThreadWrapper::~CThreadWrapper()
 // ******************************************************************************
 DWORD CThreadWrapper::Wait(DWORD dwMilliseconds)
 {
-    if ((int)m_tid != 0) {
-        return m_ThreadEndedEvt.Wait(dwMilliseconds);
+    if (m_tid != 0) {
+        return m_ThreadEndedEvt->Wait(dwMilliseconds);
     } else {
         return WAIT_OBJECT_0;
     }
@@ -102,7 +104,7 @@ void *CThreadWrapper::ThreadFunc(void *arg)
     pthis->m_pStartAddress(pthis->m_pArgument);
 
     // Thread has finished, set appropriate event here
-    pthis->m_ThreadEndedEvt.SetEvent();
+    pthis->m_ThreadEndedEvt->SetEvent();
     pthread_detach(pthread_self());
     pthis->m_tid = (pthread_t)0;
     return NULL;
@@ -115,5 +117,5 @@ void *CThreadWrapper::ThreadFunc(void *arg)
 // ******************************************************************************
 DWORD CThreadWrapper::GetThreadId()
 {
-    return (DWORD)m_tid;
+    return (long long)m_tid;
 }

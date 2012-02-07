@@ -19,6 +19,13 @@ LCM_CUST_CONFIG:=$(LCM_PATH)/customer_config
 SUPPORTED_CMDS_PATH:=$(LOADER_DIR)/src/platform_support/stn8500/config/supported_commands.xml
 WIN_BINARIES=./win_binaries/
 
+OS_NAME := $(shell uname)
+ifeq ($(OS_NAME), Linux)
+LIB_EXTENSION := so.1
+else
+LIB_EXTENSION := dylib
+endif
+
 AUTOGEN_FILES := $(AUTO_DIR_LIB)/commands.h\
 		$(AUTO_DIR_LIB)/command_ids.h\
 		$(AUTO_DIR_LIB)/error_codes.h\
@@ -81,7 +88,7 @@ INCLUDES := -I. \
 	-I ${UTILITIES_PATH}/communication_abstraction/\
 	-I ${BUFFERS_PATH}/include/\
 	-I ${SECURITY_ALGORITHMS_PATH}/include/\
-	-I ${LCM_PATH}/source/legacy_compatibility/
+	-I ${LCM_PATH}/source/legacy_compatibility/\
 
 # C compiler flags (-g -O2 -Wall)
 CFLAGS := -g -O2 -Wall -fPIC -fvisibility=hidden -DUINT64_SUPPORTED -DSINT64_SUPPORTED -DINT64_BASE_TYPE="long long" -DCFG_ENABLE_A2_FAMILY -DLCM_EXPORTS
@@ -100,10 +107,10 @@ build: configfile setup_folders $(LIB_x32)
 endif
 
 $(LIB_x32): $(LIBOBJ_x32)
-	$(CC) -shared -m32 -Wl,-soname,$(LIB_x32) -o $(LIB_x32) -lc $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(^F))
+	$(CC) -shared -m32 -Wl -o $(LIB_x32) -lc $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(^F))
 
 $(LIB_x64): $(LIBOBJ_x64)
-	$(CC) -shared -Wl,-soname,$(LIB_x64) -o $(LIB_x64) -lc $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(^F))
+	$(CC) -shared -Wl -o $(LIB_x64) -lc $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(^F))
 
 $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: ${TRANSPORT_PATH}/source/%.c $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
@@ -276,8 +283,8 @@ config: BUILDFOLDER := $(LCM_PATH)/out
 config: LCM_AUTO_DIR:=$(BUILDFOLDER)/autogen
 config: AUTO_DIR_LIB:=$(LCM_AUTO_DIR)/lib
 config: AUTO_DIR_LOADER:=$(LCM_AUTO_DIR)/loader
-config: LIB_x32 := $(BUILDFOLDER)/liblcm.so.1
-config: LIB_x64 := $(BUILDFOLDER)/liblcm_x64.so.1
+config: LIB_x32 := $(BUILDFOLDER)/liblcm.$(LIB_EXTENSION)
+config: LIB_x64 := $(BUILDFOLDER)/liblcm_x64.$(LIB_EXTENSION)
 config: LCMLIB_INSTALLDIR := /tmp/
 config: LCMLDR_INSTALLDIR := /tmp/
 config: LIB_x32_OBJ_DIR := x32
@@ -316,30 +323,30 @@ config:
 	@echo CONFIG_DIR : $(CONFIG_DIR)
 
 install: build
-	install -p -m 0755 -t ${LCMLIB_INSTALLDIR} ${BUILDFOLDER}/liblcm.so.*
+	install -p -m 0755 ${BUILDFOLDER}/liblcm.$(LIB_EXTENSION) ${LCMLIB_INSTALLDIR}
 ifeq ($(LBITS),64)
-	install -p -m 0755 -t ${LCMLIB_INSTALLDIR} ${BUILDFOLDER}/liblcm_x64.so.*
+	install -p -m 0755 ${BUILDFOLDER}/liblcm_x64.$(LIB_EXTENSION) ${LCMLIB_INSTALLDIR}
 endif
-	install -p -m 0755 -t $(LCMLIB_INSTALLDIR) $(WIN_BINARIES)/*.dll
-	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${AUTO_DIR_LOADER}/*
-	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${TRANSPORT_PATH}/source/*.c
-	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${NETWORK_PATH}/source/*.c
-	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${LCM_CNH_PATH}/source/*.c
-	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${TRANSPORT_PATH}/include/*.h
-	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${NETWORK_PATH}/include/*.h
-	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${LCM_CNH_PATH}/include/*.h
-	install -p -m 0555 -t ${LCMLDR_INSTALLDIR} ${LCM_PATH}/source/serialization.c
+	install -p -m 0755 $(WIN_BINARIES)/*.dll ${LCMLIB_INSTALLDIR}
+	install -p -m 0555 ${AUTO_DIR_LOADER}/* ${LCMLDR_INSTALLDIR}
+	install -p -m 0555 ${TRANSPORT_PATH}/source/*.c ${LCMLDR_INSTALLDIR}
+	install -p -m 0555 ${NETWORK_PATH}/source/*.c ${LCMLDR_INSTALLDIR}
+	install -p -m 0555 ${LCM_CNH_PATH}/source/*.c ${LCMLDR_INSTALLDIR}
+	install -p -m 0555 ${TRANSPORT_PATH}/include/*.h ${LCMLDR_INSTALLDIR}
+	install -p -m 0555 ${NETWORK_PATH}/include/*.h ${LCMLDR_INSTALLDIR}
+	install -p -m 0555 ${LCM_CNH_PATH}/include/*.h ${LCMLDR_INSTALLDIR}
+	install -p -m 0555 ${LCM_PATH}/source/serialization.c ${LCMLDR_INSTALLDIR}
 
 clean:
 	$(if ${BUILDFOLDER}, \
 		$(if ${LIB_x32_OBJ_DIR}, \
-			@rm -f ${BUILDFOLDER}/${LIB_x32_OBJ_DIR}/*.o \
+			@rm -rf ${BUILDFOLDER}/${LIB_x32_OBJ_DIR}/*.o \
 			@rm -rf ${BUILDFOLDER}/${LIB_x32_OBJ_DIR} \
 			@rm -rf ${BUILDFOLDER},),)
 ifeq ($(LBITS),64)
 	$(if ${BUILDFOLDER}, \
 		$(if ${LIB_x64_OBJ_DIR}, \
-			@rm -f ${BUILDFOLDER}/${LIB_x64_OBJ_DIR}/*.o \
+			@rm -rf ${BUILDFOLDER}/${LIB_x64_OBJ_DIR}/*.o \
 			@rm -rf ${BUILDFOLDER}/${LIB_x64_OBJ_DIR} \
 			@rm -rf ${BUILDFOLDER},),)
 endif
@@ -441,10 +448,10 @@ distclean: clean
 		@rm -f ${LCMLDR_INSTALLDIR}/z_transport.c \
 		@rm -f ${LCMLDR_INSTALLDIR}/r15_transport_layer.c \
 		@rm -f ${LCMLDR_INSTALLDIR}/t_a2_network.h \
-		@rm -f ${LCMLIB_INSTALLDIR}/liblcm.so.*,)
+		@rm -f ${LCMLIB_INSTALLDIR}/liblcm.$(LIB_EXTENSION),)
 ifeq ($(LBITS),64)
 	$(if ${LCMLDR_INSTALLDIR}, \
-		@rm -f ${LCMLIB_INSTALLDIR}/liblcm_x64.so.*,)
+		@rm -f ${LCMLIB_INSTALLDIR}/liblcm_x64.$(LIB_EXTENSION),)
 endif
 	$(if ${LCM_AUTO_DIR}, \
 		@rm -rf ${LCM_AUTO_DIR},)

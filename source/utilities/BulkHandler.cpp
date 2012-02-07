@@ -183,6 +183,7 @@ void BulkHandler::HandleRxSessionEnd(uint16 session, uint32 chunkSize, uint64 of
     m_ReceiveQueue.AddTail(m_pBulkVector);
 
     VERIFY_SUCCESS(m_pLcmInterface->BulkCloseSession(m_pBulkVector));
+
 #ifdef _BULKDEBUG
     m_pLogger->log("BULK: Session closed Session = %u", session);
 #endif
@@ -190,7 +191,6 @@ void BulkHandler::HandleRxSessionEnd(uint16 session, uint32 chunkSize, uint64 of
     m_Methods->UpdateBulkProgress();
 
 ErrorExit:
-
     if (E_SUCCESS != ReturnValue) {
         m_Methods->SignalError(ReturnValue);
     }

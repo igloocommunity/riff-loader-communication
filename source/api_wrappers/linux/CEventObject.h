@@ -33,7 +33,7 @@ public:
     void UnsetEvent();
     DWORD Wait(DWORD dwTimeout = INFINITE);
 private:
-    sem_t m_sem;
+    sem_t *m_sem;
 };
 
 #endif /* _CEVENTOBJECT_H */

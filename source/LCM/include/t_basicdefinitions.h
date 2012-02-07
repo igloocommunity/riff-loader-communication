@@ -75,7 +75,7 @@
 #define SINT64_SUPPORTED
 #define UINT64_SUPPORTED
 #define INT64_BASE_TYPE   __int64
-#elif defined(__linux__)
+#elif (defined(__linux__) || defined(__APPLE__))
 #define SINT64_SUPPORTED
 #define UINT64_SUPPORTED
 #define INT64_BASE_TYPE  long long

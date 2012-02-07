@@ -84,7 +84,7 @@
 #elif defined(__GNUC__)
 #ifdef __arm__
 #define COMPILER_GCC_ARM
-#elif defined(__linux__)
+#elif (defined(__linux__) || defined(__APPLE__))
 /* TARGET IS LINUX */
 #define COMPILER_GCC
 #endif

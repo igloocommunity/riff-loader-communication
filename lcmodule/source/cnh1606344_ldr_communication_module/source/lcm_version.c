@@ -13,6 +13,6 @@
  * LCD_LCM_CompatibilityList in file LcdVersion.cpp in LCD code.
  */
 
-char LCM_CurrentVersion[] = "P2Y";
+char LCM_CurrentVersion[] = "P3Y";
 
 /** @} */

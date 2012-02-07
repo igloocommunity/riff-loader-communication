@@ -19,7 +19,7 @@
 #pragma once
 #if defined(_WIN32)
 #include "WinApiWrappers.h"
-#elif defined(__linux__)
+#elif (defined(__linux__) || defined(__APPLE__))
 #include "LinuxApiWrappers.h"
 #include <stdio.h>
 #include <stdlib.h>

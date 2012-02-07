@@ -10,6 +10,13 @@ LCD_CONFIG:=./source/config/
 LCD_DIR:=./
 WIN_BINARIES=./win_binaries/
 
+OS_NAME := $(shell uname)
+ifeq ($(OS_NAME), Linux)
+LIB_EXTENSION := so
+else
+LIB_EXTENSION := dylib
+endif
+
 LIBSRC := \
 	source/utilities/Serialization.cpp\
 	source/utilities/Logger.cpp\
@@ -73,7 +80,7 @@ INCLUDES := \
 # C++ compiler flags (-g -O2 -Wall)
 CXXFLAGS := -c -O2 -Wall -fPIC -fvisibility=hidden -fno-strict-aliasing -DLCDRIVER_EXPORTS -D_FILE_OFFSET_BITS=64
 
-LDFLAGS := -fPIC -fvisibility=hidden -lpthread -lrt -ldl -shared -Wl,-soname,liblcdriver.so
+LDFLAGS := -fPIC -fvisibility=hidden -lpthread -ldl -shared -Wl -o liblcdriver.$(LIB_EXTENSION)
 
 LBITS := $(shell getconf LONG_BIT)
 ifeq ($(LBITS),64)
@@ -252,8 +259,8 @@ configfile: $(if $(wildcard $(config_file)),,config)
 .PHONY: config
 config: BUILDFOLDER := $(LCD_DIR)/out
 config: AUTO_DIR_LIB :=$(BUILDFOLDER)/autogen/
-config: LIB_x32 := $(BUILDFOLDER)/liblcdriver.so
-config: LIB_x64 := $(BUILDFOLDER)/liblcdriver_x64.so
+config: LIB_x32 := $(BUILDFOLDER)/liblcdriver.$(LIB_EXTENSION)
+config: LIB_x64 := $(BUILDFOLDER)/liblcdriver_x64.$(LIB_EXTENSION)
 config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
 config: CXX := $(CROSS_PREFIX)g++
@@ -280,22 +287,20 @@ config:
 	@echo "LCD_INSTALLDIR := $(LCD_INSTALLDIR)" >> $(config_file)
 
 install: build
-	install -m 0755 -t $(LCD_INSTALLDIR) $(BUILDFOLDER)/liblcdriver.so
+	install -m 0755 $(BUILDFOLDER)/liblcdriver.$(LIB_EXTENSION) $(LCD_INSTALLDIR)
 ifeq ($(LBITS),64)
-	install -m 0755 -t $(LCD_INSTALLDIR) $(BUILDFOLDER)/liblcdriver_x64.so
+	install -m 0755 $(BUILDFOLDER)/liblcdriver_x64.$(LIB_EXTENSION) $(LCD_INSTALLDIR)
 endif
-	install -m 0755 -t $(LCD_INSTALLDIR) $(WIN_BINARIES)/*.dll
+	install -m 0755 $(WIN_BINARIES)/*.dll $(LCD_INSTALLDIR)
 
 clean:
 	$(if $(BUILDFOLDER), \
 		$(if $(LIB_x32_OBJ_DIR), \
-			@rm -f $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/*.o \
 			@rm -rf $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR) \
 			@rm -rf $(BUILDFOLDER),),)
 ifeq ($(LBITS),64)
 	$(if $(BUILDFOLDER), \
 		$(if $(LIB_x64_OBJ_DIR), \
-			@rm -f $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/*.o \
 			@rm -rf $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR) \
 			@rm -rf $(BUILDFOLDER),),)
 endif
@@ -308,10 +313,10 @@ distclean: clean
 		@rm -f $(AUTO_DIR_LIB)/*.cpp \
 		@rm -f $(AUTO_DIR_LIB)/*.h,)
 	$(if $(LCD_INSTALLDIR), \
-		@rm -f $(LCD_INSTALLDIR)/liblcdriver.so,)
+		@rm -f $(LCD_INSTALLDIR)/liblcdriver.$(LIB_EXTENSION),)
 ifeq ($(LBITS),64)
 	$(if $(LCD_INSTALLDIR), \
-		@rm -f $(LCD_INSTALLDIR)/liblcdriver_x64.so,)
+		@rm -f $(LCD_INSTALLDIR)/liblcdriver_x64.$(LIB_EXTENSION),)
 endif
 	$(if $(config_file), \
 		@rm -f $(config_file),)

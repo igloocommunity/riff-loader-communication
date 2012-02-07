@@ -10,6 +10,7 @@
 #include "CEventObject.h"
 #include <pthread.h>
 
+
 typedef void *(*StartAddress_t)(void *);
 
 class CThreadWrapper : public CWaitableObject
@@ -26,7 +27,7 @@ private:
     pthread_t m_tid;
     StartAddress_t m_pStartAddress;
     void *m_pArgument;
-    CEventObject m_ThreadEndedEvt;
+    CEventObject *m_ThreadEndedEvt;
 
 protected:
     static void *ThreadFunc(void *Arg);

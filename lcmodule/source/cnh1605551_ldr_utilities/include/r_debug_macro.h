@@ -36,7 +36,7 @@
 /*******************************************************************************
  * Macro for disabling ARM interrupts. Do nothing for Windows and LINT target.
  ******************************************************************************/
-#if (defined(WIN32) || defined(CFG_ENABLE_LINT_TARGET_BUILD) || defined(__linux__) || defined(__CYGWIN__))
+#if (defined(WIN32) || defined(CFG_ENABLE_LINT_TARGET_BUILD) || defined(__linux__) || defined(__APPLE__) || defined(__CYGWIN__))
 #define INT_DISABLE()
 #else
 #ifdef MACH_TYPE_DB5700

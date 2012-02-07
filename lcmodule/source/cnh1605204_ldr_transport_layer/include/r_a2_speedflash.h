@@ -29,7 +29,7 @@
 #define LCM_API __declspec(dllimport) // import DLL information
 #endif // LCM_EXPORTS
 
-#elif defined(__linux__)
+#elif (defined(__linux__) || defined(__APPLE__))
 
 #ifdef LCM_EXPORTS
 #define LCM_API __attribute__((visibility("default")))

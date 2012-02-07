@@ -21,7 +21,7 @@
 #if defined(WIN32)
 #include <windows.h>
 #include "WinApiWrappers.h"
-#elif defined(__linux__)
+#elif (defined(__linux__) || defined(__APPLE__))
 #include "LinuxApiWrappers.h"
 #else
 #error "Unknown target"

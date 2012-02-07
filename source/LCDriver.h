@@ -15,7 +15,7 @@
 
 typedef unsigned __int64 uint64;
 typedef unsigned long uint32;
-#elif defined(__linux__)
+#elif (defined(__linux__) || defined(__APPLE__))
 #ifdef LCDRIVER_EXPORTS
 #define LCDRIVER_API __attribute__((visibility("default")))
 #else
