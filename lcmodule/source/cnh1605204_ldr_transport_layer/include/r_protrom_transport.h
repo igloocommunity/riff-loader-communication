@@ -11,7 +11,7 @@
  *    @{
  *      @addtogroup ldr_protrom_transport_layer PROTROM Transport Layer
  *      PROTROM functionalities for sending PROTROM packets and
- *      polling receiver and transmiter.
+ *      polling receiver and transmitter.
  *
  *      @{
  */
@@ -19,7 +19,6 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "t_protrom_transport.h"
 #include "t_communication_service.h"
 #include  "error_codes.h"
 

@@ -39,11 +39,11 @@ typedef enum {
 
 /** Defined state of the transmitter */
 typedef enum {
-    PROTROM_SEND_IDLE,       /**< Transmiter idle state.*/
-    PROTROM_SEND_HEADER,     /**< Transmiter send header. */
-    PROTROM_SEND_PAYLOAD,    /**< Transmiter send payload. */
-    PROTROM_SENDING_HEADER,  /**< Transmiter is in process sending header.*/
-    PROTROM_SENDING_PAYLOAD  /**< Transmiter is in process sending payload.*/
+    PROTROM_SEND_IDLE,       /**< Transmitter idle state.*/
+    PROTROM_SEND_HEADER,     /**< Transmitter send header. */
+    PROTROM_SEND_PAYLOAD,    /**< Transmitter send payload. */
+    PROTROM_SENDING_HEADER,  /**< Transmitter is in process sending header.*/
+    PROTROM_SENDING_PAYLOAD  /**< Transmitter is in process sending payload.*/
 } Protrom_OutboundState_t;
 
 /** Structure for the packet meta data type. */
@@ -52,8 +52,8 @@ typedef struct Protrom_Packet {
     uint8             *Buffer_p;        /**< Temporary buffer for receiving data.*/
     uint16            CRC;              /**< Calculated CRC of received packet. */
     Communication_t   *Communication_p; /**< The communication over which this
-                                           packet has been/is to be transferred
-                                           over */
+                                             packet has been/is to be transferred
+                                             over */
 } Protrom_Packet_t;
 
 /** Structure for handling incoming PROTROM packets.*/
@@ -62,9 +62,9 @@ typedef struct {
     Protrom_InboundState_t State;
     /**< Number of requested data for receiving from communication device. */
     uint32                 ReqData;
-    /**< Number of receivied data from communication device. */
+    /**< Number of received data from communication device. */
     uint32                 RecData;
-    /**< Number of receivied data from backup buffer used for switching the
+    /**< Number of received data from backup buffer used for switching the
      * protocol family. */
     uint32                 RecBackupData;
     /**< Offset in the buffer for next data that should be received. */
@@ -73,7 +73,7 @@ typedef struct {
     uint8                  *Target_p;
     /**< Temporary buffer for receiving data. */
     uint8                  Scratch[PROTROM_HEADER_LENGTH];
-    /** Number of packets before receiver is stoped. */
+    /** Number of packets before receiver is stopped. */
     uint8                  PacketsBeforeReceiverStop;
     /** Indicator for stopping the receiver. */
     boolean                StopTransfer;

@@ -21,7 +21,6 @@
  ******************************************************************************/
 #include "t_protrom_protocol.h"
 #include "error_codes.h"
-#include "t_communication_service.h"
 
 /*******************************************************************************
  * Declaration of functions
@@ -41,7 +40,7 @@
 ErrorCode_e Protrom_Family_Init(Communication_t *Communication_p);
 
 /**
- * Protrom family protocols sutdown.
+ * Protrom family protocols shutdown.
  *
  * @param [in] Communication_p Communication module context.
  *
@@ -51,10 +50,12 @@ ErrorCode_e Protrom_Family_Init(Communication_t *Communication_p);
 ErrorCode_e Protrom_Family_Shutdown(Communication_t *Communication_p);
 
 /*
- * Protrom Cancel Transmition.
+ * Protrom Cancel Transmission.
  *
- * @param [in] Communication_p Communication module context.
- * @param [in] PacketsBeforeTransferStop Number of packets that will be transmited before stopping the transmition.
+ * @param [in] Communication_p           Communication module context.
+ * @param [in] PacketsBeforeTransferStop Number of packets that will be
+ *                                       transmitted before stopping the
+ *                                       transmission.
  *
  * @retval  E_SUCCESS                   After successful execution.
  * @retval  E_INVALID_INPUT_PARAMETERS  Invalid input parameter.

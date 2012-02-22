@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "c_system.h"
+#include "c_system_v2.h"
 #include "r_basicdefinitions.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -908,7 +908,7 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
                 }
 
 #endif
-                C_(printf("bulk_protocol.c(%d) Sent chunk (%d) session (%d)\n", __LINE__, ChunkId, BulkVector_p->SessionId);)
+                C_(printf("bulk_protocol.c(%d) Sent chunk (%d) session (%d)\n", __LINE__, BulkVector_p->SendingChunkId, BulkVector_p->SessionId);)
             }
 
             break;
@@ -955,12 +955,12 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
                     }
 
 #endif
-                    C_(printf("bulk_protocol.c(%d) Sent chunk (%d) session (%d)\n", __LINE__, ChunkId, BulkVector_p->SessionId);)
+                    C_(printf("bulk_protocol.c(%d) Sent chunk (%d) session (%d)\n", __LINE__, BulkVector_p->SendingChunkId, BulkVector_p->SessionId);)
                 }
             }
 
 #ifdef  CFG_ENABLE_MEASUREMENT_TOOL
-            ReturnValue = MP(Measurement_p, ChunkId, RECEIVED_CHUNK_TIME);
+            ReturnValue = MP(Measurement_p, BulkVector_p->SendingChunkId, RECEIVED_CHUNK_TIME);
 #endif
             break;
 
@@ -979,7 +979,7 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
                 pcbf(Communication_p->Object_p, BulkVector_p->SessionId, BulkVector_p->ChunkSize, BulkVector_p->Offset, BulkVector_p->Length, TRUE);
 
                 // close the current bulk session
-                (void)Do_R15_Bulk_CloseSession(Communication_p, BulkVector_p); //TODO: da se hendla return vrednosta!
+                (void)Do_R15_Bulk_CloseSession(Communication_p, BulkVector_p); //TODO: return value should be handled
 
                 BulkExtendedHeader_t *PendingHeader_p = R15_TRANSPORT(Communication_p)->BulkHandle.PendingBulkHeader_p;
 
@@ -1030,7 +1030,7 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
 
 #ifndef  CFG_ENABLE_LOADER_TYPE
 ErrExit:
-#endif
+#endif //CFG_ENABLE_LOADER_TYPE
     Do_CriticalSection_Leave(R15_TRANSPORT(Communication_p)->BulkHandle.BulkTransferCS);
 
     return ReturnValue;
@@ -1302,9 +1302,9 @@ static uint32 R15_Bulk_GetChunkId(const PacketMeta_t *const Packet_p)
 {
     BulkExtendedHeader_t BulkExtendedHeader = {0};
 
+    //lint -e(413,826)
     R15_DeserializeBulkExtendedHeader(&BulkExtendedHeader, Packet_p->ExtendedHeader_p);
 
-    //lint -e(413,826)
     return BulkExtendedHeader.AcksChunk;
 }
 
@@ -1457,7 +1457,7 @@ static ErrorCode_e R15_Bulk_ReadRequestHandler(Communication_t *Communication_p,
                         pcbf(Communication_p->Object_p, BulkVector_p->SessionId, BulkVector_p->ChunkSize, BulkVector_p->Offset, BulkVector_p->Length, TRUE);
 
                         // close the current bulk session
-                        (void)Do_R15_Bulk_CloseSession(Communication_p, BulkVector_p); //TODO: da se hendla return vrednosta!
+                        (void)Do_R15_Bulk_CloseSession(Communication_p, BulkVector_p); //TODO: return value should be handled
 
                         // set bulk parameters for new bulk session
                         ACK_Read = FALSE;
@@ -1494,7 +1494,7 @@ static ErrorCode_e R15_Bulk_ReadRequestHandler(Communication_t *Communication_p,
 
                 /* Try to release the timer for the bulk session acknowledge */
                 if (R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey > 0) {
-                    (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey); // LCM MB bug fix: Timer should be released on request for retransmission
+                    (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey); // LCM bug fix: Timer should be released on request for retransmission
                     R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = 0;
                 }
 
@@ -1510,7 +1510,7 @@ static ErrorCode_e R15_Bulk_ReadRequestHandler(Communication_t *Communication_p,
                     pcbf = (BulkCommandReqCallback_t)R15_TRANSPORT(Communication_p)->BulkCommandCallback_p;
                     pcbf(Communication_p->Object_p, BulkVector_p->SessionId, BulkVector_p->ChunkSize, BulkVector_p->Offset, BulkVector_p->Length, TRUE);
 
-                    (void)Do_R15_Bulk_CloseSession(Communication_p, BulkVector_p); //TODO: da se hendla return vrednosta!
+                    (void)Do_R15_Bulk_CloseSession(Communication_p, BulkVector_p); //TODO: return value should be handled
                 } else {
                     /* Clean the previous saved data if there is any */
                     BUFFER_FREE(R15_TRANSPORT(Communication_p)->BulkHandle.PendingBulkHeader_p);
@@ -1532,7 +1532,7 @@ static ErrorCode_e R15_Bulk_ReadRequestHandler(Communication_t *Communication_p,
 
                 /* Try to release the timer for the bulk session acknowledge */
                 if (R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey > 0) {
-                    (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey); // LCM MB bug fix: Timer should be released on request for retransmission
+                    (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey); // LCM bug fix: Timer should be released on request for retransmission
                     R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = 0;
                 }
             }
@@ -1602,7 +1602,7 @@ static ErrorCode_e R15_Bulk_DataRequestHandler(Communication_t *Communication_p,
                 BulkVector_p->TransferedLength += BulkVector_p->ChunkSize;
                 pcbf = (BulkDataReqCallback_t)R15_TRANSPORT(Communication_p)->BulkDataCallback_p;
                 pcbf(Communication_p->Object_p, BulkVector_p->SessionId, ExtendedHeader.ChunkSize, BulkVector_p->Offset, BulkVector_p->Length, BulkVector_p->TotalLength, BulkVector_p->TransferedLength);
-                C_(printf("S(%d) L(%d) CS(%d)\n", BulkVector_p->SessionId, BulkVector_p->Length, BulkVector_p->ChunkSize);)
+                C_(printf("S(%d) L(%d) CS(%d)\n", BulkVector_p->SessionId, BulkVector_p->Length, ExtendedHeader.ChunkSize);)
             }
         }
 

@@ -25,7 +25,9 @@
 #include "r_adbg_case.h"
 #include "r_adbg_module.h"
 #include "r_adbg_command.h"
+#ifndef CFG_ENABLE_LOADER_TYPE
 #include "r_a2_protocol.h"
+#endif // CFG_ENABLE_LOADER_TYPE
 #include "r_bulk_protocol.h"
 #include "r_command_protocol.h"
 #include "r_r15_transport_layer.h"
@@ -34,7 +36,9 @@
 /*******************************************************************************
  * The test case functions declarations
  ******************************************************************************/
+#ifndef CFG_ENABLE_LOADER_TYPE
 static void ADbg_Do_A2_Command_Send(ADbg_Case_t *Case_p);
+#endif // CFG_ENABLE_LOADER_TYPE
 
 static void ADbg_Do_R15_Bulk_OpenSession(ADbg_Case_t *Case_p);
 static void ADbg_Do_R15_Bulk_CreateVector(ADbg_Case_t *Case_p);
@@ -58,9 +62,11 @@ static void ADbg_R15_GetProtocolTimeouts(ADbg_Case_t *Case_p);
 /*******************************************************************************
  * The test case definitions
  ******************************************************************************/
+#ifndef CFG_ENABLE_LOADER_TYPE
 // A2_protocol
 static uint8 Parameters1_1[4] = {3, WORDPTR, WORDPTR, WORD};
 ADBG_CASE_DEFINE(Test_Do_A2_Command_Send, 1, 8, ADbg_Do_A2_Command_Send, Parameters1_1);
+#endif // CFG_ENABLE_LOADER_TYPE
 
 // Bulk_protocol
 static uint8 Parameters3_1[5] = {4, WORDPTR, SHORT, WORD, WORD};
@@ -107,7 +113,9 @@ ADBG_CASE_DEFINE(Test_R15_GetProtocolTimeouts, 18, 8, ADbg_R15_GetProtocolTimeou
 ******************************************************************************/
 ADBG_SUITE_DEFINE_BEGIN(TestCase_CNH1605204, 0, 8)
 
+#ifndef CFG_ENABLE_LOADER_TYPE
 ADBG_SUITE_ENTRY(Test_Do_A2_Command_Send)
+#endif // CFG_ENABLE_LOADER_TYPE
 
 ADBG_SUITE_ENTRY(Test_Do_R15_Bulk_OpenSession)
 ADBG_SUITE_ENTRY(Test_Do_R15_Bulk_CreateVector)
@@ -141,6 +149,7 @@ void Do_CNH1605204_Module_Test_Run(ADbg_MainModule_t *MainModule_p)
 /*******************************************************************************
  * Test cases
  ******************************************************************************/
+#ifndef CFG_ENABLE_LOADER_TYPE
 /**
  * This function will test function:
  * CNH1605204_TestedFunction1.
@@ -171,6 +180,7 @@ static void ADbg_Do_A2_Command_Send(ADbg_Case_t *Case_p)
         free(CmdData_p);
     }
 }
+#endif // CFG_ENABLE_LOADER_TYPE
 
 /**
  * This function will test function:

@@ -34,9 +34,9 @@ typedef enum {
 
 /** Defined state of the transmitter */
 typedef enum {
-    Z_SEND_IDLE,      /**< Transmiter idle state.*/
-    Z_SEND_PACKET,    /**< Transmiter send packet. */
-    Z_SENDING_PACKET  /**< Transmiter is in process sending packet.*/
+    Z_SEND_IDLE,      /**< Transmitter idle state.*/
+    Z_SEND_PACKET,    /**< Transmitter send packet. */
+    Z_SENDING_PACKET  /**< Transmitter is in process sending packet.*/
 } Z_OutboundState_t;
 
 /** Structure for handling incoming Z packets.*/
@@ -45,11 +45,11 @@ typedef struct {
     Z_InboundState_t  State;
     /**< Number of requested data for receiving from communication device. */
     uint32            ReqData;
-    /**< Number of receivied data from communication device. */
+    /**< Number of received data from communication device. */
     uint32            RecData;
     /**< Temporary pointer to buffer for handling received data.*/
     uint8             *Target_p;
-    /** Number of packets before receiver is stoped. */
+    /** Number of packets before receiver is stopped. */
     uint8             PacketsBeforeReceiverStop;
     /** Indicator for stopping the receiver. */
     boolean           StopTransfer;

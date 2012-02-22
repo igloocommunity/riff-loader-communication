@@ -60,11 +60,11 @@ TYPEDEF_ENUM {
 </template>
 
 <template match="value">
-<text>  </text><value-of select="@name" /> = <value-of select="@number" />, /**&lt; <value-of select="text()" /> */
+<text>    </text><value-of select="@name" /> = <value-of select="@number" />, /**&lt; <value-of select="text()" /> */
 </template>
 
 <template match="value[last()]">
-<text>  </text><value-of select="@name" /> = <value-of select="@number" />  /**&lt; <value-of select="text()" /> */
+<text>    </text><value-of select="@name" /> = <value-of select="@number" />  /**&lt; <value-of select="text()" /> */
 </template>
 
 </stylesheet>

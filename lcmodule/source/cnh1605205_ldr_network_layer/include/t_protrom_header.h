@@ -32,8 +32,6 @@
 #define PROTROM_HEADER_LENGTH 7
 /** Value of the reserved field */
 #define PROTROM_RESERVED_FIELD  0x00
-/** Offset of the header in the buffer */
-#define HEADER_OFFSET_IN_BUFFER   8
 
 /**
  * Header search results
@@ -52,7 +50,7 @@ typedef struct {
     uint8 HeaderPattern;       /**< Header pattern for marking header start.*/
     uint8 Protocol;            /**< Protocol type. */
     uint8 SourceAddress;       /**< Source address. */
-    uint8 DestinationAddress;  /**< Destionation address. */
+    uint8 DestinationAddress;  /**< Destination address. */
     uint8 ReservedField;       /**< Reserved field. */
     uint16 PayloadLength;      /**< Payload length. */
 } Protrom_Header_t;

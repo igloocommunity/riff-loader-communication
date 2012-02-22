@@ -51,8 +51,8 @@
  * Authentication Fatal 400-450
  * Authentication non-fatal 451-499
  *
- * COPS General Fatal 500-550
- * COPS General non-fatal 551-599
+ * Zip Parser Fatal 500-550
+ * Zip Parser non-fatal 551-599
  *
  * System Fatal 600-650
  * System non-fatal 651-699
@@ -60,8 +60,6 @@
  * Flash Fatal 700-750
  * Flash non-fatal 751-799
  *
- * Parameters Fatal 800-850
- * Parameters non-fatal 851-899
  *
  * File management Fatal 900-950
  * File management non-fatal 951-999
@@ -69,35 +67,73 @@
  * Command Auditing and execution Fatal 1000-1050
  * Command Auditing and execution non-fatal 1051-1099
  *
- * Emulation Fatal 1100-1150
- * Emulation non-fatal 1151-1199
  *
  * Timers Fatal 1200-1250
  * Timers non-fatal 1251-1299
  *
- * CABS Fatal 1300-1350
- * CABS non-fatal 1351-1399
+ * Parameter Fatal 1300-1350
+ * Parameter non-fatal 1351-1399
  *
- * GDFS Fatal 1400-1450
- * GDFS non-fatal 1451-1499
+ * Block device Fatal 1400-1450
+ * Block device non-fatal 1451-1499
  *
- * Antirollback Fatal 1500-1550
- * Antirollback non-fatal 1551-1599
+ * Boot area Fatal 1500-1550
+ * Boot area non-fatal 1551-1599
  *
- * Memory and Boot Fatal 1600-1650
- * Memory and Boot non-fatal 1651-1699
+ * Cops data Fatal 1600-1650
+ * Cops data non-fatal 1651-1699
  *
- * @todo this should be removed and error codes should be remaped.
- * The same applies to Emulator errors.
+ * PD NAND Fatal 1700-1750
+ * PD NAND non-fatal 1751-1799
  *
- * Job Handler Fatal 1700-1750
- * Job Handler non-fatal 1751-1799
- *
- * Emulator Fatal 1800-1850
- * Emulator non-fatal 1851-1899
+ * Trim Area non-fatal 1851-1899
  *
  * Loader utilities Fatal 1900-1950
  * Loader utilities non-fatal 1951-1999
+ *
+ * Loader ADBG Fatal 2000-2050
+ * Loader ADBG non-fatal 2051-2099
+ *
+ * OTP applications Fatal 2100-2150
+ * OTP applications non-fatal 2151-2199
+ *
+ * Security applications Fatal 2200-2250
+ * Security applications non-fatal 2251-2299
+ *
+ * Trim Area Fatal 2300-2350
+ * Trim Area non-fatal 2351-2499
+ *
+ * Recovery applications Fatal 2500-2550
+ * Recovery applications non-fatal 2551-2599
+ *
+ * PD CFI Flash Fatal 2600-2650
+ * PD CFI Flash non-fatal 2651-2699
+ *
+ * HSI Driver Fatal 2700-2724
+ * HSI Driver Non-Fatal 2725-2749
+ *
+ * HSI Driver Error Callback Fatal 2750-2774
+ * HSI Driver Error Callback Non-Fatal 2775-2799
+ *
+ * Communication Relay Fatal 2800-2849
+ * Communication Relay Non-Fatal 2850-2899
+ *
+ * SDIO Driver Fatal 2900-2924
+ * SDIO Driver Non-Fatal 2925-2949
+ *
+ * SDIO Driver Error Callback Fatal 2950-2974
+ * SDIO Driver Error Callback Non-Fatal 2975-2999
+ *
+ * External BAM Interface Fatal 3000-3049
+ * External BAM Interface non-fatal 3050-3099
+ *
+ * Security Library Fatal 4000-4050
+ * Security Library non-fatal 4051-4250
+ *
+ * Emulator Fatal 4300-4350
+ * Emulator non-fatal 4351-4399
+ *
+ * A2 and lower versions error codes translation 5000+
  */
 
 <apply-templates select="status"/>

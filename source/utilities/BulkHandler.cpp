@@ -191,6 +191,7 @@ void BulkHandler::HandleRxSessionEnd(uint16 session, uint32 chunkSize, uint64 of
     m_Methods->UpdateBulkProgress();
 
 ErrorExit:
+
     if (E_SUCCESS != ReturnValue) {
         m_Methods->SignalError(ReturnValue);
     }

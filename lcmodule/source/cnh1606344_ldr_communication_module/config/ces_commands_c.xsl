@@ -18,18 +18,12 @@
 <variable name="command" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]/command[@number=$command]'>
 <if test='contains(@supportedcmdtype, "longrunning")'>
-<if test='$group=2 and $command=5'>
-#ifdef DISABLE_SECURITY
-</if> 
 <text>  </text>  {
 <text>   </text>     NULL,
 <text>        </text><value-of select="../interface/@name"/>_<value-of select="interface/@name"/>Repeat,
 <text>        </text><call-template name="commandid"/>,
 <text>   </text>     1
 <text>  </text>  },
-<if test='$group=2 and $command=5'>
-#endif
-</if> 
 </if>
 </if>
 </template>

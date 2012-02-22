@@ -81,7 +81,7 @@
       </otherwise>
       </choose>
         <choose>
-          <when test="$supported_commands/group[@number=$group]/command[@number=$command]/permissions">  PermArray_<value-of select="concat(../interface [@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />,
+          <when test="$supported_commands/group[@number=$group]/command[@number=$command]/permissions">  PermArray_<value-of select="concat(../interface[@type='loader']/@name, '_', ./interface[@type='loader']/@name)" />,
       </when>
         <otherwise>  NULL,
       </otherwise>

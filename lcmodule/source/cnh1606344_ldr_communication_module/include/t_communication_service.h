@@ -13,19 +13,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "c_system.h"
 #include "t_basicdefinitions.h"
 #include "error_codes.h"
 #include "t_security_algorithms.h"
 #include "t_command_protocol.h"
 #include "t_queue.h"
 #include "t_time_utilities.h"
-
-#ifndef CFG_ENABLE_LOADER_TYPE
-#ifdef  WIN32
-#include <windows.h>
-#endif
-#endif
 
 
 /*******************************************************************************
@@ -47,6 +40,7 @@ typedef void (*HashCallback_t)(void *Data_p, const uint32 Length, uint8 *Hash_p,
 typedef ErrorCode_e(*DeviceRead_fn)(void *Data_p, uint32 Length, CommunicationCallback_t Callback_fn, void *Param_p);
 typedef ErrorCode_e(*DeviceWrite_fn)(void *Data_p, uint32 Length, CommunicationCallback_t Callback_fn, void *Param_p);
 typedef ErrorCode_e(*DeviceCancel_fn)(void *Param_p);
+typedef ErrorCode_e(*DeviceSetTimeouts_fn)(void *Timeouts_p, void *Param_p);
 typedef void (*HashDeviceCancel_fn)(void *Object_p, void **Param_p);
 typedef void (*DeviceCalculate_fn)(void *Object_p, HashType_e Type, void *Data_p, const uint32 Length, uint8 *Hash_p, HashCallback_t Callback_fn, void *Param_p);
 
@@ -243,14 +237,16 @@ typedef  struct {
  *  Structure contain all functions for communication device manipulating.
  */
 typedef struct {
-    DeviceRead_fn   Read;       /**< Pointer to function for read data from
-                                   communication device. */
-    DeviceWrite_fn  Write;      /**< Pointer to function for write data thru the
-                                   communication device. */
-    DeviceCancel_fn Cancel;     /**< Pointer to function for canceling current
-                                   communication with communication device. */
-    void           *Context_p;  /**< Pointer to Device description data. */
-    void           *Object_p;   /**< Pointer to Object associated with the device. */
+    DeviceRead_fn        Read;           /**< Pointer to function for read data from
+                                       communication device. */
+    DeviceWrite_fn       Write;          /**< Pointer to function for write data thru the
+                                       communication device. */
+    DeviceCancel_fn      Cancel;         /**< Pointer to function for canceling current
+                                       communication with communication device. */
+    DeviceSetTimeouts_fn SetTimeouts;    /**< Pointer to function for setting timeouts
+                                       for the communication device*/
+    void                 *Context_p;     /**< Pointer to Device description data. */
+    void                 *Object_p;      /**< Pointer to Object associated with the device. */
 } CommunicationDevice_t;
 
 /**
@@ -338,7 +334,7 @@ typedef struct FamilyDescriptor_s {
     ErrorCode_e(*SetProtocolTimeouts_fn)(Communication_t *Communication_p, void *TimeoutData_p);
     /**< Pointer to function for getting communication timeouts from current protocol family. */
     ErrorCode_e(*GetProtocolTimeouts_fn)(Communication_t *Communication_p, void *TimeoutData_p);
-    /**< Pointer to function for stopping the transmition pool after sending the specified number of packets. */
+    /**< Pointer to function for stopping the transmission pool after sending the specified number of packets. */
     ErrorCode_e(*CancelReceiver_fn)(Communication_t *Communication_p, uint8 PacketsBeforeTransferStop);
 } FamilyDescriptor_t;
 

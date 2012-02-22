@@ -20,7 +20,6 @@
  ******************************************************************************/
 #include "t_a2_family.h"
 #include "error_codes.h"
-#include "t_communication_service.h"
 
 /*******************************************************************************
  * Declaration of functions
@@ -53,8 +52,10 @@ ErrorCode_e A2_Family_Shutdown(Communication_t *Communication_p);
 /*
  * A2 Cancel Receiver.
  *
- * @param [in] Communication_p Communication module context.
- * @param [in] PacketsBeforeTransferStop Number of packets that will be transmited before stopping the transmition.
+ * @param [in] Communication_p           Communication module context.
+ * @param [in] PacketsBeforeTransferStop Number of packets that will be
+ *                                       transmitted before stopping the
+ *                                       transmission.
  *
  * @retval  E_SUCCESS                   After successful execution.
  * @retval  E_INVALID_INPUT_PARAMETERS  Invalid input parameter.

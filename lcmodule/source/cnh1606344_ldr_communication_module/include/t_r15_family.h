@@ -18,12 +18,11 @@
  ******************************************************************************/
 
 #include "t_r15_transport_layer.h"
-#include "t_r15_network_layer.h"
 
-/** Strucure with timeouts for R15 protocols. */
+/** Structure with timeouts for R15 protocols. */
 typedef struct {
     uint32 TCACK ;  /**< Time for command packet acknowledge. */
-    uint32 TBCR;    /**< Time for bulk command packet to be recieved.*/
+    uint32 TBCR;    /**< Time for bulk command packet to be received.*/
     uint32 TBDR;    /**< Time for bulk data packet to be received. */
 } R15_Timeouts_t;
 

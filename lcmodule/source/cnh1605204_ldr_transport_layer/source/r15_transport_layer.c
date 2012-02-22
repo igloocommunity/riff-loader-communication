@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "c_system.h"
+#include "c_system_v2.h"
 #include "r_r15_transport_layer.h"
 #include <stdlib.h>
 #include <string.h>
@@ -37,7 +37,9 @@
  ******************************************************************************/
 static Timer_t *TimerSet(PacketMeta_t *Packet_p, const SendData_LP_t *const InputData_p, Communication_t *Communication_p);
 static void R15_Transport_OutHashCallback(const void *const Data_p, uint32 Length, const uint8 *const Hash_p, void *Param_p);
-
+#ifdef CFG_ENABLE_LOADER_TYPE
+static ErrorCode_e ConfigureDeviceTimeouts(Communication_t *Communication_p);
+#endif
 /*******************************************************************************
  * File scope types, constants and variables
  ******************************************************************************/
@@ -57,6 +59,7 @@ static void R15_Transport_OutHashCallback(const void *const Data_p, uint32 Lengt
  */
 ErrorCode_e R15_Transport_Initialize(const Communication_t *const Communication_p)
 {
+    ErrorCode_e ReturnValue = E_SUCCESS;
     int VectorCounter;
 
     /* Initialize the session counters for command protocol*/
@@ -67,9 +70,14 @@ ErrorCode_e R15_Transport_Initialize(const Communication_t *const Communication_
     R15_TRANSPORT(Communication_p)->BulkSessionCounter = 0;
 
     /* Initialize the default timeouts */
+#ifndef  CFG_ENABLE_LOADER_TYPE
     R15_TIMEOUTS(Communication_p)->TCACK = ACK_TIMEOUT_IN_MS;
     R15_TIMEOUTS(Communication_p)->TBCR = BULK_COMMAND_RECEIVING_TIMEOUT;
     R15_TIMEOUTS(Communication_p)->TBDR = BULK_DATA_RECEIVING_TIMEOUT;
+#else
+    ReturnValue = ConfigureDeviceTimeouts((Communication_t *)Communication_p);
+    VERIFY(E_SUCCESS == ReturnValue, ReturnValue);
+#endif
 
     for (VectorCounter = 0; VectorCounter < MAX_BULK_TL_PROCESSES; VectorCounter++) {
         R15_TRANSPORT(Communication_p)->BulkVectorList[VectorCounter].Status = BULK_SESSION_IDLE;
@@ -80,7 +88,10 @@ ErrorCode_e R15_Transport_Initialize(const Communication_t *const Communication_
     R15_TRANSPORT(Communication_p)->BulkHandle.BulkTransferCS = Do_CriticalSection_Create();
     R15_TRANSPORT(Communication_p)->BulkHandle.PendingBulkHeader_p = NULL;
 
-    return E_SUCCESS;
+#ifdef  CFG_ENABLE_LOADER_TYPE
+ErrorExit:
+#endif
+    return ReturnValue;
 }
 
 /*
@@ -314,6 +325,31 @@ static Timer_t *TimerSet(PacketMeta_t *Packet_p, const SendData_LP_t *const Inpu
 
     return Timer_p;
 }
+
+#ifdef CFG_ENABLE_LOADER_TYPE
+/*
+ * Function for configuration of timeouts for communication device.
+ *
+ * @param [in]  Communication_p  Communication module context.
+ *
+ * @return E_SUCCESS                  If is successfully executed.
+ */
+static ErrorCode_e ConfigureDeviceTimeouts(Communication_t *Communication_p)
+{
+    ErrorCode_e ReturnValue = E_INVALID_INPUT_PARAMETERS;
+    R15_Timeouts_t NewTimeoutData = {0};
+
+    ReturnValue = Communication_p->CommunicationDevice_p->SetTimeouts((void *)&NewTimeoutData, (void *)Communication_p);
+    VERIFY(E_SUCCESS == ReturnValue, ReturnValue);
+
+    ReturnValue = R15_SetProtocolTimeouts(Communication_p, (void *)&NewTimeoutData);
+    VERIFY(E_SUCCESS == ReturnValue, ReturnValue);
+
+ErrorExit:
+    return ReturnValue;
+}
+#endif
+
 /** @} */
 /** @} */
 /** @} */

@@ -10,12 +10,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "r_r15_family.h"
-#include "r_r15_transport_layer.h"
-#include "r_r15_network_layer.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "r_r15_family.h"
+#include "r_r15_transport_layer.h"
+#include "r_r15_network_layer.h"
 #include "r_debug_macro.h"
 /*******************************************************************************
  * File scope types, constants and variables

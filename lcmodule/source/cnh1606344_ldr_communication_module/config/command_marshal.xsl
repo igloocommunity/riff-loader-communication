@@ -138,7 +138,7 @@
     A_(printf("command_marshal.c (%d): ** memory allocation failed! **\n",__LINE__);)\
     return E_ALLOCATE_FAILED;\
   }\
- 
+
 #define COMMANDDATAOUT(TypeP,ApplicationP,CommandP,SizeP)\
   memset((uint8*)&amp;CmdData, 0x00, sizeof(CommandData_t));\
   CmdData.Type           = TypeP;\
@@ -335,7 +335,7 @@ ErrorCode_e <value-of select="concat('Done_', ../interface[@type='loader']/@name
 </if>
 </template>
   
-<template match="group/command"        mode="unmarshal">
+<template match="group/command" mode="unmarshal">
 <variable name="group" select="../@number" />
 <variable name="command" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]/command[@number=$command]'>

@@ -18,10 +18,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "t_protrom_protocol.h"
 #include "error_codes.h"
-#include "t_communication_service.h"
-#include "t_r15_network_layer.h"
 
 /*******************************************************************************
  * Declaration of functions

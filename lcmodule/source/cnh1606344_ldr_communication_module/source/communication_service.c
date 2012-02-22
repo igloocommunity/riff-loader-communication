@@ -452,8 +452,8 @@ ErrorExit:
  * @param [in] Communication_p  Communication module context.
  * @param [in] PacketsBeforeReceiverStop  Number of packets to be send before stopping the receiver.
  *
- * @retval  E_SUCCESS If all packets are successfully handled. A
- *                    protocol family dependant error code otherwise.
+ * @retval  E_SUCCESS If all packets are successfully handled.
+ *                    A protocol family dependent error code otherwise.
  */
 ErrorCode_e Do_Communication_Cancel_Receiver(Communication_t *Communication_p, uint8 PacketsBeforeReceiverStop)
 {

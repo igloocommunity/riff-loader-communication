@@ -32,7 +32,7 @@ typedef struct {
     void                  *Payload_p;        /**< Pointer to payload data.*/
     uint32                Time;              /**< Used time for retransmission.*/
     HandleFunction_t      TimerCallBackFn_p; /**< Timer call back function for
-                                                retransmission.*/
+                                                  retransmission.*/
 } SendData_LP_t;
 
 /** R15 Transport context. */
@@ -55,6 +55,7 @@ typedef struct {
     void                  *BulkDataCallback_p;
     /** Callback function pointer for handling end of bulk transfer.*/
     void                  *EndOfDump_p;
+    /** Callback function pointer for handling releasing of bulk buffers.*/
     void                  *BulkBufferRelease_p;
 } R15_TransportContext_t;
 

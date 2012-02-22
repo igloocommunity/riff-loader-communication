@@ -32,8 +32,6 @@
 #define PROTROM_HEADER_LENGTH 7
 /** Value of the reserved field */
 #define PROTROM_RESERVED_FIELD  0x00
-/** Offset of the header in the buffer */
-#define HEADER_OFFSET_IN_BUFFER   8
 
 /**
  * Header search results

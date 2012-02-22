@@ -11,7 +11,7 @@
  *    @{
  *      @addtogroup bulk_protocol Bulk Protocol
  *      Functionalities for handling bulk protocol. Receiving/Sending bulk
- *      commands and state machines for receivin and sending bulk data chunks.
+ *      commands and state machines for receiving and sending bulk data chunks.
  *
  *      @{
  */
@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "c_system.h"
+#include "c_system_v2.h"
 #include "t_bulk_protocol.h"
 #include "t_r15_transport_layer.h"
 #include "t_r15_network_layer.h"

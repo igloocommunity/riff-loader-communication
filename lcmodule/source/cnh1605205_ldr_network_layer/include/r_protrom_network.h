@@ -51,7 +51,7 @@ ErrorCode_e Protrom_Network_Shutdown(const Communication_t *const Communication_
  *
  * @param [in] Data_p  Pointer to the received data.
  * @param [in] Length  Length of the received data.
- * @param [in] Param_p Extra parameteres.
+ * @param [in] Param_p Extra parameters.
  *
  * @return none.
  */

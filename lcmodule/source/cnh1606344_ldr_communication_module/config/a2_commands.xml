@@ -32,9 +32,6 @@
 <!--
   Predefine generic type of data are: uint32, string and buffer.
   All A2 commands use only one buffer as an input and one buffer as an output parametar.
-  !!!!! IMPORTANT !!!!!
-  All new types of data (structures or vectors of structures) that need to be defined should first be reviewed and approved by:
-  Hans Holmberg (QHANHOL) for loaders, Mikael Sjolen XX for PTK and Daniel Chong for PA.
  -->
 
   <group number="1" name="A2 System group">

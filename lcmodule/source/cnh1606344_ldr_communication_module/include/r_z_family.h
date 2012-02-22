@@ -22,8 +22,6 @@
  ******************************************************************************/
 #include "t_z_protocol.h"
 #include "error_codes.h"
-#include "t_communication_service.h"
-#include "t_z_network.h"
 
 /*******************************************************************************
  * Declaration of functions
@@ -57,10 +55,12 @@ ErrorCode_e Z_Family_Init(Communication_t *Communication_p);
 ErrorCode_e Z_Family_Shutdown(Communication_t *Communication_p);
 
 /*
- * Z family Cancel Transmition.
+ * Z family Cancel Transmission.
  *
- * @param [in] Communication_p Communication module context.
- * @param [in] PacketsBeforeTransferStop Number of packets that will be transmited before stopping the transmition.
+ * @param [in] Communication_p           Communication module context.
+ * @param [in] PacketsBeforeTransferStop Number of packets that will be
+ *                                       transmitted before stopping the
+ *                                       transmission.
  *
  * @retval  E_SUCCESS                   After successful execution.
  * @retval  E_INVALID_INPUT_PARAMETERS  Invalid input parameter.

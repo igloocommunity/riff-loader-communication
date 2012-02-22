@@ -744,7 +744,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\legacy_compatibility\c_system.h"
+					RelativePath=".\legacy_compatibility\c_system_v2.h"
 					>
 				</File>
 				<File

@@ -54,7 +54,7 @@ static ErrorCode_e DispatchCommand(Communication_t *Communication_p, PacketMeta_
  */
 ErrorCode_e Do_R15_Command_ResetSessionCounters(const Communication_t *const Communication_p)
 {
-    /* Iintialize the session counters */
+    /* Initialize the session counters */
     R15_TRANSPORT(Communication_p)->SessionStateIn  = 0;
     R15_TRANSPORT(Communication_p)->SessionStateOut = 0;
 

@@ -78,7 +78,7 @@ void *Hash::WorkerThread(void *arg)
     HashRequest *request = 0;
 
     while (true) {
-        RemoveResult result = pThis->m_RequestQueue->RemoveHead((void**)(&request), INFINITE);
+        RemoveResult result = pThis->m_RequestQueue->RemoveHead((void **)(&request), INFINITE);
 
         if (REMOVE_SUCCESS != result) {
             break;
@@ -91,6 +91,7 @@ void *Hash::WorkerThread(void *arg)
             if (request->Length != 0) {
                 SecurityAlgorithms::SHA256(request->Data_p, request->Length, request->Hash_p);
             }
+
             break;
 
         case HASH_CRC16:

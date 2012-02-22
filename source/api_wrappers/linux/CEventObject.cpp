@@ -20,13 +20,17 @@ CEventObject::CEventObject()
 {
     char sem_name[SEM_NAME_MAX_LENGTH];
     int sem_nr = 1;
-    while(sem_nr <= SEM_MAX_NR) {
+
+    while (sem_nr <= SEM_MAX_NR) {
         snprintf(sem_name, SEM_NAME_MAX_LENGTH, "lcdriversem_%d", sem_nr);
 
         /* open semaphore with "rw" permissions for everyone - 0666 */
         m_sem = sem_open(sem_name, O_CREAT | O_EXCL, 0666 , 0);
-        if (m_sem != SEM_FAILED)
+
+        if (m_sem != SEM_FAILED) {
             break;
+        }
+
         sem_nr++;
     }
 }
@@ -69,6 +73,7 @@ DWORD CEventObject::Wait(DWORD dwTimeout)
 
         /* Try to lock the semaphore */
         ret = sem_trywait(m_sem);
+
         if (ret != 0) {
             while (dwTimePassed < dwTimeout) {
                 /* Sleep 1ms */
@@ -76,6 +81,7 @@ DWORD CEventObject::Wait(DWORD dwTimeout)
 
                 /* Try to lock the semaphore again*/
                 ret = sem_trywait(m_sem);
+
                 if (ret == 0) {
                     return WAIT_OBJECT_0;
                 }
@@ -85,6 +91,7 @@ DWORD CEventObject::Wait(DWORD dwTimeout)
                 dwTimePassed = 1000 * (curr_time.tv_sec - start_time.tv_sec) + \
                                (curr_time.tv_usec - start_time.tv_usec) / 1000;
             }
+
             return WAIT_TIMEOUT;
         }
     }

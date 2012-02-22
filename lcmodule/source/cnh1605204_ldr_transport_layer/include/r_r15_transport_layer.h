@@ -11,7 +11,7 @@
  *    @{
  *      @addtogroup ldr_r15_transport_layer R15 Transport layer
  *      R15 functionalities for sending R15 packets and
- *      polling receiver and transmiter.
+ *      polling receiver and transmitter.
  *
  *      @{
  */
@@ -19,9 +19,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "t_r15_transport_layer.h"
 #include "t_communication_service.h"
-#include  "error_codes.h"
+#include "error_codes.h"
 
 /*******************************************************************************
  * Declaration of functions
@@ -60,9 +59,9 @@ ErrorCode_e R15_Transport_Poll(Communication_t *Communication_p);
  * Function for sending packet in R15 protocol family.
  *
  * @param [in]  Communication_p Communication module context.
- * @param [in]  InputDataIn_p       Pointer to the input data.
+ * @param [in]  InputDataIn_p   Pointer to the input data.
  *
- * @retval E_SUCCESS                                                After successful execution.
+ * @retval E_SUCCESS                        After successful execution.
  * @retval E_FAILED_TO_ALLOCATE_COMM_BUFFER Failed to allocate communication
  *                                          buffer.
  */

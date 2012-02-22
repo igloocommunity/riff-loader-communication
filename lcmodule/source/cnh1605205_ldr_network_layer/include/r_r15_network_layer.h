@@ -22,7 +22,6 @@
 #include "error_codes.h"
 #include "t_basicdefinitions.h"
 #include "t_r15_network_layer.h"
-#include "t_communication_service.h"
 
 /*******************************************************************************
  * Declaration of functions
@@ -66,14 +65,14 @@ ErrorCode_e R15_Network_CancelRetransmission(const Communication_t *const Commun
  * combination of protocol type, session number and command.
  *
  * @param [in] Packet_p    Pointer to the packet.
- * @param [in] ExternalKey External key for marking the packet for retransmision.
+ * @param [in] ExternalKey External key for marking the packet for retransmission.
  *
  * @return Unique key.
  */
 uint32 R15_Network_CreateUniqueKey(const PacketMeta_t *const Packet_p, const uint8 ExternalKey);
 
 /**
- * Handler for received packets in R15 protocl family.
+ * Handler for received packets in R15 protocol family.
  *
  * This callback function handles the received packets.
  *
@@ -114,7 +113,7 @@ ErrorCode_e R15_Network_ReceiverHandler(Communication_t *Communication_p);
 /**
  * Handler for sending data.
  *
- * This function checks if new data is available for sending and handles the transmision.
+ * This function checks if new data is available for sending and handles the transmission.
  *
  * @param [in,out] Communication_p Communication module context.
  *

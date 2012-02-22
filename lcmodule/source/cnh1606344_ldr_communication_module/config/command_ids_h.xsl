@@ -19,6 +19,7 @@
 #ifndef _COMMAND_IDS_H
 #define _COMMAND_IDS_H
 #include "t_basicdefinitions.h"
+<apply-templates select="group/command" mode="define"/>
 
 TYPEDEF_ENUM {
 <apply-templates select="group" mode="id"/>} ENUM8(GroupId_e);
@@ -38,13 +39,13 @@ typedef struct <value-of select="interface/@name" />_s {
 <template match="value">
 <text>  </text>
   <choose>
-  <when test="@type='uint64'">
-  <value-of select="@type" /><text>  </text><value-of select="@name" />; /**&lt; <value-of select="text()" /> */
-  </when>
   <when test="@type='string'">
     char   *<text></text><value-of select="@name" />; /**&lt; <value-of select="text()" /> */
   </when>
   <when test="@type='uint32'">
+  <value-of select="@type" /><text>  </text><value-of select="@name" />; /**&lt; <value-of select="text()" /> */
+  </when>
+  <when test="@type='uint64'">
   <value-of select="@type" /><text>  </text><value-of select="@name" />; /**&lt; <value-of select="text()" /> */
   </when>
 </choose>
@@ -79,6 +80,14 @@ typedef struct <value-of select="interface/@name" />_s {
 <variable name="command" select="@number" />
 <if test='$target="lcm" or $supported_commands/group[@number=$group]/command[@number=$command]'>
 <text>    </text><call-template name="commandid" /> = <value-of select="@number" />  /**&lt; <value-of select="@name" /> */
+</if>
+</template>
+
+<template match="command" mode="define">
+<variable name="group" select="../@number"/>
+<variable name="command" select="@number"/>
+<if test='$target=&quot;lcm&quot; or $supported_commands/group[@number=$group]/command[@number=$command]'>
+#define <call-template name="commandsupported"/>
 </if>
 </template>
 

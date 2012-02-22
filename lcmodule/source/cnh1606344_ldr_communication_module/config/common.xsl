@@ -25,6 +25,11 @@
   <value-of select="translate(concat('COMMAND_', $path/../interface[@type='loader']/@name, '_', $path/interface[@type='loader']/@name),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')" />
 </template>
 
+<template name="commandsupported">
+  <param name="path" select="." />
+  <value-of select="translate(concat('COMMAND_', $path/../interface[@type='loader']/@name, '_', $path/interface[@type='loader']/@name, '_SUPPORTED'),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')" />
+</template>
+
 <template match="value" mode="deserialize">
   <choose>
   <when test="@type='uint32'"><text>      </text><value-of select="@name" /> = get_uint32_le(&amp;Data_p);

@@ -11,7 +11,7 @@
  *    The R15 protocol family include two protocols COMMAND and BULK. Command
  *    protocol is used for sending commands between the ME and PC tool in both
  *    direction. This module include R15 transport layer and R15 network layer
- *    for handling R15 prtocols.
+ *    for handling R15 protocols.
  *
  *    @{
  *
@@ -22,7 +22,6 @@
  ******************************************************************************/
 #include "t_r15_family.h"
 #include "error_codes.h"
-#include "t_communication_service.h"
 
 /*******************************************************************************
  * Declaration of functions
@@ -43,7 +42,7 @@
 ErrorCode_e R15_Family_Init(Communication_t *Communication_p);
 
 /**
- * R15 family protocols sutdown.
+ * R15 family protocols shutdown.
  *
  * @param [in] Communication_p Communication module context.
  *
@@ -53,10 +52,12 @@ ErrorCode_e R15_Family_Init(Communication_t *Communication_p);
 ErrorCode_e R15_Family_Shutdown(Communication_t *Communication_p);
 
 /*
- * R15 Cancel Transmition.
+ * R15 Cancel Transmission.
  *
- * @param [in] Communication_p Communication module context.
- * @param [in] PacketsBeforeTransferStop Number of packets that will be transmited before stopping the transmition.
+ * @param [in] Communication_p           Communication module context.
+ * @param [in] PacketsBeforeTransferStop Number of packets that will be
+ *                                       transmitted before stopping the
+ *                                       transmission.
  *
  * @retval  E_SUCCESS                   After successful execution.
  * @retval  E_INVALID_INPUT_PARAMETERS  Invalid input parameter.

@@ -16,7 +16,7 @@
  ******************************************************************************/
 #include <stdlib.h>
 #include <string.h>
-#include "c_system.h"
+#include "c_system_v2.h"
 #include "t_basicdefinitions.h"
 #include "r_protrom_family.h"
 #include "r_protrom_transport.h"
@@ -27,10 +27,6 @@
 #include "r_debug.h"
 #include "r_debug_macro.h"
 #include "r_critical_section.h"
-
-#ifdef  WIN32
-#include <windows.h>
-#endif
 
 /*******************************************************************************
  * Declaration of file local functions
@@ -393,7 +389,7 @@ static ErrorCode_e Protrom_Network_TransmiterHandler(Communication_t *Communicat
         Out_p->Packet_p = (Protrom_Packet_t *)QUEUE(Communication_p, FifoDequeue_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Outbound_p);
 
         if (NULL != Out_p->Packet_p) {
-            /* get next packet for transmiting */
+            /* get next packet for transmitting */
             Out_p->State = PROTROM_SEND_HEADER;
         } else {
             break;

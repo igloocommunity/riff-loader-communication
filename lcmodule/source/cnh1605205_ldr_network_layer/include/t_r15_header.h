@@ -69,7 +69,7 @@ typedef struct {
     uint8 HeaderPattern;           /**< Header pattern for marking header start.*/
     uint8 Protocol;                /**< Protocol type. */
     uint16 HeaderPatternExtension; /**< Header pattern extension.*/
-    uint8 Flags;                   /**< Flasgs for the header.*/
+    uint8 Flags;                   /**< Flags for the header.*/
     uint8 ExtendedHeaderLength;    /**< Extended header length.*/
     uint8 ExtendedHeaderChecksum;  /**< Extended header checksum.*/
     uint32 PayloadLength;          /**< Payload length. */

@@ -25,8 +25,10 @@
 #include "r_adbg_case.h"
 #include "r_adbg_module.h"
 #include "r_adbg_command.h"
+#ifndef CFG_ENABLE_LOADER_TYPE
 #include "r_a2_header.h"
 #include "r_a2_network.h"
+#endif // CFG_ENABLE_LOADER_TYPE
 #include "r_r15_header.h"
 #include "r_r15_network_layer.h"
 #include <stdlib.h>
@@ -34,6 +36,7 @@
 /*******************************************************************************
  * The test case functions declarations
  ******************************************************************************/
+#ifndef CFG_ENABLE_LOADER_TYPE
 static void ADbg_A2_GetPacketLength(ADbg_Case_t *Case_p);
 static void ADbg_A2_IsValidHeader(ADbg_Case_t *Case_p);
 static void ADbg_A2_IsReceivedHeader(ADbg_Case_t *Case_p);
@@ -42,6 +45,7 @@ static void ADbg_A2_Network_Initialize(ADbg_Case_t *Case_p);
 static void ADbg_A2_Network_Shutdown(ADbg_Case_t *Case_p);
 static void ADbg_A2_Network_PacketAllocate(ADbg_Case_t *Case_p);
 static void ADbg_A2_Network_PacketRelease(ADbg_Case_t *Case_p);
+#endif // CFG_ENABLE_LOADER_TYPE
 
 static void ADbg_R15_GetPacketLength(ADbg_Case_t *Case_p);
 static void ADbg_R15_IsValidHeader(ADbg_Case_t *Case_p);
@@ -57,6 +61,7 @@ static void ADbg_R15_Network_PacketRelease(ADbg_Case_t *Case_p);
 /*******************************************************************************
  * The test case definitions
  ******************************************************************************/
+#ifndef CFG_ENABLE_LOADER_TYPE
 static uint8 Parameters1_1[3] = {2, WORDPTR, WORD};
 ADBG_CASE_DEFINE(Test_A2_GetPacketLength, 1, 9, ADbg_A2_GetPacketLength, Parameters1_1);
 static uint8 Parameters1_2[3] = {2, VOIDPTR, BYTE};
@@ -72,6 +77,7 @@ static uint8 Parameters2_3[4] = {3, WORDPTR, WORD, WORDPTR};
 ADBG_CASE_DEFINE(Test_A2_Network_PacketAllocate, 6, 9, ADbg_A2_Network_PacketAllocate, Parameters2_3);
 static uint8 Parameters2_4[4] = {3, WORDPTR, WORD, WORDPTR};
 ADBG_CASE_DEFINE(Test_A2_Network_PacketRelease, 7, 9, ADbg_A2_Network_PacketRelease, Parameters2_4);
+#endif // CFG_ENABLE_LOADER_TYPE
 
 static uint8 Parameters3_1[3] = {2, WORDPTR, WORD};
 ADBG_CASE_DEFINE(Test_R15_GetPacketLength, 8, 9, ADbg_R15_GetPacketLength, Parameters3_1);
@@ -98,6 +104,7 @@ ADBG_CASE_DEFINE(Test_R15_Network_PacketRelease, 16, 9, ADbg_R15_Network_PacketR
 ******************************************************************************/
 ADBG_SUITE_DEFINE_BEGIN(TestCase_CNH1605205, 0, 9)
 
+#ifndef CFG_ENABLE_LOADER_TYPE
 ADBG_SUITE_ENTRY(Test_A2_GetPacketLength)
 ADBG_SUITE_ENTRY(Test_A2_IsValidHeader)
 ADBG_SUITE_ENTRY(Test_A2_IsReceivedHeader)
@@ -106,6 +113,7 @@ ADBG_SUITE_ENTRY(Test_A2_Network_Initialize)
 ADBG_SUITE_ENTRY(Test_A2_Network_Shutdown)
 ADBG_SUITE_ENTRY(Test_A2_Network_PacketAllocate)
 ADBG_SUITE_ENTRY(Test_A2_Network_PacketRelease)
+#endif // CFG_ENABLE_LOADER_TYPE
 
 ADBG_SUITE_ENTRY(Test_R15_GetPacketLength)
 ADBG_SUITE_ENTRY(Test_R15_IsValidHeader)
@@ -132,6 +140,7 @@ void Do_CNH1605205_Module_Test_Run(ADbg_MainModule_t *MainModule_p)
 /*******************************************************************************
  * Test cases
  ******************************************************************************/
+#ifndef CFG_ENABLE_LOADER_TYPE
 /**
  * This function will test function:
  * A2_GetPacketLength.
@@ -315,6 +324,7 @@ static void ADbg_A2_Network_PacketRelease(ADbg_Case_t *Case_p)
         free(Meta_p);
     }
 }
+#endif // CFG_ENABLE_LOADER_TYPE
 
 /**
  * This function will test function:

@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "c_system.h"
+#include "c_system_v2.h"
 #include "r_basicdefinitions.h"
 #include "r_a2_family.h"
 #include "r_a2_transport.h"
@@ -28,10 +28,6 @@
 #include "r_debug.h"
 #include "r_debug_macro.h"
 #include "r_critical_section.h"
-
-#ifdef  WIN32
-#include <windows.h>
-#endif
 
 /*******************************************************************************
  * Declaration of file local functions

@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "c_system.h"
+#include "c_system_v2.h"
 #include <string.h>
 #include "t_basicdefinitions.h"
 #include "r_r15_header.h"
@@ -224,8 +224,12 @@ boolean R15_IsReceivedHeader(R15_Inbound_t *In_p)
                 In_p->ReqBuffOffset = In_p->RecData - StartHeaderInBuffer;
             }
         } else {
-            In_p->ReqData = ALIGNED_HEADER_LENGTH;
+            /* Sync the header. */
+            In_p->RecData       = 0;
             In_p->ReqBuffOffset = 0;
+            In_p->State         = RECEIVE_HEADER;
+            In_p->ReqData       = ALIGNED_HEADER_LENGTH;
+            In_p->Target_p      = In_p->Scratch;
         }
     }
 

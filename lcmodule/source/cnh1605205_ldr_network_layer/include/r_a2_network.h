@@ -58,7 +58,7 @@ ErrorCode_e A2_Network_Shutdown(const Communication_t *const Communication_p);
 ErrorCode_e A2_Network_CancelRetransmission(const Communication_t *const Communication_p, uint32 UniqueKey);
 
 /**
- * Handler for received packets in A2 protocl family.
+ * Handler for received packets in A2 protocol family.
  *
  * This callback function handles the received packets.
  *

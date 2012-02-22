@@ -11,7 +11,7 @@
  *    @{
  *      @addtogroup ldr_z_transport_layer Z Transport layer
  *      TI functionalities for sending Z packets, Initialization and
- *      polling receiver and transmiter.
+ *      polling receiver and transmitter.
  *
  *      @{
  */

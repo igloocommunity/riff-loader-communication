@@ -49,7 +49,7 @@ ErrorCode_e Z_Network_Initialize(Communication_t *Communication_p);
 ErrorCode_e Z_Network_Shutdown(const Communication_t *const Communication_p);
 
 /**
- * Handler for received packets in Z protcol family.
+ * Handler for received packets in Z protocol family.
  *
  * This callback function handles the received packets.
  *
@@ -77,7 +77,7 @@ void Z_Network_ReadCallback(const void *Data_p, const uint32 Length, void *Param
 void Z_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Param_p);
 
 /**
- * Handler for receiving new data in Z protcol family.
+ * Handler for receiving new data in Z protocol family.
  *
  * This function checks if new data has been received.
  *
@@ -89,9 +89,9 @@ void Z_Network_ReceiverHandler(Communication_t *Communication_p);
 
 
 /**
- * Handler for sending new data in Z protcol family.
+ * Handler for sending new data in Z protocol family.
  *
- * This function checks if new data has been transmited.
+ * This function checks if new data has been transmitted.
  *
  * @param [in]  Communication_p  Communication module context.
  * @param [in]  SendingContent_p Pointer to the sending context.

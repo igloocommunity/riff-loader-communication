@@ -16,13 +16,17 @@ CSemaphore::CSemaphore(unsigned int initial_count)
 {
     char sem_name[SEM_NAME_MAX_LENGTH];
     int sem_nr = 1;
-    while(sem_nr <= SEM_MAX_NR) {
+
+    while (sem_nr <= SEM_MAX_NR) {
         snprintf(sem_name, SEM_NAME_MAX_LENGTH, "lcdriversem_%d", sem_nr);
 
         /* open semaphore with "rw" permissions for everyone - 0666 */
         m_semaphore = sem_open(sem_name, O_CREAT | O_EXCL, 0666 , 0);
-        if (m_semaphore != SEM_FAILED)
+
+        if (m_semaphore != SEM_FAILED) {
             break;
+        }
+
         sem_nr++;
     }
 }
@@ -60,6 +64,7 @@ DWORD CSemaphore::Wait(DWORD timeout)
 
         /* Try to lock the semaphore */
         ret = sem_trywait(m_semaphore);
+
         if (ret != 0) {
             while (dwTimePassed < timeout) {
                 /* Sleep 1ms */
@@ -67,6 +72,7 @@ DWORD CSemaphore::Wait(DWORD timeout)
 
                 /* Try to lock the semaphore again*/
                 ret = sem_trywait(m_semaphore);
+
                 if (ret == 0) {
                     return WAIT_OBJECT_0;
                 }

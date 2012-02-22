@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "c_system.h"
+#include "c_system_v2.h"
 #include "error_codes.h"
 #include "t_communication_service.h"
 
@@ -81,13 +81,13 @@ extern "C"
      *                                       calculations and verifications.
      * @param [in]     CommunicationDevice_p The device to use for network
      *                                       transmission.
-     * @param [in]     CommandCallback_p     Collback function for command handling.
+     * @param [in]     CommandCallback_p     Callback function for command handling.
      * @param [in]     Buffers_p             Pointer to buffer handling functions.
      * @param [in]     Timers_p              Pointer to timers handling functions.
      * @param [in]     Queue_p               Pointer to queue handling functions.
      *
      * @retval  E_SUCCESS If the module instance is successfully
-     *                    initialized. A protocol family dependant error
+     *                    initialized. A protocol family dependent error
      *                    code otherwise.
      */
     LCM_API ErrorCode_e Do_Communication_Initialize(void *Object_p, Communication_t **Communication_pp, Family_t Family, HashDevice_t *HashDevice_p, CommunicationDevice_t *CommunicationDevice_p, Do_CEH_Call_t CommandCallback_p, BuffersInterface_t *Buffers_p, TimersInterface_t *Timers_p, QueueInterface_t *Queue_p);
@@ -102,7 +102,7 @@ extern "C"
      * @param [in,out] Communication_pp    Communication module context.
      *
      * @retval  E_SUCCESS If the module instance is successfully
-     *                    shut down. A protocol family dependant error
+     *                    shut down. A protocol family dependent error
      *                    code otherwise.
      */
     LCM_API ErrorCode_e Do_Communication_Shutdown(Communication_t **Communication_pp);
@@ -118,8 +118,8 @@ extern "C"
      * @param [in] Communication_p  Communication module context.
      *
      *
-     * @retval  E_SUCCESS If all packets are successfully handled. A
-     *                    protocol family dependant error code otherwise.
+     * @retval  E_SUCCESS If all packets are successfully handled.
+     *                    A protocol family dependent error code otherwise.
      */
     LCM_API ErrorCode_e Do_Communication_Poll(Communication_t *Communication_p);
 
@@ -132,8 +132,8 @@ extern "C"
      * @param [in] Family           New protocol family identifier.
      * @param [in] CEHCallback      Callback that will handle the commands.
      *
-     * @retval  E_SUCCESS If the family is successfully changed. A
-     *                    protocol family dependant error code otherwise.
+     * @retval  E_SUCCESS If the family is successfully changed.
+     *                    A protocol family dependent error code otherwise.
      */
     LCM_API ErrorCode_e Do_Communication_SetFamily(Communication_t *Communication_p, Family_t Family, Do_CEH_Call_t CEHCallback);
 
@@ -141,7 +141,7 @@ extern "C"
      * Function for sending packet.
      *
      * @param [in]  Communication_p Communication module context.
-     * @param [in]  InputData_p     Pointer to the data for tranmission.
+     * @param [in]  InputData_p     Pointer to the data for transmission.
      *
      * @retval E_SUCCESS                        After successful execution.
      * @retval E_FAILED_TO_ALLOCATE_COMM_BUFFER Failed to allocate communication
@@ -186,7 +186,7 @@ extern "C"
      *                                     device for the given LCM context.
      *
      * @retval E_SUCCESS                 After successful execution.
-     * @retval E_INVALID_INPUT_PARAMTERS In case when communicaiton is not Singleton
+     * @retval E_INVALID_INPUT_PARAMTERS In case when communication is not Singleton
      *                                   and Communication_p is NULL pointer.
      */
     LCM_API ErrorCode_e Do_Communication_GetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t **CommunicationDevice_pp);
@@ -202,7 +202,7 @@ extern "C"
      *                                     device to be set for the given LCM context.
      *
      * @retval E_SUCCESS                 After successful execution.
-     * @retval E_INVALID_INPUT_PARAMTERS In case when communicaiton is not Singleton
+     * @retval E_INVALID_INPUT_PARAMTERS In case when communication is not Singleton
      *                                   and Communication_p is NULL pointer.
      */
     LCM_API ErrorCode_e Do_Communication_SetCommunicationDevice(Communication_t *Communication_p, CommunicationDevice_t *CommunicationDevice_p);
@@ -210,11 +210,11 @@ extern "C"
     /*
      * Cancel Receiving new packets
      *
-     * @param [in] Communication_p  Communication module context.
+     * @param [in] Communication_p            Communication module context.
      * @param [in] PacketsBeforeReceiverStop  Number of packets to be send before stopping the receiver.
      *
-     * @retval  E_SUCCESS If all packets are successfully handled. A
-     *                    protocol family dependant error code otherwise.
+     * @retval  E_SUCCESS If all packets are successfully handled.
+     *                    A protocol family dependent error code otherwise.
      */
     LCM_API ErrorCode_e Do_Communication_Cancel_Receiver(Communication_t *Communication_p, uint8 PacketsBeforeReceiverStop);
 
@@ -225,7 +225,7 @@ extern "C"
      *
      * @retval char LCM_CurrentVersion[]             After successful execution.
      */
-    LCM_API char *Do_Communication_GetVersion();
+    LCM_API char *Do_Communication_GetVersion(void);
 
 #ifdef __cplusplus
 };

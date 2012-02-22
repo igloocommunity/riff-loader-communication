@@ -10,7 +10,7 @@
  *    @addtogroup z_family
  *    @{
  *      @addtogroup ldr_z_header Z header
- *      Functionalities for analizing header from Z protocol family.
+ *      Functionalities for analyzing header from Z protocol family.
  *
  *      @{
  */

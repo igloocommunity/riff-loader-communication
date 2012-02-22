@@ -77,7 +77,7 @@ BEGIN
             VALUE "LegalCopyright", "Copyright (C) STEricsson AB 2012"
             VALUE "PrivateBuild", "Change-Id: I70835353a592d1f1ad40743640a1d0827e56fd2e"
             VALUE "ProductName", "CXA1104507 Loader Communication Module"
-            VALUE "ProductVersion", "P3Y"
+            VALUE "ProductVersion", "P4Y"
         END
     END
     BLOCK "VarFileInfo"

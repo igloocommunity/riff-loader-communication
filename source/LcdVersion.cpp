@@ -18,6 +18,6 @@
  * This table contains compatibility information for the versions of LCM.
  * Current LCM version is defined in file lcm_version.c in LCM code.
  */
-const char *LCD_LCM_CompatibilityList[] = {"P3Y",
+const char *LCD_LCM_CompatibilityList[] = {"P4Y",
         NULL
                                           };

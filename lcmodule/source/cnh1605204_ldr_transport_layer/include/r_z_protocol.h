@@ -11,7 +11,7 @@
  *    @{
  *      @addtogroup z_protocol Z Protocol
  *      Functionalities for handling Z commands. All Z commands are not decoded
- *      in this layer, it is resent to teh application layer for decoding
+ *      in this layer, it is resent to the application layer for decoding
  *      and executing.
  *
  *      @{

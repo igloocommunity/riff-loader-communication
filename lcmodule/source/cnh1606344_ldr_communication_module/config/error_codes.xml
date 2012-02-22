@@ -86,16 +86,16 @@
     * Services Fatal 400-450
     * Services non-fatal 451-499
     -->
-    <value number="451" name="E_CYCLIC_GRAPH" fatal="false" short="Cyclic graph in services detected."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behaviour.</value>
-    <value number="452" name="E_SERVICE_NOT_SUPPORTED" fatal="false" short="The service is not supported."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behaviour.</value>
-    <value number="453" name="E_INCONSISTENCY_IN_SERVICES" fatal="false" short="Inconsistency in services is detected."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behaviour.</value>
-    <value number="454" name="E_SERVICE_IN_USE" fatal="false" short="The service is in use and can't be stopped."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behaviour.</value>
-    <value number="455" name="E_UNREGISTER_BDM_SERVICE_FAILED" fatal="false" short="Unregistering of Block Device Manager Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behaviour.</value>
-    <value number="456" name="E_UNREGISTER_BAM_SERVICE_FAILED" fatal="false" short="Unregistering of Boot Area Manager Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behaviour.</value>
-    <value number="457" name="E_UNREGISTER_COPS_SERVICE_FAILED" fatal="false" short="Unregistering of COPS Data Manager Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behaviour.</value>
-    <value number="458" name="E_UNREGISTER_FS_SERVICE_FAILED" fatal="false" short="Unregistering of File System Manager Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behaviour.</value>
-    <value number="459" name="E_UNREGISTER_FPD_SERVICE_FAILED" fatal="false" short="Unregistering of Flash Physical Driver Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behaviour.</value>
-    <value number="460" name="E_UNREGISTER_GD_SERVICE_FAILED" fatal="false" short="Unregistering of Global Data Manager Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behaviour.</value>
+    <value number="451" name="E_CYCLIC_GRAPH" fatal="false" short="Cyclic graph in services detected."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behavior.</value>
+    <value number="452" name="E_SERVICE_NOT_SUPPORTED" fatal="false" short="The service is not supported."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behavior.</value>
+    <value number="453" name="E_INCONSISTENCY_IN_SERVICES" fatal="false" short="Inconsistency in services is detected."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behavior.</value>
+    <value number="454" name="E_SERVICE_IN_USE" fatal="false" short="The service is in use and can't be stopped."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behavior.</value>
+    <value number="455" name="E_UNREGISTER_BDM_SERVICE_FAILED" fatal="false" short="Unregistering of Block Device Manager Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behavior.</value>
+    <value number="456" name="E_UNREGISTER_BAM_SERVICE_FAILED" fatal="false" short="Unregistering of Boot Area Manager Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behavior.</value>
+    <value number="457" name="E_UNREGISTER_COPS_SERVICE_FAILED" fatal="false" short="Unregistering of COPS Data Manager Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behavior.</value>
+    <value number="458" name="E_UNREGISTER_FS_SERVICE_FAILED" fatal="false" short="Unregistering of File System Manager Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behavior.</value>
+    <value number="459" name="E_UNREGISTER_FPD_SERVICE_FAILED" fatal="false" short="Unregistering of Flash Physical Driver Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behavior.</value>
+    <value number="460" name="E_UNREGISTER_GD_SERVICE_FAILED" fatal="false" short="Unregistering of Global Data Manager Service failed."> Some internal error occurred and you need to reset the loader to avoid further unpredictable behavior.</value>
 
     <!--
     * Zip Parser Fatal 500-550
@@ -110,10 +110,10 @@
     * System non-fatal 651-699
     -->
     <value number="600" name="E_FILESYS_APP_INIT_FAILURE" fatal="true" short="Failed to initialize the file system application.">Internal error.Reset loader.Report if problem still exist.</value>
-    <value number="601" name="E_NO_FILESYSTEM_PROPERTY" fatal="true" short="Failed to start file system."> Verify that archive is successfuly flashed.Reset loader. Report if problem still exist.</value>
-    <value number="602" name="E_UNDEFINED_AUTHENTICATION_TYPE" fatal="true" short="Undefined authentication type.">Check the authentication type. The loader supports authentication with CA certificate and control keyes.Repeat authentiacton. Report if problem still exist.</value>
+    <value number="601" name="E_NO_FILESYSTEM_PROPERTY" fatal="true" short="Failed to start file system."> Verify that archive is successfully flashed.Reset loader. Report if problem still exist.</value>
+    <value number="602" name="E_UNDEFINED_AUTHENTICATION_TYPE" fatal="true" short="Undefined authentication type.">Check the authentication type. The loader supports authentication with CA certificate and control keyes.Repeat authenticaton. Report if problem still exist.</value>
     <value number="651" name="E_RTC_TIME_NOT_ACCURATE" fatal="false" short="System Time is not properly set."> Default system time is used.Set the Time properly. Report if problem still exist.</value>
-    <value number="652" name="E_RTC_INTIALIZATION_FAILED" fatal="false" short="Hardware error ocure during initialization of RTC."> Report this problem</value>
+    <value number="652" name="E_RTC_INTIALIZATION_FAILED" fatal="false" short="Hardware error occurred during initialization of RTC."> Report this problem</value>
     <value number="653" name="E_UNDEFINED_DEAUTHENTICATION_TYPE" fatal="false" short="Undefined deauthentication type."> Check input parameters and repeat operation. Report if problem still exist.</value>
     <value number="654" name="E_COPS_DEVICE_STATE_FULL" fatal="false" short="Indicate that ME is in full security mode,Full authentication is needed prior to use COPS functionalities."> Perform RSA or SIMLOCK authentication prior to use COPS functionalities.</value>
     <value number="655" name="E_COPS_DEVICE_STATE_RELAXED" fatal="false" short="Indicate that ME is in authenticate security mode, Permanent type authentication is needed prior to use COPS functionalities."> Perform permanent authentication prior to use COPS functionalities.</value>
@@ -127,13 +127,13 @@
     <value number="753" name="E_UNKNOWN_COMM_DEVICE" fatal="false" short="Unknown communication device was detected."> Try to restart the loader and if still exist the problem, report this error.</value>
     <value number="754" name="E_FLASH_APP_INTERNAL_ERROR" fatal="false" short="Internal during execution of flash commands."> Try to erase flash and restart the loader and if problem still exist, report it.</value>
     <value number="755" name="E_DEVICE_NAME_TOO_LONG" fatal="false" short="Device name is too long."> Try to erase flash and restart the loader and if problem still exist, report it.</value>
-    <value number="756" name="E_FLASH_ARCHIVE_MISMATCH" fatal="false" short="Mismatch between archieve that is flashed and previosly flashed one."> During previous flashing some fail condition occurs. Reflash same archieve again before try a new one.</value>
+    <value number="756" name="E_FLASH_ARCHIVE_MISMATCH" fatal="false" short="Mismatch between archive that is flashed and previously flashed one."> During previous flashing some fail condition occurs. Re-flash same archive again before try a new one.</value>
     <value number="757" name="E_UNSUPPORTED_FLASH_TYPE" fatal="false" short="Flash memory device type is not supported."> Try to use loaders with support for memory device attached to DBB. If loaders does not exist, fire CR in FIDO to get loaders that support that memory.</value>
     <value number="758" name="E_FPD_NOT_CONFIGURED" fatal="false" short= "Flash physical driver is not configured."> Check MEMCONF settings in flash archive.</value>
     <value number="759" name="E_INVALID_SIZE_IN_MEMCONF" fatal="false" short= "MEMCONF boot record contain invalid TotalSize field."> Check MEMCONF settings in flash archive. Very likely flash archive is built for ME with flash device with larger capacity</value>
     <value number="760" name="E_ARCHIVE_TO_LARGE" fatal="false" short= "Flash archive larger than available space in BDM."> Check CABS settings in flash archive. Very likely flash archive is built for ME with flash device with larger capacity</value>
     <value number="761" name="E_ENTRY_NOT_FOUND_IN_FLASHLAYOUT" fatal="false" short="Entry not found in flashlayout file.">Entry stated in manifest file is not found in flashlayout file. All entries in manifest must be defined in flashlayout file.</value>
-    <value number="762" name="E_MISMATCH_MANIFEST_FLASHLAYOUT" fatal="false" short="Mismatch between manifest and flashlayout.">Entry start address in manifest and flashlayout are not equal.</value>
+    <value number="762" name="E_MISMATCH_MANIFEST_FLASHLAYOUT" fatal="false" short="Mismatch between manifest and flash layout.">Entry start address in manifest and flash layout are not equal.</value>
     <value number="763" name="E_INVALID_SUBTOC_PARAMETERS" fatal="false" short="SUBTOC is invalid.">SUBTOC parameters are not valid.</value>
     <value number="764" name="E_FAILED_TO_READ_SUBTOC" fatal="false" short="Reading SUBTOC from flash failed.">Reading SUBTOC from flash failed.</value>
     <value number="765" name="E_OVERLAPPING_PARTITIONS_FOUND" fatal="false" short="Overlapping partitions found in the archive.">Overlapping partitions found in the archive.</value>
@@ -210,7 +210,7 @@
     <value number="1003" name="E_UNSUPPORTED_GROUP" fatal="true" short="The loader does not support the requested group."> Check your authentication level. Verify that you are sending command from existing group.</value>
     <value number="1051" name="E_INVALID_COMMAND_SIZE" fatal="false" short="The size of the command is invalid."> Check the command payload. If payload is fine, report this problem</value>
     <value number="1052" name="E_OVERLOAD_COMMAND_TABLE" fatal="false" short="Too many commands are registered."> It is not allowed more than 5 commands to be registered.</value>
-    <value number="1053" name="E_COMMAND_ALREADY_REGISTERED" fatal="false" short="Command has already registered in execution queue.">It is not allowed the command to be registerd more than once in execution queue</value>
+    <value number="1053" name="E_COMMAND_ALREADY_REGISTERED" fatal="false" short="Command has already registered in execution queue.">It is not allowed the command to be registered more than once in execution queue</value>
     <value number="1054" name="E_AUDITING_FAILED" fatal="false" short=" Command auditing failed."> You should be authenticate with appropriate permission level in order to execute this command.</value>
 
     <!--
@@ -370,7 +370,7 @@
 
     <value number="1601" name="E_BAM_ONLD_CRITICAL_ERROR" fatal="false" short="BAM ONLD: Critical error."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1602" name="E_BAM_ONLD_INVALID_PARAMS" fatal="false" short="BAM ONLD: Invalid parameters."> Check input parameters. Retry operation. If problem still exist reset loader. Report if problem doesn't solved.</value>
-    <value number="1603" name="E_BAM_ONLD_INITIALISATION_ERROR" fatal="false" short="BAM ONLD: Initialisation error."> Internal error. Reset loader. Report if problem still exist.</value>
+    <value number="1603" name="E_BAM_ONLD_INITIALISATION_ERROR" fatal="false" short="BAM ONLD: Initialization error."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1604" name="E_BAM_ONLD_READ_ERROR" fatal="false" short="BAM ONLD: An error occurred while reading."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1605" name="E_BAM_ONLD_WRITE_ERROR" fatal="false" short="BAM ONLD: An error occurred while writing."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1606" name="E_BAM_ONLD_ERASE_ERROR" fatal="false" short="BAM ONLD: An error occurred while erasing."> Internal error. Reset loader. Report if problem still exist.</value>
@@ -382,10 +382,10 @@
     * Cops data Fatal 1620-1650
     * Cops data non-fatal 1651-1699
     -->
-    <value number="1621" name="E_COPS_RC_ASYNC_CALL" fatal="false" short="COPS: Asyncronous call initiated."> Internal error. Reset loader. Report if problem still exist.</value>
+    <value number="1621" name="E_COPS_RC_ASYNC_CALL" fatal="false" short="COPS: Asynchronous call initiated."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1622" name="E_COPS_RC_IPC_ERROR" fatal="false" short="COPS: IPC failed."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1623" name="E_COPS_RC_INTERNAL_IPC_ERROR" fatal="false" short="COPS: Internal IPC lib error."> Internal error. Reset loader. Report if problem still exist.</value>
-    <value number="1624" name="E_COPS_RC_ASYNC_IPC_ERROR" fatal="false" short="COPS: Asyncronous IPC is not supported/setup for this function."> Internal error. Reset loader. Report if problem still exist.</value>
+    <value number="1624" name="E_COPS_RC_ASYNC_IPC_ERROR" fatal="false" short="COPS: Asynchronous IPC is not supported/setup for this function."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1625" name="E_COPS_RC_ARGUMENT_ERROR" fatal="false" short="COPS: Incorrect arguments for function."> Check input arguments. Report if problem still exist.</value>
     <value number="1626" name="E_COPS_RC_STORAGE_ERROR" fatal="false" short="COPS: Storage error (read/write flash failed)."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1627" name="E_COPS_RC_MEMORY_ALLOCATION_ERROR" fatal="false" short="COPS: Failed to allocate memory."> Internal error. Reset loader. Report if problem still exist.</value>
@@ -409,7 +409,7 @@
 
     <value number="1651" name="E_COPS_MEMORY_ALLOC_FAILED" fatal="false" short="COPS: Memory allocation failed."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1652" name="E_COPS_DATA_TAMPERED" fatal="false" short="COPS: Data is tempered."> Check the file that you want to bind. Repeat operation. Report if problem still exist.</value>
-    <value number="1653" name="E_COPS_IMEI_MISSMATCH" fatal="false" short="COPS: IMEI missmatch.">IMEI in the OTP differs from the IMEI in the COPS data.</value>
+    <value number="1653" name="E_COPS_IMEI_MISSMATCH" fatal="false" short="COPS: IMEI mismatch.">IMEI in the OTP differs from the IMEI in the COPS data.</value>
     <value number="1654" name="E_COPS_OTP_LOCKED" fatal="false" short="COPS: OTP is locked.">It is not allowed to write in already locked OTP area</value>
     <value number="1655" name="E_COPS_MAC_FUNCTION_LOCKED_DOWN" fatal="false" short="COPS: Function for calculating MAC is locked down."> Restart loader. Report if problem still exist.</value>
     <value number="1656" name="E_COPS_AUTHENTICATION_FAILED" fatal="false" short="COPS: Authentication failed.">Be sure that authentication is performed with valid data.(Correct Certificate, Domain, Control Keys)</value>
@@ -417,19 +417,19 @@
     <value number="1658" name="E_COPS_IMEI_UPDATE_NOT_ALLOWED" fatal="false" short="COPS: IMEI update is not allowed."> Check if IMEI changeable is set in OTP. Report this issue if IMEI changeable is set and requested operation can not be executed.</value>
     <value number="1659" name="E_COPS_LOCK_PERMANENTLY_DISABLED" fatal="false" short="COPS: Locking of SIMLocks is disabled.">lock is disabled or already locked.</value>
     <value number="1660" name="E_COPS_NO_ATTEMPTS_LEFT" fatal="false" short="COPS: No more attempts for verification left."> Check the validation of the certificate or control keys.</value>
-    <value number="1661" name="E_COPS_INCORRECT_CONTROLKEY" fatal="false" short="COPS: Control key is not correct."> Control keys that you try to authenticate and control keys from Default Data missmach.</value>
+    <value number="1661" name="E_COPS_INCORRECT_CONTROLKEY" fatal="false" short="COPS: Control key is not correct."> Control keys that you try to authenticate and control keys from Default Data mismatch.</value>
     <value number="1662" name="E_COPS_TOO_SHORT_CONTROLKEY" fatal="false" short="COPS: Control key is too short."> Valid length is 8-16 bytes. Repeat operation with valid control keys. Report if problem still exist.</value>
     <value number="1663" name="E_COPS_TOO_LONG_CONTROLKEY" fatal="false" short="COPS: Control key is too long.">Valid length is 8-16 bytes. Repeat operation with valid control keys. Report if problem still exist.</value>
     <value number="1664" name="E_COPS_INVALID_CONTROLKEY" fatal="false" short="COPS: Control key is not valid."> Check the control keys. Repeat operation with valid control keys. Report if problem still exist.</value>
-    <value number="1665" name="E_COPS_TIMER_RUNNING" fatal="false" short="COPS: Timer is running.">For the appropiate LockType timer is already running.</value>
+    <value number="1665" name="E_COPS_TIMER_RUNNING" fatal="false" short="COPS: Timer is running.">For the appropriate LockType timer is already running.</value>
     <value number="1666" name="E_COPS_SIM_ERROR" fatal="false" short="COPS: SIM error.">Check that the SIM is active. If the SIM is active be sure that you are entering correct SIM Pin. Report if problem still exist</value>
-    <value number="1667" name="E_COPS_LOCKING_FAILED" fatal="false" short="COPS: Locking failed.">Be sure that the SIM data conatains valid data for IMSI, GID1 and GID2</value>
+    <value number="1667" name="E_COPS_LOCKING_FAILED" fatal="false" short="COPS: Locking failed.">Be sure that the SIM data contains valid data for IMSI, GID1 and GID2</value>
     <value number="1668" name="E_COPS_OTA_UNLOCK_IMEI_MISMATCH" fatal="false" short="COPS: OTA unlock IMEI mismatch.">IMEI in the OTP differs from the IMEI in the COPS data.</value>
     <value number="1669" name="E_COPS_INCORRECT_IMSI" fatal="false" short="COPS: Incorrect IMSI.">IMSI on interface doesn't match SIM IMSI</value>
     <value number="1670" name="E_COPS_PARAMETER_ERROR" fatal="false" short="COPS: Parameter error."> Check the input parameters. Repeat operation. Report if problem still exist.</value>
     <value number="1671" name="E_COPS_BUFFER_TOO_SMALL" fatal="false" short="COPS: Memory buffer is too small."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1672" name="E_COPS_FORBIDDEN_PARAMETER_ID" fatal="false" short="COPS: Parameter is not allowed."> Check the input parameters. Repeat operation. Report if problem still exist.</value>
-    <value number="1673" name="E_COPS_UNKNOWN_PARAMETER_ID" fatal="false" short="COPS: Parameter can not be recognised."> Check the input parameters. Repeat operation. Report if problem still exist.</value>
+    <value number="1673" name="E_COPS_UNKNOWN_PARAMETER_ID" fatal="false" short="COPS: Parameter can not be recognized."> Check the input parameters. Repeat operation. Report if problem still exist.</value>
     <value number="1674" name="E_COPS_ARGUMENT_ERROR" fatal="false" short="COPS: Argument error!"> Verify the input parameters. Repeat operation. Report if problem still exist.</value>
     <value number="1698" name="E_COPS_VERIFY_FAILED" fatal="false" short="COPS: Failed to verify internal data.">Reset loader. Report if problem still exist.</value>
     <value number="1699" name="E_COPS_UNDEFINED_ERROR" fatal="false" short="COPS: Undefined error."> Internal error. Reset loader. Report if problem still exist.</value>
@@ -454,12 +454,12 @@
     <value number="1851" name="E_GD_TA_BASE" fatal="false" short="GD/TA: TA base."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1852" name="E_GD_TA_UNKNOWN_PARTITION" fatal="false" short="GD/TA: Unknown partition."> Check input parameters. Repeat operation with the correct input parameters. Report if problem still exist.</value>
     <value number="1853" name="E_GD_TA_UNKNOWN_CONFIG" fatal="false" short="GD/TA: Unknown configuration."> Possible wrong or missing configuration in flash archive. Check the archive. Flash the correct archive. If problem still exist report the problem.</value>
-    <value number="1854" name="E_GD_TA_ILLOGICAL_CONFIGURATION" fatal="false" short="GD/TA: Ilogical configuration."> Possible wrong configuration in flash archive. Check the archive. Flash the correct archive. If problem still exist report the problem.</value>
+    <value number="1854" name="E_GD_TA_ILLOGICAL_CONFIGURATION" fatal="false" short="GD/TA: Illogical configuration."> Possible wrong configuration in flash archive. Check the archive. Flash the correct archive. If problem still exist report the problem.</value>
     <value number="1855" name="E_GD_TA_UNKNOWN_MEMORY_TYPE" fatal="false" short="GD/TA: Unknown memory type."> Possible wrong configuration in flash archive. Check the archive. Flash the correct archive. If problem still exist report the problem.</value>
     <value number="1856" name="E_GD_TA_WRONG_PARAMETER" fatal="false" short="GD/TA: Wrong parameter."> Check input parameters. Repeat operation with the correct input parameters. Report if problem still exist.</value>
     <value number="1857" name="E_GD_TA_OUT_OF_MEMORY" fatal="false" short="GD/TA: Out of memory."> Internal error. Reset loader. Report if problem still exist.</value>
-    <value number="1858" name="E_GD_TA_INVALID_ADRESS" fatal="false" short="GD/TA: Invalid adress."> Internal error. Reset loader. Report if problem still exist.</value>
-    <value number="1859" name="E_GD_TA_UNUSED_ADRESS" fatal="false" short="GD/TA: Unused adress."> Internal error. Reset loader. Report if problem still exist.</value>
+    <value number="1858" name="E_GD_TA_INVALID_ADRESS" fatal="false" short="GD/TA: Invalid address."> Internal error. Reset loader. Report if problem still exist.</value>
+    <value number="1859" name="E_GD_TA_UNUSED_ADRESS" fatal="false" short="GD/TA: Unused address."> Internal error. Reset loader. Report if problem still exist.</value>
     <value number="1860" name="E_GD_TA_UNIT_NOT_FOUND" fatal="false" short="GD/TA: Unit not found."> No data was written in the specified unit. Write data to the unit and than perform read operation. Report if problem still exist.</value>
     <value number="1861" name="E_GD_TA_NOT_IMPLEMENTED" fatal="false" short="GD/TA: TA is not supported."></value>
     <value number="1862" name="E_GD_TA_FAIL" fatal="false" short="GD/TA: TA fail."> Internal error. Reset loader. Report if problem still exist.</value>
@@ -512,7 +512,7 @@
     <value number="2100" name="E_INIT_OTP_PD_FAILED" fatal="true" short="Failed to initialize OTD driver."> Internal error. Reset loader. Report if problem still exist</value>
     <value number="2101" name="E_READING_OTP_FAILED" fatal="true" short="Failed to read data from OTP."> Internal error. Reset loader. Report if problem still exist</value>
     <value number="2102" name="E_WRITTING_OTP_FAILED" fatal="true" short="Failed to write data in OTP."> Internal error.Possible hardware malfunction. Please report this problem immediately</value>
-    <value number="2103" name="E_INVALID_CID_VALUE" fatal="true" short="Trying to write invalid CID in OTP."> The value for CID must be in the range from 19 to 16384.0 value is also alowed CID value</value>
+    <value number="2103" name="E_INVALID_CID_VALUE" fatal="true" short="Trying to write invalid CID in OTP."> The value for CID must be in the range from 19 to 16384.0 value is also allowed CID value</value>
     <value number="2104" name="E_INIT_OTP_LD_FAILED" fatal="true" short="Failed to initialize OTD logical driver."> Internal error. Reset loader. Report if problem still exist</value>
     <value number="2105" name="E_OTP_AREA_LOCKED" fatal="true" short="Requested OTP area is already locked."> It is not allowed to write in already locked OTP area</value>
 
@@ -527,9 +527,9 @@
     <value number="2255" name="E_SEC_APP_ROM_ERROR_CRITICAL" fatal="true" short="Critical error in ROM has occurred.">Reset loader. Report if problem still exist.</value>
     <value number="2256" name="E_SEC_APP_ROM_ERROR" fatal="true" short="Unexpected ROM error.">Reset loader. Report if problem still exist.</value>
     <value number="2257" name="E_SEC_APP_PATCH_EXISTS" fatal="true" short="ROM Patch is already installed.">If you are trying to install flash patch ,please make sure that version of ROM patch is greater than already installed. Reinstallation of OTP patch is not allowed.</value>
-    <value number="2258" name="E_SEC_APP_PATCH_REINSTALLED" fatal="true" short="Operation successful."> ROM Patch in Flash is successfuly reinstalled.</value>
+    <value number="2258" name="E_SEC_APP_PATCH_REINSTALLED" fatal="true" short="Operation successful."> ROM Patch in Flash is successfully reinstalled.</value>
     <value number="2259" name="E_SEC_APP_ROOTKEY_EXISTS" fatal="true" short="RootKey is already installed.">.Please make sure that version of Root key is the same with already installed</value>
-    <value number="2260" name="E_SEC_APP_ROOTKEY_REINSTALLED" fatal="true" short="Operation successful."> Root Key is successfuly reinstalled.</value>
+    <value number="2260" name="E_SEC_APP_ROOTKEY_REINSTALLED" fatal="true" short="Operation successful."> Root Key is successfully reinstalled.</value>
 
     <!--
     * Trim Area Fatal 2300-2350
@@ -580,7 +580,7 @@
     <value number="2701" name="E_HSI_BSC_RESULT_FAILED" fatal="true" short="General Error.">It is possible to failed to initialize the communication device.Reset loader.Report if problem still exist</value>
     <value number="2702" name="E_HSI_BSC_RESULT_FAILED_INVALIDARGS" fatal="true" short="Invalid arguments.">.Check input parameters. Retry operation. If problem still exist reset loader. Report if problem doesn't solved.</value>
     <value number="2703" name="E_HSI_BSC_RESULT_FAILED_NOTSUPPORTED" fatal="true" short="Implementation is removed."> Implementation it is not supported anymore.</value>
-    <value number="2704" name="E_HSI_BSC_RESULT_FAILED_HSIERR" fatal="true" short="HSI internal error.">Buffer with unaligned length is requested to be transfered or device driver is confiured to use unsupported frame size.</value>
+    <value number="2704" name="E_HSI_BSC_RESULT_FAILED_HSIERR" fatal="true" short="HSI internal error.">Buffer with unaligned length is requested to be transfered or device driver is configured to use unsupported frame size.</value>
     <value number="2705" name="E_HSI_BSC_RESULT_FAILED_BUSY" fatal="true" short="Communication device is busy.">Current transfer is not finished.</value>
 
     <!--
@@ -599,8 +599,8 @@
     * Communication Relay Fatal 2800-2849
     * Communication Relay Non-Fatal 2850-2899
     -->
-    <value number="2850" name="E_CR_INVALID_STATE" fatal="false" short="Invalid state for commnication relay detected.">Wrong value passed as state for the communication relay and hence it can't be used. Try setting some of predifined communication relay states.</value>
-    <value number="2851" name="E_CR_NOT_RUNNING" fatal="false" short="Communication Relay is not running.">Communication relay is set in error state or it is not configured properly. Check the relay state. If error occured restart the loader, otherwise try reconfiguring the relay.</value>
+    <value number="2850" name="E_CR_INVALID_STATE" fatal="false" short="Invalid state for communication relay detected.">Wrong value passed as state for the communication relay and hence it can't be used. Try setting some of predefined communication relay states.</value>
+    <value number="2851" name="E_CR_NOT_RUNNING" fatal="false" short="Communication Relay is not running.">Communication relay is set in error state or it is not configured properly. Check the relay state. If error occurred restart the loader, otherwise try reconfiguring the relay.</value>
 
     <!--
     * SDIO Driver SDIO_BSC_Result_t - Error codes for all functions (offset 2900)
@@ -610,7 +610,7 @@
     <value number="2901" name="E_SDIO_BSC_RESULT_FAILED" fatal="true" short="General Error.">It is possible to failed to initialize the communication device.Reset loader.Report if problem still exist</value>
     <value number="2902" name="E_SDIO_BSC_RESULT_FAILED_INVALIDARGS" fatal="true" short="Invalid arguments.">.Check input parameters. Retry operation. If problem still exist reset loader. Report if problem doesn't solved.</value>
     <value number="2903" name="E_SDIO_BSC_RESULT_FAILED_NOTSUPPORTED" fatal="true" short="Implementation is removed."> Implementation it is not supported anymore.</value>
-    <value number="2904" name="E_SDIO_BSC_RESULT_FAILED_SDIOERR" fatal="true" short="SDIO internal error.">Buffer with unaligned length is requested to be transfered or device driver is confiured to use unsupported frame size.</value>
+    <value number="2904" name="E_SDIO_BSC_RESULT_FAILED_SDIOERR" fatal="true" short="SDIO internal error.">Buffer with unaligned length is requested to be transfered or device driver is configured to use unsupported frame size.</value>
     <value number="2905" name="E_SDIO_BSC_RESULT_FAILED_BUSY" fatal="true" short="Communication device is busy.">Current transfer is not finished.</value>
 
     <!--
@@ -647,7 +647,7 @@
     <value number="3068" name="E_BAM_HASH_ERROR" fatal="true" short="The hash callback function failed unexpectedly.">.</value>
     <value number="3069" name="E_BAM_UPDATE_IN_PROGRESS" fatal="true" short="An update is already in progress.">.</value>
     <value number="3070" name="E_BAM_BUF_TOO_SMALL" fatal="true" short="The supplied buffer is to small.The image will not be written.">.</value>
-    <value number="3071" name="E_BAM_EXTERNAL_ERROR" fatal="true" short="An external error occured.">.</value>
+    <value number="3071" name="E_BAM_EXTERNAL_ERROR" fatal="true" short="An external error occurred.">.</value>
     <value number="3072" name="E_BAM_NOT_INSTANTIATED" fatal="true" short="The requested function is not compiled into the loadmodule that supplies the service.">.</value>
     <value number="3073" name="E_BAM_UPDATE_NOT_POSSIBLE" fatal="true" short="The state in the flash prevents BAM from performing any updates.">.</value>
 
@@ -665,41 +665,41 @@
     <value number="4150" name="E_LOADER_SEC_LIB_INIT_CALLED_TWICE" fatal="true" short="The security library init function has been called 2 times.">Restart the loader.</value>
     <value number="4180" name="E_LOADER_SEC_LIB_MEMORY_RELEASE_FAILED" fatal="true" short="Memory release failed.">Restart the loader.</value>
     <value number="4181" name="E_LOADER_SEC_LIB_MEMORY_ALLOCATION_FAILED" fatal="true" short="Memory allocation failed.">Restart the loader.</value>
-    <value number="4182" name="E_LOADER_SEC_LIB_DATA_BLOCK_EXIST" fatal="true" short="Data block exist in the linked list.">nternal error. Reset loader. Report if problem still exist.</value>
-    <value number="4183" name="E_LOADER_SEC_LIB_DATA_BLOCK_DO_NOT_EXIST" fatal="true" short="Data block do not exist in the linked list.">nternal error. Reset loader. Report if problem still exist.</value>
+    <value number="4182" name="E_LOADER_SEC_LIB_DATA_BLOCK_EXIST" fatal="true" short="Data block exist in the linked list.">Internal error. Reset loader. Report if problem still exist.</value>
+    <value number="4183" name="E_LOADER_SEC_LIB_DATA_BLOCK_DO_NOT_EXIST" fatal="true" short="Data block do not exist in the linked list.">Internal error. Reset loader. Report if problem still exist.</value>
     <value number="4184" name="E_LOADER_SEC_LIB_INVALID_AUTHENTICATION_TYPE" fatal="true" short="Invalid authentication type."> Try to use the appropriate authentication type (control key or CA certificate).</value>
-    <value number="4185" name="E_LOADER_SEC_LIB_EXCEEDED_NUMBER_OF_AUTHENTICATION" fatal="true" short="Exceeded number of authentication. Loader will be shut downed.">Restart the laoder and use the correct control keys or CA certificate to authenticate.</value>
+    <value number="4185" name="E_LOADER_SEC_LIB_EXCEEDED_NUMBER_OF_AUTHENTICATION" fatal="true" short="Exceeded number of authentication. Loader will be shut downed.">Restart the loader and use the correct control keys or CA certificate to authenticate.</value>
     <value number="4186" name="E_LOADER_SEC_LIB_ESB_MAC_INIT_FAILED" fatal="true" short="Initialization of ESB block for MAC calculation failed.">Possible error in hardware configuration, or hardware malfunction.Reset loader. Report if problem still exist.</value>
     <value number="4187" name="E_LOADER_SEC_LIB_ESB_MAC_UPDATE_FAILED" fatal="true" short="MAC update with ESB block failed.">Internal error. Reset loader. Report if problem still exist.</value>
     <value number="4188" name="E_LOADER_SEC_LIB_ESB_MAC_FINAL_FAILED" fatal="true" short="MAC finalize with ESB block failed.">Internal error. Reset loader. Report if problem still exist.</value>
     <value number="4189" name="E_LOADER_SEC_LIB_ESB_MAC_NOT_VERIFIED" fatal="true" short="MAC verification with ESB block failed.">Internal error. Reset loader. Report if problem still exist.</value>
     <value number="4190" name="E_LOADER_SEC_LIB_ESB_DOWNLOCK_FAILED" fatal="true" short="ESB downlock failed.">Internal error. Reset loader. Report if problem still exist.</value>
     <value number="4191" name="E_LOADER_SEC_LIB_CONTROL_KEY_VERIFICATION_FAILURE" fatal="true" short="Control key verification failed."> Verify that authentication is performed with correct control keys, otherwise report this error.</value>
-    <value number="4192" name="E_LOADER_SEC_LIB_CA_CERTIFICATE_VERIFICATION_FAILURE" fatal="true" short="CA certificate verification failed.">Verify that CA certifiacte which is used is valid and appropiate for the HW on which authentication is performed,otherwise report this error.</value>
-    <value number="4193" name="E_LOADER_SEC_LIB_X509_ERROR_IN_CERTIFICATE" fatal="true" short="X509 certificate error.">An error ocured while parsing X.509 certificate. Check that certificate structure is valid.</value>
-    <value number="4194" name="E_LOADER_SEC_LIB_COPS_INIT_FAILED" fatal="true" short="COPS initialization failed.">Internal error. Reset loader. Report if problem still exist</value>
-    <value number="4195" name="E_LOADER_SEC_LIB_COPS_PROTECT_DATA_INIT_FAILED" fatal="true" short="COPS protect data initialization failed.">Internal error. Reset loader. Report if problem still exis</value>
-    <value number="4196" name="E_LOADER_SEC_LIB_COPS_DATA_READ_FAILED" fatal="true" short="COPS data read failed.">Verify that Bind properties is already performed. Report if problem still exist</value>
-    <value number="4197" name="E_LOADER_SEC_LIB_COPS_DATA_WRITE_FAILED" fatal="true" short="COPS data write failed.">Verify that the data is correct and flash is not corupted. Report if problem still exist</value>
+    <value number="4192" name="E_LOADER_SEC_LIB_CA_CERTIFICATE_VERIFICATION_FAILURE" fatal="true" short="CA certificate verification failed.">Verify that CA certificate which is used is valid and appropriate for the HW on which authentication is performed,otherwise report this error.</value>
+    <value number="4193" name="E_LOADER_SEC_LIB_X509_ERROR_IN_CERTIFICATE" fatal="true" short="X509 certificate error.">An error occurred while parsing X.509 certificate. Check that certificate structure is valid.</value>
+    <value number="4194" name="E_LOADER_SEC_LIB_COPS_INIT_FAILED" fatal="true" short="COPS initialization failed.">Internal error. Reset loader. Report if problem still exist.</value>
+    <value number="4195" name="E_LOADER_SEC_LIB_COPS_PROTECT_DATA_INIT_FAILED" fatal="true" short="COPS protect data initialization failed.">Internal error. Reset loader. Report if problem still exist.</value>
+    <value number="4196" name="E_LOADER_SEC_LIB_COPS_DATA_READ_FAILED" fatal="true" short="COPS data read failed.">Verify that Bind properties is already performed. Report if problem still exist.</value>
+    <value number="4197" name="E_LOADER_SEC_LIB_COPS_DATA_WRITE_FAILED" fatal="true" short="COPS data write failed.">Verify that the data is correct and flash is not corrupted. Report if problem still exist.</value>
     <value number="4198" name="E_LOADER_SEC_LIB_READ_OTP_FAILED" fatal="true" short="Reading OTP data failed.">Internal error.Please reset the loader and try again.Please report if problem still exist.</value>
     <value number="4199" name="E_LOADER_SEC_LIB_WRITE_OTP_FAILED" fatal="true" short="Writing OTP data failed.">Internal error. Possible hardware malfunction. Please report this problem immediately.</value>
     <value number="4200" name="E_LOADER_SEC_LIB_LOCK_OTP_FAILED" fatal="true" short="Locking OTP data failed.">Internal error.Possible hardware malfunction. Please report this problem immediately.</value>
     <value number="4201" name="E_LOADER_SEC_LIB_UNPACKING_IMEI_FAILED" fatal="true" short="Unpacking IMEI data failed.">Internal error. Reset loader. Report if problem still exist</value>
     <value number="4202" name="E_LOADER_SEC_LIB_PACKING_IMEI_FAILED" fatal="true" short="Packing IMEI data failed.">Internal error. Reset loader. Report if problem still exist></value>
     <value number="4203" name="E_LOADER_SEC_LIB_OTP_ALREADY_LOCKED" fatal="true" short="OTP is already locked.">You are not allowed to write in already locked OTP area.</value>
-    <value number="4204" name="E_LOADER_SEC_LIB_INVALID_CID_VALUE" fatal="true" short="CID value is out of range.">The value for CID must be in the range from 19 to 16384.0 value is also alowed CID value.</value>
+    <value number="4204" name="E_LOADER_SEC_LIB_INVALID_CID_VALUE" fatal="true" short="CID value is out of range.">The value for CID must be in the range from 19 to 16384.0 value is also allowed CID value.</value>
     <value number="4205" name="E_LOADER_SEC_LIB_OTP_LOCKBITS_MISSMATCH" fatal="true" short="OTP lock bits have different values.">Reset loader. Report if problem still exist</value>
     <value number="4206" name="E_LOADER_SEC_LIB_WRITING_BOOTRECORD_FAILED" fatal="true" short="Failed to write in boot records.">Internal error. Reset loader. Report if problem still exist</value>
     <value number="4207" name="E_LOADER_SEC_LIB_UNSUPPORTED_NO_DEBUG_HW" fatal="true" short="No debug hardware detected.">Internal error. Reset loader. Report if problem still exist</value>
     <value number="4208" name="E_LOADER_SEC_LIB_CHANGE_OPERATION_NOT_SUPPORTED" fatal="true" short="Requested change operation is not supported or not allowed.">Check the authentication level and try again. Report if problem still exist</value>
     <value number="4209" name="E_LOADER_SEC_LIB_INVALID_CHANGE_OPERATION" fatal="true" short="Invalid change operation.">Internal error. Reset loader. Report if problem still exist.</value>
-    <value number="4210" name="E_LOADER_SEC_LIB_RWIMEI_NOT_ALLOWED" fatal="true" short="Rewriteable IMEI is not allowed to change.">Check if IMEI changeable is set in OTP. Report this issue if IMEI changeable is set and requested operation can not be executed.</value>
+    <value number="4210" name="E_LOADER_SEC_LIB_RWIMEI_NOT_ALLOWED" fatal="true" short="Re-writable IMEI is not allowed to change.">Check if IMEI changeable is set in OTP. Report this issue if IMEI changeable is set and requested operation can not be executed.</value>
     <value number="4211" name="E_LOADER_SEC_LIB_REQUEST_DENIED" fatal="true" short="Request for change operation is denied.">Check the authentication level and try again. Report if problem still exist</value>
     <value number="4212" name="E_LOADER_SEC_LIB_BOOT_BLOCK_DO_NOT_EXIST" fatal="true" short="Boot record do not exist.">If boot block is corrupted or do not exist, processFile command should be used to flash the new boot record or recovery domain data to generate the boot record template.</value>
     <value number="4213" name="E_LOADER_SEC_LIB_CORRUPTED_DOMAIN_DATA" fatal="true" short="Corrupted or do not exist domain data in boot block.">If domain data are corrupted or do not exist should be use the bind properties command or recover domain data to generate the new domain data.</value>
     <value number="4214" name="E_LOADER_SEC_LIB_INVALID_DOMAIN" fatal="true" short="Invalid domain.">Select appropriated domain.</value>
-    <value number="4215" name="E_LOADER_SEC_LIB_INVALID_CHALLENGE_DATA_BLOCK" fatal="true" short="Invalid challenge data block.">Verify that challene data block is created properly.</value>
-    <value number="4216" name="E_LOADER_SEC_LIB_NO_DEBUG_HW_NOT_ALLOWED" fatal="true" short="Not allowed operation on NoDebug HW.">Cuurent opertaion can be executed only on Debug HW.</value>
+    <value number="4215" name="E_LOADER_SEC_LIB_INVALID_CHALLENGE_DATA_BLOCK" fatal="true" short="Invalid challenge data block.">Verify that challenge data block is created properly.</value>
+    <value number="4216" name="E_LOADER_SEC_LIB_NO_DEBUG_HW_NOT_ALLOWED" fatal="true" short="Not allowed operation on NoDebug HW.">Current operation can be executed only on Debug HW.</value>
 
     <!--
     * Emulator Fatal 4300-4350
@@ -709,7 +709,7 @@
     <value number="4301" name="E_FIFO_UNDERFLOW" fatal="true" short="UART FIFO underflow.">Reset loader. Report if problem still exist.</value>
     <value number="4302" name="E_OBJECT_NULL" fatal="true" short="Null pointer to Object.">Reset loader. Report if problem still exist.</value>
     <value number="4303" name="E_POINTER_NOT_NULL" fatal="true" short="Pointer is not NULL.">Reset loader. Report if problem still exist.</value>
-    <value number="4304" name="E_UNRECOGNIZED_STATE" fatal="true" short="The state in the State Machine is invalid.">Reset loader. Report if problem stil exist.</value>
+    <value number="4304" name="E_UNRECOGNIZED_STATE" fatal="true" short="The state in the State Machine is invalid.">Reset loader. Report if problem still exist.</value>
     <value number="4305" name="E_UNKNOWN_MANUFACTURER_ID" fatal="true" short="The provided manufacturer ID is not valid.">Possible error in HW configuration. Try to reset the loader and if problem still exist, report it.</value>
     <value number="4306" name="E_UNKNOWN_DEVICE_ID" fatal="true" short="The provided device ID is not valid.">Possible error in HW configuration. Try to reset the loader and if problem still exist, report it.</value>
     <value number="4308" name="E_INVALID_A01_FORMAT" fatal="true" short="Something wrong with the A01 file containing the flash image.">Verify that the flash image is valid, otherwise report the problem. </value>
@@ -756,7 +756,7 @@
     <value number="5033" name="A2_E_BOOTIMAGE_SIGNATURE_FAILED" fatal="true" short="Boot image signature failed.">.</value>
     <value number="5034" name="A2_E_BOOTIMAGE_FAILED_TO_READ_IMAGE" fatal="true" short="Failed to read image.">.</value>
     <value number="5035" name="A2_E_BOOTIMAGE_FAILED_ALLOCATE_MEM" fatal="true" short="Failed to allocate memory.">.</value>
-    <value number="5036" name="A2_E_BOOTIMAGE_INVALID_PARAM" fatal="true" short="Boot image invalid parametars.">.</value>
+    <value number="5036" name="A2_E_BOOTIMAGE_INVALID_PARAM" fatal="true" short="Boot image invalid parameters.">.</value>
     <value number="5037" name="A2_E_BOOTIMAGE_INVALID_LENGTH" fatal="true" short="Boot image has invalid length.">.</value>
     <value number="5038" name="A2_E_BOOTIMAGE_MACED_HEADER_SIZE_ZERO" fatal="true" short="Header size is zero.">.</value>
     <value number="5039" name="A2_E_FLASH_RESULT_DEVICE_PROTECTED" fatal="true" short="The flash device was protected.">.</value>
@@ -845,11 +845,11 @@
     <value number="5122" name="A2_E_PMC_OVERFLOWN" fatal="true" short="All steps of the PMC are destroyed.">.</value>
     <value number="5123" name="A2_E_PMC_ONCE_REQUIRED" fatal="true" short="New version of once protected module attempted to be loaded without ARB flag set.">.</value>
     <value number="5124" name="A2_E_PMC_BAD_N_OF_STEPS" fatal="true" short="Unsuitable number of steps within PMC.">.</value>
-    <value number="5125" name="A2_E_UNIT_MISSING" fatal="true" short="Dynamyc variable is missing.">.</value>
-    <value number="5126" name="A2_E_UNIT_TO_BIG" fatal="true" short="Dynamyc variable found is to big.">.</value>
+    <value number="5125" name="A2_E_UNIT_MISSING" fatal="true" short="Dynamic variable is missing.">.</value>
+    <value number="5126" name="A2_E_UNIT_TO_BIG" fatal="true" short="Dynamic variable found is to big.">.</value>
     <value number="5127" name="A2_E_PARTMAN_READ_ERROR" fatal="true" short="Error reading partition manger status.">.</value>
     <value number="5128" name="A2_E_PARTMAN_INIT_ERROR" fatal="true" short="Error initializing partition manger.">.</value>
-    <value number="5129" name="A2_E_BOOTIMAGE_INVALID_ALLIGNMENT" fatal="true" short="Boot container size is not word alligned.">.</value>
+    <value number="5129" name="A2_E_BOOTIMAGE_INVALID_ALLIGNMENT" fatal="true" short="Boot container size is not word aligned.">.</value>
     <value number="5130" name="A2_E_BOOTIMAGE_INSUFFICIENT_CONTAINERS" fatal="true" short="Not enough boot containers are allocated.">.</value>
     <value number="5131" name="A2_E_BOOTIMAGE_INVALID_CONTAINER_TYPE" fatal="true" short="Invalid boot container type. At this position other type of container is expected.">.</value>
     <value number="5132" name="A2_E_DATA_LENGTH_IS_NOT_ALIGNED" fatal="true" short="The data size must be aligned to 512 bytes when reading or writing pages to/from the NAND.">.</value>

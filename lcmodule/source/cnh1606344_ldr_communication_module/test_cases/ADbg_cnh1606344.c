@@ -50,7 +50,7 @@ static void ADbg_Do_Communication_GetProtocolTimeouts(ADbg_Case_t *Case_p);
 // A2_Family
 
 // Communication_service
-static uint8 Parameters2_1[7] = {6, WORDPTR, WORD, WORDPTR, WORDPTR, WORD, WORD};
+static uint8 Parameters2_1[11] = {10, VOIDPTR, WORDPTR, WORD, WORDPTR, WORDPTR, WORD, WORDPTR, WORDPTR, WORDPTR, WORD};
 ADBG_CASE_DEFINE(Test_Do_Communication_Initialize, 1, 15, ADbg_Do_Communication_Initialize, Parameters2_1);
 static uint8 Parameters2_2[3] = {2, WORDPTR, WORD};
 ADBG_CASE_DEFINE(Test_Do_Communication_Shutdown, 2, 15, ADbg_Do_Communication_Shutdown, Parameters2_2);
@@ -109,15 +109,20 @@ void Do_CNH1606344_Module_Test_Run(ADbg_MainModule_t *MainModule_p)
 static void ADbg_Do_Communication_Initialize(ADbg_Case_t *Case_p)
 {
     ErrorCode_e Result = E_SUCCESS;
-    Communication_t *Communication_p;
+    void *Object_p;
+    Communication_t **Communication_pp;
     Family_t Family;
     HashDevice_t *HashDevice_p;
     CommunicationDevice_t *CommunicationDevice_p;
     Do_CEH_Call_t CommandCallback_p;
+    BuffersInterface_t *Buffers_p;
+    TimersInterface_t *Timers_p;
+    QueueInterface_t *Queue_p;
     uint8 *Var_p = NULL;
 
     Var_p = Case_p->Command_p->Data_p;
-    Communication_p = Do_ADbg_GetDataPointer(sizeof(Communication_t), (void **)&Var_p);
+    Object_p = Do_ADbg_GetDataPointer(sizeof(void *), (void **)&Var_p);
+    Communication_pp = Do_ADbg_GetDataPointer(sizeof(Communication_t *), (void **)&Var_p);
 
     Do_ADbg_GetDataVar(sizeof(Family_t), &Var_p, &Family);
 
@@ -125,11 +130,14 @@ static void ADbg_Do_Communication_Initialize(ADbg_Case_t *Case_p)
     CommunicationDevice_p = Do_ADbg_GetDataPointer(sizeof(CommunicationDevice_t), (void **)&Var_p);
 
     Do_ADbg_GetDataVar(sizeof(Do_CEH_Call_t), &Var_p, &CommandCallback_p);
+    Buffers_p = Do_ADbg_GetDataPointer(sizeof(BuffersInterface_t), (void **)&Var_p);
+    Timers_p = Do_ADbg_GetDataPointer(sizeof(TimersInterface_t), (void **)&Var_p);
+    Queue_p = Do_ADbg_GetDataPointer(sizeof(QueueInterface_t), (void **)&Var_p);
 
-    Result = Do_Communication_Initialize(Communication_p, Family, HashDevice_p, CommunicationDevice_p, CommandCallback_p);
+    Result = Do_Communication_Initialize(Object_p, Communication_pp, Family, HashDevice_p, CommunicationDevice_p, CommandCallback_p, Buffers_p, Timers_p, Queue_p);
     Do_ADbg_Assert((ErrorCode_e)(*Var_p) == Result, Case_p);
 
-    BUFFER_FREE(Communication_p);
+    BUFFER_FREE(*Communication_pp);
     BUFFER_FREE(HashDevice_p);
     BUFFER_FREE(CommunicationDevice_p);
 

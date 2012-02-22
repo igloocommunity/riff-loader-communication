@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "c_system.h"
+#include "c_system_v2.h"
 #include "r_a2_network.h"
 #include "r_a2_transport.h"
 #include <stdlib.h>

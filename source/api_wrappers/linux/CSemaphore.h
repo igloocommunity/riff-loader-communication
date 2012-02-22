@@ -19,7 +19,7 @@ public:
     DWORD Wait(DWORD timeout = INFINITE);
 
 private:
-    sem_t* m_semaphore;
+    sem_t *m_semaphore;
 };
 
 #endif /* _CSEMAPHORE_H */

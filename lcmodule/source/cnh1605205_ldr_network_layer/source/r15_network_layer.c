@@ -14,13 +14,13 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <stdlib.h>
+#include <string.h>
 #include "r_r15_network_layer.h"
 #include "r_basicdefinitions.h"
-#include <stdlib.h>
 #include "r_debug.h"
 #include "r_debug_macro.h"
-#include <string.h>
-#include "c_system.h"
+#include "c_system_v2.h"
 #include "r_r15_transport_layer.h"
 #include "r_r15_family.h"
 #include "r_r15_header.h"
@@ -466,7 +466,7 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
  * Cancel retransmission of packets.
  *
  * @param [in,out] Communication_p Communication module context.
- * @param [in] UniqueKey           Unique key used for identification of packet
+ * @param [in]     UniqueKey       Unique key used for identification of packet
  *                                 for retransmission.
  *
  * @return none.
@@ -729,6 +729,7 @@ static ErrorCode_e R15_Network_ReceiveHeader(const Communication_t *const Commun
 
             if (print_header) {
             uint32 Counter = 0;
+            print_header = 0;
             printf("Invalid header! \n");
 
                 for (Counter = 0; Counter < 16; Counter++) {
@@ -818,7 +819,7 @@ static ErrorCode_e R15_Network_ReceiveExtendedHeader(Communication_t *Communicat
     } else {
         A_(
             uint32 Counter = 0;
-            printf("Invalid exheader! \n");
+            printf("Invalid extended header! \n");
 
         for (Counter = 0; Counter < 16; Counter++) {
         printf(" %02X", In_p->Target_p[Counter]);
