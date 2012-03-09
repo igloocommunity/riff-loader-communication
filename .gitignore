@@ -1,6 +1,8 @@
 lcmodule/.config
 lcmodule/out
 out
+source/outLCDriver.rc
+lcmodule/source/outLCM.rc
 .config
 cov_data
 cov_inter

@@ -154,6 +154,7 @@ LOCAL_SRC_FILES := \
 	source/utilities/MemMappedFile.cpp\
 	source/utilities/CaptiveThreadObject.cpp\
 	source/utilities/BulkHandler.cpp\
+	source/utilities/String_s.cpp\
 	source/CEH/ProtromRpcInterface.cpp\
 	source/CEH/commands_impl.cpp\
 	source/CEH/a2_commands_impl.cpp\

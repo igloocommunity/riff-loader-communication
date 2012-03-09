@@ -11,6 +11,10 @@
 #define LCDRIVER_API __declspec(dllexport)
 #else
 #define LCDRIVER_API __declspec(dllimport)
+#endif //LCDRIVER_EXPORTS
+
+#ifndef __int64
+#define __int64 long long
 #endif
 
 typedef unsigned __int64 uint64;

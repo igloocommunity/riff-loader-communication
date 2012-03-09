@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="LCM"
 	ProjectGUID="{E06F2763-9680-40F7-99CB-4065B1157B67}"
 	RootNamespace="LCM"
@@ -255,8 +255,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copying $(TargetPath) to $(ProjectDir)..\win_binaries"
-				CommandLine="copy /B /Y $(TargetPath) $(ProjectDir)..\win_binaries"
+				Description=""
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -337,8 +337,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copying $(TargetPath) to$(ProjectDir)..\win_binaries"
-				CommandLine="copy /B /Y $(TargetPath) $(ProjectDir)..\win_binaries"
+				Description=""
+				CommandLine=""
 			/>
 		</Configuration>
 	</Configurations>
@@ -374,6 +374,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\cnh1606344_ldr_communication_module\source\lcm_version.c"
+					>
+				</File>
+				<File
 					RelativePath=".\cnh1606344_ldr_communication_module\source\protrom_family.c"
 					>
 				</File>
@@ -383,10 +387,6 @@
 				</File>
 				<File
 					RelativePath=".\cnh1606344_ldr_communication_module\source\z_family.c"
-					>
-				</File>
-				<File
-					RelativePath=".\cnh1606344_ldr_communication_module\source\lcm_version.c"
 					>
 				</File>
 			</Filter>
@@ -933,10 +933,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\LCM.rc"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

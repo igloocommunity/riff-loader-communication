@@ -6,6 +6,8 @@ endif
 
 -include $(config_file)
 
+MINGW_X32_CC:=i586-mingw32msvc-
+MINGW_X64_CC:=amd64-mingw32msvc-
 LCM_PATH:=./
 TRANSPORT_PATH:=${LCM_PATH}/source/cnh1605204_ldr_transport_layer/
 NETWORK_PATH:=${LCM_PATH}/source/cnh1605205_ldr_network_layer/
@@ -17,7 +19,18 @@ SECURITY_ALGORITHMS_PATH:=$(LOADER_DIR)/src/loader_code_base/cnh1605721_ldr_secu
 LCM_CONFIG:=$(LCM_CNH_PATH)/config
 LCM_CUST_CONFIG:=$(LCM_PATH)/customer_config
 SUPPORTED_CMDS_PATH:=$(LOADER_DIR)/src/platform_support/stn8500/config/supported_commands.xml
-WIN_BINARIES=./win_binaries/
+
+ifneq ($(shell which $(MINGW_X32_CC)gcc), )
+USE_MINGW_X32 := 1
+else
+USE_MINGW_X32 := 0
+endif
+
+ifneq ($(shell which $(MINGW_X64_CC)gcc), )
+USE_MINGW_X64 := 1
+else
+USE_MINGW_X64 := 0
+endif
 
 OS_NAME := $(shell uname)
 ifeq ($(OS_NAME), Linux)
@@ -67,11 +80,22 @@ LIBSRC :=${TRANSPORT_PATH}/source/bulk_protocol.c\
 	${LCM_CNH_PATH}/source/z_family.c\
 	${LCM_CNH_PATH}/source/r15_family.c\
 	${LCM_CNH_PATH}/source/a2_family.c\
-	${LCM_PATH}/source/cnh1605551_ldr_utilities/critical_section/critical_section_linux.c\
 	${LCM_PATH}/source/serialization.c
+ifeq ($(BUILD_WIN),)
+LIBSRC +=  ${LCM_PATH}/source/cnh1605551_ldr_utilities/critical_section/critical_section_linux.c
+else
+LIBSRC += ${LCM_PATH}/source/cnh1605551_ldr_utilities/critical_section/critical_section_win32.c
+endif
 
 LIBOBJ_x32 := $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(notdir $(LIBSRC:.c=.o)))
 LIBOBJ_x64 := $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(notdir $(LIBSRC:.c=.o)))
+
+ifeq ($(BUILD_WIN),1)
+LIBOBJ_x32 += $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/outLCM.o
+endif
+ifeq ($(BUILD_WIN),2)
+LIBOBJ_x64 += $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/outLCM.o
+endif
 
 	#-I ${AUTO_DIR)\
 	#	-I ${LCM_PATH}/include/
@@ -91,27 +115,70 @@ INCLUDES := -I. \
 	-I ${LCM_PATH}/source/legacy_compatibility/\
 
 # C compiler flags (-g -O2 -Wall)
+ifeq ($(BUILD_WIN),)
 CFLAGS := -g -O2 -Wall -fPIC -fvisibility=hidden -DUINT64_SUPPORTED -DSINT64_SUPPORTED -DINT64_BASE_TYPE="long long" -DCFG_ENABLE_A2_FAMILY -DLCM_EXPORTS
+else
+# For Windows x32 and x64 version compile flags
+CFLAGS := -Wall -D__WIN32__ -mthreads -mwindows -DWIN32 -DNDEBUG -D_WINDOWS -D_USRDLL -DLCM_EXPORTS
+endif
+
+build:
+	$(MAKE) -C . start-build
+ifeq ($(USE_MINGW_X32),1)
+	bash ${LCM_PATH}/../source/gen_rc.sh --lcm
+	$(MAKE) -C . start-build BUILD_WIN=1
+else
+	@echo "*** warning: No Cross Compiler $(MINGW_X32_CC)gcc found ***"
+endif
+ifeq ($(USE_MINGW_X64),1)
+	bash ${LCM_PATH}/../source/gen_rc.sh --lcm
+	$(MAKE) -C . start-build BUILD_WIN=2
+else
+	@echo "*** warning: No Cross Compiler $(MINGW_X64_CC)gcc found ***"
+endif
 
 LBITS := $(shell getconf LONG_BIT)
+
+#
+# do Linux stuff here
+#
+ifeq ($(BUILD_WIN),)
+
 ifeq ($(LBITS),64)
 #
 # do 64 bit stuff here, like set some CFLAGS
 #
-build: configfile setup_folders $(LIB_x32) $(LIB_x64)
+start-build: configfile setup_folders $(LIB_x32) $(LIB_x64)
 else
 #
 # do 32 bit stuff here
 #
-build: configfile setup_folders $(LIB_x32)
+start-build: configfile setup_folders $(LIB_x32)
 endif
 
+else
+#
+# do Windows stuff here
+#
+ifeq ($(BUILD_WIN),1)
+start-build: configfile setup_folders $(LIB_x32)
+endif
+ifeq ($(BUILD_WIN),2)
+start-build: configfile setup_folders $(LIB_x64)
+endif
+
+endif
+
+
 $(LIB_x32): $(LIBOBJ_x32)
-	$(CC) -shared -m32 -Wl -o $(LIB_x32) -lc $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(^F))
+	$(CC) -shared -m32 -Wl -o  $(LIB_x32) $(LINKOPTS) $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(^F))
 
 $(LIB_x64): $(LIBOBJ_x64)
-	$(CC) -shared -Wl -o $(LIB_x64) -lc $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(^F))
+	$(CC) -shared -Wl -o $(LIB_x64) $(LINKOPTS) $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(^F))
 
+#
+# Source files build x32
+#
 $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: ${TRANSPORT_PATH}/source/%.c $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CC) $(INCLUDES) $(CFLAGS) -c -m32 $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
@@ -132,6 +199,15 @@ $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: ${LCM_PATH}/source/%.c  $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CC) $(INCLUDES) $(CFLAGS) -c -m32 $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
 
+ifeq ($(BUILD_WIN),1)
+$(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: out/autogen/outLCM.rc $(AUTOGEN_FILES)
+	@mkdir -p $(dir $@)
+	$(MINGW_X32_CC)windres out/autogen/outLCM.rc $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
+endif
+
+#
+# Source files build x64
+#
 $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: ${TRANSPORT_PATH}/source/%.c  $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
@@ -151,6 +227,12 @@ $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: ${LCM_PATH}/source/cnh1605551_ldr_utiliti
 $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: ${LCM_PATH}/source/%.c  $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
+
+ifeq ($(BUILD_WIN),2)
+$(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: out/autogen/outLCM.rc $(AUTOGEN_FILES)
+	@mkdir -p $(dir $@)
+	$(MINGW_X64_CC)windres out/autogen/outLCM.rc $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
+endif
 
 #Autogen files
 $(AUTO_DIR_LIB)/commands.h: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/commands_h.xsl | setup_folders
@@ -279,55 +361,54 @@ configfile: $(if $(wildcard $(config_file)),,config)
 	@echo $< > /dev/null
 
 .PHONY: config
-config: BUILDFOLDER := $(LCM_PATH)/out
-config: LCM_AUTO_DIR:=$(BUILDFOLDER)/autogen
-config: AUTO_DIR_LIB:=$(LCM_AUTO_DIR)/lib
-config: AUTO_DIR_LOADER:=$(LCM_AUTO_DIR)/loader
-config: LIB_x32 := $(BUILDFOLDER)/liblcm.$(LIB_EXTENSION)
-config: LIB_x64 := $(BUILDFOLDER)/liblcm_x64.$(LIB_EXTENSION)
 config: LCMLIB_INSTALLDIR := /tmp/
 config: LCMLDR_INSTALLDIR := /tmp/
 config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
-config: CC := gcc
 config: LOADER_DIR := ./
 config:
 	@echo Generating config file...
 	@echo config_file : $(config_file)
 	@rm -f $(config_file)
 	@touch $(config_file)
-	@echo CC: $(CC)
-	@echo "CC := $(CC)" >> $(config_file)
-	@echo LOADER_DIR: $(LOADER_DIR)
+	@echo "BUILDOUT := \$$(LCM_PATH)/out" >> $(config_file)
+
+	@echo "ifeq (\$$(BUILD_WIN),)" >> $(config_file)
+	@echo "BUILDFOLDER := \$$(BUILDOUT)/out_linux" >> $(config_file)
+	@echo "CC := gcc"  >> $(config_file)
+	@echo "LIB_x32 := \$$(BUILDFOLDER)/liblcm.$(LIB_EXTENSION)"  >> $(config_file)
+	@echo "LIB_x64 := \$$(BUILDFOLDER)/liblcm_x64.$(LIB_EXTENSION)"  >> $(config_file)
+	@echo "LINKOPTS := -lc"  >> $(config_file)
+	@echo "else"  >> $(config_file)
+
+	@echo "ifeq (\$$(BUILD_WIN),1)" >> $(config_file)
+	@echo "BUILDFOLDER := \$$(BUILDOUT)/out_win" >> $(config_file)
+	@echo "CC := $(MINGW_X32_CC)gcc" >> $(config_file)
+	@echo "LIB_x32 := \$$(BUILDFOLDER)/LCM.dll" >> $(config_file)
+	@echo "LIB_x64 := \$$(BUILDFOLDER)/LCM_x64.dll" >> $(config_file)
+	@echo "LINKOPTS := -s -mthreads"  >> $(config_file)
+	@echo "endif"  >> $(config_file)
+
+	@echo "ifeq (\$$(BUILD_WIN),2)" >> $(config_file)
+	@echo "BUILDFOLDER := \$$(BUILDOUT)/out_win" >> $(config_file)
+	@echo "CC := $(MINGW_X64_CC)gcc" >> $(config_file)
+	@echo "LIB_x32 := \$$(BUILDFOLDER)/LCM.dll" >> $(config_file)
+	@echo "LIB_x64 := \$$(BUILDFOLDER)/LCM_x64.dll" >> $(config_file)
+	@echo "LINKOPTS := -s -mthreads"  >> $(config_file)
+	@echo "endif"  >> $(config_file)
+
+	@echo "endif"  >> $(config_file)
+	@echo "LCM_AUTO_DIR := \$$(BUILDOUT)/autogen" >> $(config_file)
+	@echo "AUTO_DIR_LIB := \$$(LCM_AUTO_DIR)/lib" >> $(config_file)
+	@echo "AUTO_DIR_LOADER := \$$(LCM_AUTO_DIR)/loader" >> $(config_file)
 	@echo "LOADER_DIR := $(LOADER_DIR)" >> $(config_file)
-	@echo BUILDFOLDER: $(BUILDFOLDER)
-	@echo "BUILDFOLDER := $(BUILDFOLDER)" >> $(config_file)
-	@echo AUTO_DIR_LIB: $(AUTO_DIR_LIB)
-	@echo "AUTO_DIR_LIB := $(AUTO_DIR_LIB)" >> $(config_file)
-	@echo LCM_AUTO_DIR: $(LCM_AUTO_DIR)
-	@echo "LCM_AUTO_DIR := $(LCM_AUTO_DIR)" >> $(config_file)
-	@echo LCMLIB_INSTALLDIR: $(LCMLIB_INSTALLDIR)
 	@echo "LCMLIB_INSTALLDIR := $(LCMLIB_INSTALLDIR)" >> $(config_file)
-	@echo LCMLDR_INSTALLDIR: $(LCMLDR_INSTALLDIR)
 	@echo "LCMLDR_INSTALLDIR := $(LCMLDR_INSTALLDIR)" >> $(config_file)
-	@echo AUTO_DIR_LOADER: $(AUTO_DIR_LOADER)
-	@echo "AUTO_DIR_LOADER := $(AUTO_DIR_LOADER)" >> $(config_file)
-	@echo LIB_x32: $(LIB_x32)
-	@echo "LIB_x32 := $(LIB_x32)" >> $(config_file)
-	@echo LIB_x64: $(LIB_x64)
-	@echo "LIB_x64 := $(LIB_x64)" >> $(config_file)
-	@echo LIB_x32_OBJ_DIR: $(LIB_x32_OBJ_DIR)
 	@echo "LIB_x32_OBJ_DIR := $(LIB_x32_OBJ_DIR)" >> $(config_file)
-	@echo LIB_x64_OBJ_DIR: $(LIB_x64_OBJ_DIR)
 	@echo "LIB_x64_OBJ_DIR := $(LIB_x64_OBJ_DIR)" >> $(config_file)
 	@echo CONFIG_DIR : $(CONFIG_DIR)
 
-install: build
-	install -p -m 0755 ${BUILDFOLDER}/liblcm.$(LIB_EXTENSION) ${LCMLIB_INSTALLDIR}
-ifeq ($(LBITS),64)
-	install -p -m 0755 ${BUILDFOLDER}/liblcm_x64.$(LIB_EXTENSION) ${LCMLIB_INSTALLDIR}
-endif
-	install -p -m 0755 $(WIN_BINARIES)/*.dll ${LCMLIB_INSTALLDIR}
+install:
 	install -p -m 0555 ${AUTO_DIR_LOADER}/* ${LCMLDR_INSTALLDIR}
 	install -p -m 0555 ${TRANSPORT_PATH}/source/*.c ${LCMLDR_INSTALLDIR}
 	install -p -m 0555 ${NETWORK_PATH}/source/*.c ${LCMLDR_INSTALLDIR}
@@ -337,7 +418,36 @@ endif
 	install -p -m 0555 ${LCM_CNH_PATH}/include/*.h ${LCMLDR_INSTALLDIR}
 	install -p -m 0555 ${LCM_PATH}/source/serialization.c ${LCMLDR_INSTALLDIR}
 
+	$(MAKE) -C . start-install
+ifeq ($(USE_MINGW_X32),1)
+	$(MAKE) -C . start-install BUILD_WIN=1
+endif
+ifeq ($(USE_MINGW_X64),1)
+	$(MAKE) -C . start-install BUILD_WIN=2
+endif
+
+start-install: start-build
+ifeq ($(BUILD_WIN),)
+	install -p -m 0755 $(LIB_x32) ${LCMLIB_INSTALLDIR}
+ifeq ($(LBITS),64)
+	install -p -m 0755 $(LIB_x64) ${LCMLIB_INSTALLDIR}
+endif
+else
+ifeq ($(BUILD_WIN),1)
+	install -p -m 0755 $(LIB_x32) ${LCMLIB_INSTALLDIR}
+endif
+ifeq ($(BUILD_WIN),2)
+	install -p -m 0755 $(LIB_x64) ${LCMLIB_INSTALLDIR}
+endif
+endif
+
 clean:
+	$(MAKE) -C . start-clean
+	$(MAKE) -C . start-clean BUILD_WIN=1
+	$(MAKE) -C . start-clean BUILD_WIN=2
+
+start-clean:
+	@rm -f $(LCM_PATH)out/autogen/outLCM.rc
 	$(if ${BUILDFOLDER}, \
 		$(if ${LIB_x32_OBJ_DIR}, \
 			@rm -rf ${BUILDFOLDER}/${LIB_x32_OBJ_DIR}/*.o \
@@ -352,7 +462,10 @@ ifeq ($(LBITS),64)
 endif
 	$(if ${BUILDFOLDER}, \
 		@rm -f ${BUILDFOLDER}/*.so* \
+		@rm -f $(BUILDFOLDER)/*.dll \
 		@rm -rf ${BUILDFOLDER},)
+	$(if ${BUILDOUT}, \
+		@rm -rf ${BUILDOUT},)
 
 distclean: clean
 	$(if ${LCMLDR_INSTALLDIR}, \
@@ -448,6 +561,8 @@ distclean: clean
 		@rm -f ${LCMLDR_INSTALLDIR}/z_transport.c \
 		@rm -f ${LCMLDR_INSTALLDIR}/r15_transport_layer.c \
 		@rm -f ${LCMLDR_INSTALLDIR}/t_a2_network.h \
+		@rm -f ${LCMLIB_INSTALLDIR}/LCM.dll \
+		@rm -f $(LCMLIB_INSTALLDIR)/LCM_x64.dll \
 		@rm -f ${LCMLIB_INSTALLDIR}/liblcm.$(LIB_EXTENSION),)
 ifeq ($(LBITS),64)
 	$(if ${LCMLDR_INSTALLDIR}, \
@@ -477,3 +592,8 @@ coverity:
 	@cov-commit-defects --datadir $(COV_DATA_DIR) --product lcd --user admin --dir $(COV_INTER_DATA_DIR)
 	@cov-start-gui --datadir $(COV_DATA_DIR) --port 1122
 	echo Go to localhost port 1122 in webbrowser and login with username admin and password admin to review result
+
+astyle:
+	astyle --style=k/r --indent=spaces  --break-blocks --convert-tabs --add-brackets \
+	--unpad-paren --pad-header --pad-oper --indent-col1-comments --align-pointer=name \
+	-R "*.h" -R "*.c"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="LCDriver"
 	ProjectGUID="{E195BE97-0727-419C-931E-08C8B99AB884}"
 	RootNamespace="LCDriver"
@@ -224,7 +224,6 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				Description=""
 				CommandLine=""
 			/>
 			<Tool
@@ -265,8 +264,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copying $(TargetPath) to $(TargetDir)..\win_binaries"
-				CommandLine="copy /B /Y $(TargetPath) $(TargetDir)..\win_binaries"
+				Description=""
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -310,7 +309,6 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				Description=""
 				CommandLine=""
 			/>
 			<Tool
@@ -351,8 +349,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copying $(TargetPath) to $(TargetDir)..\win_binaries"
-				CommandLine="copy /B /Y $(TargetPath) $(TargetDir)..\win_binaries"
+				Description=""
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -1512,10 +1510,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\LCDriver.rc"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

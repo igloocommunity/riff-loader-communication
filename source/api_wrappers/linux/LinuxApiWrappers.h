@@ -15,6 +15,7 @@
 #include "CWaitableObject.h"
 #include "CWaitableObjectCollection.h"
 #include "OS.h"
+#include "String_s.h"
 
 #endif /* _LINUXAPIWRAPPERS_H */
 

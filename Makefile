@@ -5,10 +5,22 @@ else
 endif
 -include $(config_file)
 
+MINGW_X32_CC:=i586-mingw32msvc-
+MINGW_X64_CC:=amd64-mingw32msvc-
 XALAN_PATH:=./lcmodule/tools/xalan-j_2_7_1/
 LCD_CONFIG:=./source/config/
 LCD_DIR:=./
-WIN_BINARIES=./win_binaries/
+
+ifneq ($(shell which $(MINGW_X32_CC)g++), )
+USE_MINGW_X32 := 1
+else
+USE_MINGW_X32 := 0
+endif
+ifneq ($(shell which $(MINGW_X64_CC)g++), )
+USE_MINGW_X64 := 1
+else
+USE_MINGW_X64 := 0
+endif
 
 OS_NAME := $(shell uname)
 ifeq ($(OS_NAME), Linux)
@@ -23,36 +35,47 @@ LIBSRC := \
 	source/utilities/MemMappedFile.cpp\
 	source/utilities/CaptiveThreadObject.cpp\
 	source/utilities/BulkHandler.cpp\
-	source/CEH/ProtromRpcInterface.cpp\
-	source/CEH/commands_impl.cpp\
+	source/utilities/String_s.cpp\
 	source/CEH/a2_commands_impl.cpp\
-	source/CEH/ZRpcInterface.cpp\
 	source/CEH/CmdResult.cpp\
+	source/CEH/commands_impl.cpp\
+	source/CEH/ProtromRpcInterface.cpp\
+	source/CEH/ZRpcInterface.cpp\
 	source/LcmInterface.cpp\
 	source/LCDriverThread.cpp\
 	source/LCDriverMethods.cpp\
 	source/LcdVersion.cpp\
 	source/LCDriverEntry.cpp\
 	source/LCDriver.cpp\
-	source/LCM/Hash.cpp\
 	source/LCM/Buffers.cpp\
+	source/LCM/Hash.cpp\
 	source/LCM/Queue.cpp\
 	source/LCM/Timer.cpp\
+	source/LCDriverInterface.cpp\
+	source/security_algorithms/SecurityAlgorithms.cpp\
+	source/security_algorithms/sha/sha2.cpp\
+	$(AUTO_DIR_LIB)/commands_marshal.cpp\
+	$(AUTO_DIR_LIB)/a2_commands_marshal.cpp
+ifeq ($(BUILD_WIN),)
+LIBSRC += \
 	source/api_wrappers/linux/CThreadWrapper.cpp\
 	source/api_wrappers/linux/CWaitableObject.cpp\
 	source/api_wrappers/linux/CSemaphore.cpp\
 	source/api_wrappers/linux/CSemaphoreQueue.cpp\
 	source/api_wrappers/linux/CEventObject.cpp\
 	source/api_wrappers/linux/CWaitableObjectCollection.cpp\
-	source/api_wrappers/linux/OS.cpp\
-	source/LCDriverInterface.cpp\
-	source/security_algorithms/SecurityAlgorithms.cpp\
-	source/security_algorithms/sha/sha2.cpp\
-	$(AUTO_DIR_LIB)/commands_marshal.cpp\
-	$(AUTO_DIR_LIB)/a2_commands_marshal.cpp\
+	source/api_wrappers/linux/OS.cpp
+endif
 
 LIBOBJ_x32 := $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(notdir $(LIBSRC:.cpp=.o)))
 LIBOBJ_x64 := $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(notdir $(LIBSRC:.cpp=.o)))
+
+ifeq ($(BUILD_WIN),1)
+LIBOBJ_x32 += $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/outLCDriver.o
+endif
+ifeq ($(BUILD_WIN),2)
+LIBOBJ_x64 += $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/outLCDriver.o
+endif
 
 AUTOGEN_FILES := $(AUTO_DIR_LIB)/command_ids.h\
 		$(AUTO_DIR_LIB)/commands.h\
@@ -68,7 +91,6 @@ AUTOGEN_FILES := $(AUTO_DIR_LIB)/command_ids.h\
 #include directories
 INCLUDES := \
 	-Isource\
-	-Isource/api_wrappers/linux\
 	-Isource/utilities\
 	-Isource/LCM\
 	-Isource/LCM/include\
@@ -77,24 +99,85 @@ INCLUDES := \
 	-Isource/security_algorithms/sha\
 	-I$(AUTO_DIR_LIB)
 
-# C++ compiler flags (-g -O2 -Wall)
-CXXFLAGS := -c -O2 -Wall -fPIC -fvisibility=hidden -fno-strict-aliasing -DLCDRIVER_EXPORTS -D_FILE_OFFSET_BITS=64
+ifeq ($(BUILD_WIN),)
+INCLUDES += \
+	-Isource/api_wrappers/linux
+else
+INCLUDES += \
+	-Isource/api_wrappers/windows
+endif
 
+BYTE_ORDER := -DLITTLE_ENDIAN=1234 -DBIG_ENDIAN=4321 -DBYTE_ORDER=LITTLE_ENDIAN
+# C++ compiler flags (-g -O2 -Wall)
+ifeq ($(BUILD_WIN),)
+CXXFLAGS := -c -O2 -Wall -fPIC -fvisibility=hidden -fno-strict-aliasing -DLCDRIVER_EXPORTS -D_FILE_OFFSET_BITS=64
+else
+# For Windows x32 and x64 version compile flags
+CXXFLAGS := -D__WIN32__ -mwindows -mthreads -fno-strict-aliasing -Wall $(BYTE_ORDER) -DWIN32 -DWIN32_LEAN_AND_MEAN -DNDEBUG -D_WINDOWS -D_USRDLL -DLCDRIVER_EXPORTS -D_FILE_OFFSET_BITS=64
+endif
+
+ifeq ($(BUILD_WIN),)
 LDFLAGS := -fPIC -fvisibility=hidden -lpthread -ldl -shared -Wl -o liblcdriver.$(LIB_EXTENSION)
+else
+# Win x32 linker flags
+ifeq ($(BUILD_WIN),1)
+LDFLAGS := -D__WIN32__ -s -mwindows -mthreads -mdll -Wl -o LCDriver_CNH1606432.dll
+endif
+# Win x64 linker flags
+ifeq ($(BUILD_WIN),2)
+LDFLAGS := -D__WIN32__ -s -mwindows -mthreads -mdll -Wl -o LCDriver_CNH1606432_x64.dll
+endif
+endif
+
+build: $(SCRIPT)
+	$(MAKE) -C . start-build
+# Start Win x32 Build
+ifeq ($(USE_MINGW_X32),1)
+	bash $(LCD_DIR)source/gen_rc.sh --lcd
+	$(MAKE) -C . start-build BUILD_WIN=1
+else
+	@echo "*** warning: No Cross Compiler $(MINGW_X32_CC)g++ found ***"
+endif
+# Start Win x64 Build
+ifeq ($(USE_MINGW_X64),1)
+	bash $(LCD_DIR)source/gen_rc.sh --lcd
+	$(MAKE) -C . start-build BUILD_WIN=2
+else
+	@echo "*** warning: No Cross Compiler $(MINGW_X64_CC)g++ found ***"
+endif
 
 LBITS := $(shell getconf LONG_BIT)
+
+#
+# do Linux stuff here
+#
+ifeq ($(BUILD_WIN),)
+
 ifeq ($(LBITS),64)
 #
 # do 64 bit stuff here, like set some CFLAGS
 #
 CXXFLAGS += -DLINUX_64
-build: configfile setup_folders $(LIB_x32) $(LIB_x64)
+start-build: configfile setup_folders $(LIB_x32) $(LIB_x64)
 else
 #
 # do 32 bit stuff here
 #
 CXXFLAGS += -DLINUX_32
-build: configfile setup_folders $(LIB_x32)
+start-build: configfile setup_folders $(LIB_x32)
+endif
+
+else
+#
+# do Windows stuff here
+#
+ifeq ($(BUILD_WIN),1)
+start-build: configfile setup_folders $(LIB_x32)
+endif
+ifeq ($(BUILD_WIN),2)
+start-build: configfile setup_folders $(LIB_x64)
+endif
+
 endif
 
 $(LIB_x32): $(LIBOBJ_x32)
@@ -104,7 +187,7 @@ $(LIB_x64): $(LIBOBJ_x64)
 	$(CXX) $(LDFLAGS) -o $(LIB_x64) $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(^F))
 
 #
-# Source files build
+# Source files build x32
 #
 $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: source/utilities/%.cpp $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
@@ -122,10 +205,6 @@ $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: source/LCM/%.cpp $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -m32 -c $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
 
-$(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: source/api_wrappers/linux/%.cpp $(AUTOGEN_FILES)
-	@mkdir -p $(dir $@)
-	$(CXX) $(INCLUDES) $(CXXFLAGS) -m32 -c $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
-
 $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: $(AUTO_DIR_LIB)/%.cpp $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -m32 -c $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
@@ -138,7 +217,21 @@ $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: source/security_algorithms/%.cpp $(AUTOGE
 	@mkdir -p $(dir $@)
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -m32 -c $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
 
-###
+ifeq ($(BUILD_WIN),)
+$(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: source/api_wrappers/linux/%.cpp $(AUTOGEN_FILES)
+	@mkdir -p $(dir $@)
+	$(CXX) $(INCLUDES) $(CXXFLAGS) -m32 -c $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
+endif
+
+ifeq ($(BUILD_WIN),1)
+$(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: out/autogen/outLCDriver.rc $(AUTOGEN_FILES)
+	@mkdir -p $(dir $@)
+	$(MINGW_X32_CC)windres out/autogen/outLCDriver.rc $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
+endif
+
+#
+# Source files build x64
+#
 $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: source/utilities/%.cpp $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
@@ -155,10 +248,6 @@ $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: source/LCM/%.cpp $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
 
-$(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: source/api_wrappers/linux/%.cpp $(AUTOGEN_FILES)
-	@mkdir -p $(dir $@)
-	$(CXX) $(INCLUDES) $(CXXFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
-
 $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: source/security_algorithms/%.cpp $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
@@ -170,6 +259,18 @@ $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: source/security_algorithms/sha/%.cpp $(AU
 $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: $(AUTO_DIR_LIB)/%.cpp $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
+
+ifeq ($(BUILD_WIN),)
+$(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: source/api_wrappers/linux/%.cpp $(AUTOGEN_FILES)
+	@mkdir -p $(dir $@)
+	$(CXX) $(INCLUDES) $(CXXFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
+endif
+
+ifeq ($(BUILD_WIN),2)
+$(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: out/autogen/outLCDriver.rc $(AUTOGEN_FILES)
+	@mkdir -p $(dir $@)
+	$(MINGW_X64_CC)windres out/autogen/outLCDriver.rc $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
+endif
 
 #Autogen files
 $(AUTO_DIR_LIB)/command_ids.h: $(LCD_CONFIG)commands.xml $(LCD_CONFIG)command_ids_h.xsl | setup_folders
@@ -257,43 +358,77 @@ configfile: $(if $(wildcard $(config_file)),,config)
 	@echo $< > /dev/null
 
 .PHONY: config
-config: BUILDFOLDER := $(LCD_DIR)/out
-config: AUTO_DIR_LIB :=$(BUILDFOLDER)/autogen/
-config: LIB_x32 := $(BUILDFOLDER)/liblcdriver.$(LIB_EXTENSION)
-config: LIB_x64 := $(BUILDFOLDER)/liblcdriver_x64.$(LIB_EXTENSION)
 config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
-config: CXX := $(CROSS_PREFIX)g++
 config: LCD_INSTALLDIR := /tmp/
 config:
 	@echo Generating config file...
 	@rm -f $(config_file)
 	@touch $(config_file)
-	@echo CXX: $(CXX)
-	@echo "CXX := $(CXX)" >> $(config_file)
-	@echo BUILDFOLDER: $(BUILDFOLDER)
-	@echo "BUILDFOLDER := $(BUILDFOLDER)" >> $(config_file)
-	@echo AUTO_DIR_LIB: $(AUTO_DIR_LIB)
-	@echo "AUTO_DIR_LIB := $(AUTO_DIR_LIB)" >> $(config_file)
-	@echo LIB_x32: $(LIB_x32)
-	@echo "LIB_x32 := $(LIB_x32)" >> $(config_file)
-	@echo LIB_x64: $(LIB_x64)
-	@echo "LIB_x64 := $(LIB_x64)" >> $(config_file)
-	@echo LIB_x32_OBJ_DIR: $(LIB_x32_OBJ_DIR)
+	@echo "BUILDOUT := \$$(LCD_DIR)out" >> $(config_file)
+
+	@echo "ifeq (\$$(BUILD_WIN),)" >> $(config_file)
+	@echo "BUILDFOLDER := \$$(BUILDOUT)/out_linux" >> $(config_file)
+	@echo "CXX := $(CROSS_PREFIX)g++"  >> $(config_file)
+	@echo "LIB_x32 := \$$(BUILDFOLDER)/liblcdriver.$(LIB_EXTENSION)"  >> $(config_file)
+	@echo "LIB_x64 := \$$(BUILDFOLDER)/liblcdriver_x64.$(LIB_EXTENSION)"  >> $(config_file)
+	@echo "else"  >> $(config_file)
+
+	@echo "ifeq (\$$(BUILD_WIN),1)" >> $(config_file)
+	@echo "BUILDFOLDER := \$$(BUILDOUT)/out_win" >> $(config_file)
+	@echo "CXX := $(CROSS_PREFIX)$(MINGW_X32_CC)g++" >> $(config_file)
+	@echo "LIB_x32 := \$$(BUILDFOLDER)/LCDriver_CNH1606432.dll" >> $(config_file)
+	@echo "LIB_x64 := \$$(BUILDFOLDER)/LCDriver_CNH1606432_x64.dll" >> $(config_file)
+	@echo "endif"  >> $(config_file)
+
+	@echo "ifeq (\$$(BUILD_WIN),2)" >> $(config_file)
+	@echo "BUILDFOLDER := \$$(BUILDOUT)/out_win" >> $(config_file)
+	@echo "CXX := $(CROSS_PREFIX)$(MINGW_X64_CC)g++" >> $(config_file)
+	@echo "LIB_x32 := \$$(BUILDFOLDER)/LCDriver_CNH1606432.dll" >> $(config_file)
+	@echo "LIB_x64 := \$$(BUILDFOLDER)/LCDriver_CNH1606432_x64.dll" >> $(config_file)
+	@echo "endif"  >> $(config_file)
+
+	@echo "endif"  >> $(config_file)
+	@echo "AUTO_DIR_LIB := \$$(BUILDOUT)/autogen/" >> $(config_file)
 	@echo "LIB_x32_OBJ_DIR := $(LIB_x32_OBJ_DIR)" >> $(config_file)
-	@echo LIB_x64_OBJ_DIR: $(LIB_x64_OBJ_DIR)
 	@echo "LIB_x64_OBJ_DIR := $(LIB_x64_OBJ_DIR)" >> $(config_file)
-	@echo LCD_INSTALLDIR: $(LCD_INSTALLDIR)
 	@echo "LCD_INSTALLDIR := $(LCD_INSTALLDIR)" >> $(config_file)
 
-install: build
+install:
+	$(MAKE) -C . start-install
+ifeq ($(USE_MINGW_X32),1)
+	$(MAKE) -C . start-install BUILD_WIN=1
+endif
+ifeq ($(USE_MINGW_X64),1)
+	$(MAKE) -C . start-install BUILD_WIN=2
+endif
+
+start-install: start-build
+ifeq ($(BUILD_WIN),)
 	install -m 0755 $(BUILDFOLDER)/liblcdriver.$(LIB_EXTENSION) $(LCD_INSTALLDIR)
 ifeq ($(LBITS),64)
 	install -m 0755 $(BUILDFOLDER)/liblcdriver_x64.$(LIB_EXTENSION) $(LCD_INSTALLDIR)
 endif
-	install -m 0755 $(WIN_BINARIES)/*.dll $(LCD_INSTALLDIR)
+else
+
+	install -m 0755 $(LCD_DIR)mingw_prebuilt/mingwm10.dll $(LCD_INSTALLDIR)
+ifeq ($(BUILD_WIN),1)
+	install -m 0755 $(BUILDFOLDER)/LCDriver_CNH1606432.dll $(LCD_INSTALLDIR)
+endif
+ifeq ($(BUILD_WIN),2)
+	install -m 0755 $(BUILDFOLDER)/LCDriver_CNH1606432_x64.dll $(LCD_INSTALLDIR)
+endif
+
+endif
+
 
 clean:
+	$(MAKE) -C . start-clean
+	$(MAKE) -C . start-clean BUILD_WIN=1
+	$(MAKE) -C . start-clean BUILD_WIN=2
+
+start-clean:
+	@rm -f $(LCD_DIR)out/autogen/outLCDriver.rc
 	$(if $(BUILDFOLDER), \
 		$(if $(LIB_x32_OBJ_DIR), \
 			@rm -rf $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR) \
@@ -306,16 +441,21 @@ ifeq ($(LBITS),64)
 endif
 	$(if $(BUILDFOLDER), \
 		@rm -f $(BUILDFOLDER)/*.so* \
+		@rm -f $(BUILDFOLDER)/*.dll \
 		@rm -rf $(BUILDFOLDER),)
+	$(if ${BUILDOUT}, \
+		@rm -rf ${BUILDOUT},)
 
 distclean: clean
 	$(if $(AUTO_DIR_LIB), \
 		@rm -f $(AUTO_DIR_LIB)/*.cpp \
 		@rm -f $(AUTO_DIR_LIB)/*.h,)
 	$(if $(LCD_INSTALLDIR), \
+		@rm -f $(LCD_INSTALLDIR)/LCDriver_CNH1606432.dll \
 		@rm -f $(LCD_INSTALLDIR)/liblcdriver.$(LIB_EXTENSION),)
 ifeq ($(LBITS),64)
 	$(if $(LCD_INSTALLDIR), \
+		@rm -f $(LCD_INSTALLDIR)/LCDriver_CNH1606432_x64.dll \
 		@rm -f $(LCD_INSTALLDIR)/liblcdriver_x64.$(LIB_EXTENSION),)
 endif
 	$(if $(config_file), \

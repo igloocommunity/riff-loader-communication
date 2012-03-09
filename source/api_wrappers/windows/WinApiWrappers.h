@@ -22,6 +22,11 @@
 #include <process.h>
 #include <assert.h>
 #include <vector>
+#ifdef __MINGW32__
+#include "String_s.h"
+#include <stdlib.h>
+#endif
+
 using namespace std;
 
 class CWaitableObject
@@ -95,20 +100,6 @@ public:
     DWORD Wait(DWORD milliseconds = INFINITE) {
         return ::WaitForSingleObject(m_Handle, milliseconds);
     }
-    void WaitForAllEvents(HANDLE *pHandles, int iHandles, DWORD msec = INFINITE) {
-        ::WaitForMultipleObjects(
-            iHandles,   // Number of objects in handles
-            pHandles,
-            TRUE,       // Wait all events
-            msec);
-    }    // Wait indefinitely default i.e. INFINITE
-    int WaitForFirstEvent(HANDLE *pHandles, int iHandles, DWORD msec = INFINITE) {
-        ::WaitForMultipleObjects(
-            iHandles,   // Number of objects in handles
-            pHandles,
-            FALSE,      // Wait for first event object
-            msec);
-    }    // Wait indefinitely default i.e. INFINITE
     HANDLE GetHandle() {
         return m_Handle;
     }
