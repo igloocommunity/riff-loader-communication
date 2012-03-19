@@ -75,6 +75,12 @@
 #define SINT64_SUPPORTED
 #define UINT64_SUPPORTED
 #define INT64_BASE_TYPE   __int64
+#elif (defined(__linux__) || defined(__APPLE__))
+#define SINT64_SUPPORTED
+#define UINT64_SUPPORTED
+#define INT64_BASE_TYPE  long long
+#else
+#error "Unknown platform"
 #endif
 
 
@@ -172,7 +178,7 @@ typedef uint8 boolean;
 * Portable bitfield definitions
 *******************************************/
 
-#if defined(COMPILER_IAR_AVR) || defined(COMPILER_IAR_ARM) || defined(_WIN32) || defined(COMPILER_ARM_ARM) || defined(COMPILER_GCC_ARM) || defined(COMPILER_GCC)
+#if defined(COMPILER_IAR_AVR) || defined(COMPILER_IAR_ARM) || defined(_WIN32) || defined(COMPILER_ARM_ARM) || defined(COMPILER_GNUC) || defined(COMPILER_GCC) || defined(COMPILER_GCC_ARM)
 /** Type definition to be used when implementing bit-fields that should hold
  * signed values.
  */

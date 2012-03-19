@@ -69,15 +69,15 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "Build date: 2012-02-07"
+            VALUE "Comments", "Build date: 2012-03-14"
             VALUE "CompanyName", "STEricsson AB"
             VALUE "FileDescription", "LCM Dynamic Link Library"
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "Loader Communication Module"
             VALUE "LegalCopyright", "Copyright (C) STEricsson AB 2012"
-            VALUE "PrivateBuild", "Change-Id: I70835353a592d1f1ad40743640a1d0827e56fd2e"
+            VALUE "PrivateBuild", "Change-Id: I2f2835b56857eb9640501ff681400517600ccdef"
             VALUE "ProductName", "CXA1104507 Loader Communication Module"
-            VALUE "ProductVersion", "P4Y"
+            VALUE "ProductVersion", "P5Y"
         END
     END
     BLOCK "VarFileInfo"

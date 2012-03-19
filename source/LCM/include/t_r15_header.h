@@ -40,12 +40,6 @@
 #define COMMAND_EXTENDED_HEADER_LENGTH 4
 /** The length of the bulk extended header. */
 #define BULK_EXTENDED_HEADER_LENGTH 20
-/** Offset of the header in the buffer. */
-#ifndef  CFG_ENABLE_LOADER_TYPE
-#define HEADER_OFFSET_IN_BUFFER   0
-#else
-#define HEADER_OFFSET_IN_BUFFER   8
-#endif
 
 #define ALIGNED_HEADER_LENGTH                   ALIGN_SIZE
 #define ALIGNED_COMMAND_EXTENDED_HEADER_LENGTH  ALIGN_SIZE
@@ -69,7 +63,7 @@ typedef struct {
     uint8 HeaderPattern;           /**< Header pattern for marking header start.*/
     uint8 Protocol;                /**< Protocol type. */
     uint16 HeaderPatternExtension; /**< Header pattern extension.*/
-    uint8 Flags;                   /**< Flasgs for the header.*/
+    uint8 Flags;                   /**< Flags for the header.*/
     uint8 ExtendedHeaderLength;    /**< Extended header length.*/
     uint8 ExtendedHeaderChecksum;  /**< Extended header checksum.*/
     uint32 PayloadLength;          /**< Payload length. */

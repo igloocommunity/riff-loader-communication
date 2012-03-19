@@ -204,7 +204,7 @@ TL_BulkVectorList_t *Do_R15_Bulk_CreateVector(const Communication_t *const Commu
                         return NULL;
                     }
 
-                    Packet_p->ExtendedHeader_p = Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH;
+                    Packet_p->ExtendedHeader_p = Packet_p->Buffer_p + ALIGNED_HEADER_LENGTH;
                     Packet_p->Payload_p = Packet_p->ExtendedHeader_p + ALIGNED_BULK_EXTENDED_HEADER_LENGTH;
 #else
                     /* packet meta info allocate */
@@ -220,8 +220,8 @@ TL_BulkVectorList_t *Do_R15_Bulk_CreateVector(const Communication_t *const Commu
                     Packet_p->Buffer_p = NULL;
                     Packet_p->BufferSize = BULK_BUFFER_SIZE;
                     SET_PACKET_FLAGS(Packet_p, PACKET_ALLOCATION_STATE_MASK, BUF_ALLOCATED);
-                    Packet_p->Payload_p = (uint8 *)(HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH + ALIGNED_BULK_EXTENDED_HEADER_LENGTH);
-                    Packet_p->ExtendedHeader_p = Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH;
+                    Packet_p->Payload_p = (uint8 *)(ALIGNED_HEADER_LENGTH + ALIGNED_BULK_EXTENDED_HEADER_LENGTH);
+                    Packet_p->ExtendedHeader_p = Packet_p->Buffer_p + ALIGNED_HEADER_LENGTH;
                     BuffersNr = 0;
 
                     do {
@@ -1124,7 +1124,7 @@ static void R15_Bulk_SerializeChunk(Communication_t *Communication_p, PacketMeta
     TL_BulkVectorList_t *BulkVector_p = R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p;
     uint32 DeltaLength = 0;
 
-    Packet_p->Timer_p = NULL;
+    memset(&(Packet_p->Timer), 0, sizeof(Timer_t));
     Packet_p->Resend = 0;
     /* set call back function */
     Packet_p->CallBack_p = NULL;
@@ -1157,7 +1157,7 @@ static void R15_Bulk_SerializeChunk(Communication_t *Communication_p, PacketMeta
     ExtendedHeader.TypeFlags = CMD_BULK_DATA;
 
     /* serialize and calculate extended header */
-    Packet_p->ExtendedHeader_p = Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH;
+    Packet_p->ExtendedHeader_p = Packet_p->Buffer_p + ALIGNED_HEADER_LENGTH;
     R15_SerializeExtendedHeader(Packet_p->ExtendedHeader_p, Header.Protocol, &ExtendedHeader, &(Header.ExtendedHeaderChecksum));
     /* setup header for serialization and calculation */
     memcpy(&Packet_p->Header, &Header, HEADER_LENGTH);
@@ -1174,7 +1174,7 @@ static void R15_Bulk_SerializeChunk(Communication_t *Communication_p, PacketMeta
                 (void *)Packet_p);
     } else {
         memset(&Packet_p->Header.PayloadChecksum, 0x0, sizeof(uint32));
-        R15_SerializeHeader(Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER, &Packet_p->Header);
+        R15_SerializeHeader(Packet_p->Buffer_p, &Packet_p->Header);
         SET_PACKET_FLAGS(Packet_p, PACKET_CRC_STATE_MASK, BUF_PAYLOAD_CRC_CALCULATED);
     }
 }
@@ -1190,7 +1190,7 @@ static void R15_Bulk_OutHashCallback(const void *const Data_p, uint32 Length, co
     PacketMeta_t *Packet_p = (PacketMeta_t *)Param_p;
 
     memcpy(&Packet_p->Header.PayloadChecksum, Hash_p, sizeof(uint32));
-    R15_SerializeHeader(Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER, &Packet_p->Header);
+    R15_SerializeHeader(Packet_p->Buffer_p, &Packet_p->Header);
 
     SET_PACKET_FLAGS(Packet_p, PACKET_CRC_STATE_MASK, BUF_PAYLOAD_CRC_CALCULATED);
 }

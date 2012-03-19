@@ -4,6 +4,7 @@
  ******************************************************************************/
 #include "ProtromRpcInterface.h"
 #include "t_protrom_transport.h"
+#include "t_protrom_network.h"
 #include "Serialization.h"
 
 ProtromRpcInterface::ProtromRpcInterface(CmdResult *CmdResult, LcmInterface *LcmInterface)

@@ -35,7 +35,7 @@
 /*******************************************************************************
  * Declaration of file local functions
  ******************************************************************************/
-static Timer_t *TimerSet(PacketMeta_t *Packet_p, const SendData_LP_t *const InputData_p, Communication_t *Communication_p);
+static void TimerSet(PacketMeta_t *Packet_p, const SendData_LP_t *const InputData_p, Communication_t *Communication_p);
 static void R15_Transport_OutHashCallback(const void *const Data_p, uint32 Length, const uint8 *const Hash_p, void *Param_p);
 #ifdef CFG_ENABLE_LOADER_TYPE
 static ErrorCode_e ConfigureDeviceTimeouts(Communication_t *Communication_p);
@@ -187,16 +187,16 @@ ErrorCode_e R15_Transport_Send(Communication_t *Communication_p, void *InputData
     Packet_p->Resend = 0;
     Packet_p->CallBack_p = NULL;
 
-    Packet_p->Timer_p = TimerSet(Packet_p, InputData_p, Communication_p);
+    TimerSet(Packet_p, InputData_p, Communication_p);
     Packet_p->Header = *InputData_p->Header_p;
     /* serialize and calculate extended header */
-    Packet_p->ExtendedHeader_p = Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH;
+    Packet_p->ExtendedHeader_p = Packet_p->Buffer_p + ALIGNED_HEADER_LENGTH;
     R15_SerializeExtendedHeader(Packet_p->ExtendedHeader_p, InputData_p->Header_p->Protocol, InputData_p->ExtendedHeader_p, &(Packet_p->Header.ExtendedHeaderChecksum));
 
     if (Packet_p->Header.ExtendedHeaderLength == COMMAND_EXTENDED_HEADER_LENGTH) {
-        Packet_p->Payload_p = Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH + ALIGNED_COMMAND_EXTENDED_HEADER_LENGTH;
+        Packet_p->Payload_p = Packet_p->Buffer_p + ALIGNED_HEADER_LENGTH + ALIGNED_COMMAND_EXTENDED_HEADER_LENGTH;
     } else {
-        Packet_p->Payload_p = Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH + ALIGNED_BULK_EXTENDED_HEADER_LENGTH;
+        Packet_p->Payload_p = Packet_p->Buffer_p + ALIGNED_HEADER_LENGTH + ALIGNED_BULK_EXTENDED_HEADER_LENGTH;
     }
 
     if (NULL != InputData_p->Payload_p) {
@@ -215,12 +215,12 @@ ErrorCode_e R15_Transport_Send(Communication_t *Communication_p, void *InputData
         } else {
             SET_PACKET_FLAGS(Packet_p, PACKET_CRC_STATE_MASK, BUF_PAYLOAD_CRC_CALCULATED);
             memset(&Packet_p->Header.PayloadChecksum, 0x0, sizeof(uint32));
-            R15_SerializeHeader(Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER, &Packet_p->Header);
+            R15_SerializeHeader(Packet_p->Buffer_p, &Packet_p->Header);
 
             (void)QUEUE(Packet_p->Communication_p, FifoEnqueue_Fn)(OBJECT_QUEUE(Packet_p->Communication_p), Packet_p->Communication_p->Outbound_p, Packet_p);
         }
     } else {
-        R15_SerializeHeader(Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER, &Packet_p->Header);
+        R15_SerializeHeader(Packet_p->Buffer_p, &Packet_p->Header);
 
         (void)QUEUE(Communication_p, FifoEnqueue_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Outbound_p, Packet_p);
     }
@@ -290,7 +290,7 @@ static void R15_Transport_OutHashCallback(const void *const Data_p, uint32 Lengt
 
     SET_PACKET_FLAGS(Packet_p, PACKET_CRC_STATE_MASK, BUF_PAYLOAD_CRC_CALCULATED);
     memcpy(&Packet_p->Header.PayloadChecksum, Hash_p, sizeof(uint32));
-    R15_SerializeHeader(Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER, &Packet_p->Header);
+    R15_SerializeHeader(Packet_p->Buffer_p, &Packet_p->Header);
 
     (void)QUEUE(Packet_p->Communication_p, FifoEnqueue_Fn)(OBJECT_QUEUE(Packet_p->Communication_p), Packet_p->Communication_p->Outbound_p, Packet_p);
 }
@@ -304,26 +304,16 @@ static void R15_Transport_OutHashCallback(const void *const Data_p, uint32 Lengt
  *
  * @return none.
  */
-static Timer_t *TimerSet(PacketMeta_t *Packet_p, const SendData_LP_t *const InputData_p, Communication_t *Communication_p)
+static void TimerSet(PacketMeta_t *Packet_p, const SendData_LP_t *const InputData_p, Communication_t *Communication_p)
 {
-    Timer_t *Timer_p = NULL;
-
     if (InputData_p->Time > 0) {
-        Timer_p = (Timer_t *)malloc(sizeof(Timer_t));
-
-        if (NULL == Timer_p) {
-            return NULL;
-        }
-
         /* timer data */
-        Timer_p->Time = InputData_p->Time;
-        Timer_p->PeriodicalTime = 0;
-        Timer_p->HandleFunction_p = (HandleFunction_t)(InputData_p->TimerCallBackFn_p);
-        Timer_p->Data_p = (void *)Packet_p;
-        Timer_p->Param_p = (void *)Communication_p;
+        Packet_p->Timer.Time = InputData_p->Time;
+        Packet_p->Timer.PeriodicalTime = 0;
+        Packet_p->Timer.HandleFunction_p = (HandleFunction_t)(InputData_p->TimerCallBackFn_p);
+        Packet_p->Timer.Data_p = (void *)Packet_p;
+        Packet_p->Timer.Param_p = (void *)Communication_p;
     }
-
-    return Timer_p;
 }
 
 #ifdef CFG_ENABLE_LOADER_TYPE

@@ -64,14 +64,14 @@ TYPEDEF_ENUM {
     WAIT_TX_DONE               = 9,  /**< Wait all chunks to be sent. */
     WRITE_BULK_FINISH          = 10, /**< Bulk acknowledge has been received,
                                           finish the write bulk process. */
-    WAIT_WRITE_REQUEST         = 11,  /**< Wait bulk request command. */
+    WAIT_WRITE_REQUEST         = 11, /**< Wait bulk request command. */
     CANCEL_BULK                = 12
 } ENUM8(TL_BulkProtocolState_t);
 
 /** Defined bulk process states. */
 TYPEDEF_ENUM {
     BULK_SESSION_IDLE         = 0x00,  /**< Bulk transfer is closed and ready
-                                          for starting. */
+                                            for starting. */
     BULK_SESSION_OPEN         = 0x01,  /**< Bulk transfer is opened. */
     BULK_SESSION_PROCESSING   = 0x02,  /**< Processing the bulk transfer. */
     BULK_SESSION_FINISHED     = 0x04,  /**< Bulk transfer is finished. */

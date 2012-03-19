@@ -318,14 +318,27 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
 #ifdef CFG_ENABLE_LOADER_TYPE
     uint8  *HeaderStartInBuffer_p = NULL;
     boolean IsBufferContinuous = FALSE;
-#endif
+    static R15_OutboundState_t SavedState = SEND_IDLE;
+    static boolean ReRun = FALSE;
+#endif // CFG_ENABLE_LOADER_TYPE
     uint32  ContinuousBufferLength = 0;
     boolean RegisterRetransmission = FALSE;
     uint32  ExtHdrLen = 0;
     uint32  Aligned_Length = 0;
 
+#ifdef CFG_ENABLE_LOADER_TYPE
+StartTramsmitter:
+#endif // CFG_ENABLE_LOADER_TYPE
+
     if (!Do_CriticalSection_Enter(Out_p->TxCriticalSection)) {
+#ifdef CFG_ENABLE_LOADER_TYPE
+        ReRun = TRUE;
+        SavedState = Out_p->State;
+        A_(printf("r15_network_layer.c (%d) Failed to lock CriticalSection code! \n", __LINE__);)
+        return E_CS_LOCK_FAILED;
+#else
         return ReturnValue;
+#endif // CFG_ENABLE_LOADER_TYPE
     }
 
     switch (Out_p->State) {
@@ -341,13 +354,14 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
             Out_p->State = SEND_HEADER;
         } else {
             //Do_CommunicationInternalErrorHandler(E_RETRANSMITION_FAILED);
-            return E_RETRANSMITION_FAILED;
+            ReturnValue = E_RETRANSMITION_FAILED;
+            break;
         }
 
         /* FALLTHROUGH */
     case SEND_HEADER:
 #ifdef CFG_ENABLE_LOADER_TYPE
-        HeaderStartInBuffer_p = Out_p->Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER;
+        HeaderStartInBuffer_p = Out_p->Packet_p->Buffer_p;
 
         if (Out_p->Packet_p->Header.ExtendedHeaderLength == COMMAND_EXTENDED_HEADER_LENGTH) {
             ExtHdrLen = ALIGNED_COMMAND_EXTENDED_HEADER_LENGTH;
@@ -381,7 +395,7 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
 
 #endif
 
-        if (E_SUCCESS == Communication_p->CommunicationDevice_p->Write((Out_p->Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER),
+        if (E_SUCCESS == Communication_p->CommunicationDevice_p->Write((Out_p->Packet_p->Buffer_p),
         ContinuousBufferLength, R15_Network_WriteCallback, Communication_p->CommunicationDevice_p)) {
             C_(printf("r15_network_layer.c (%d) Header Sent to comm device! \n", __LINE__);)
         } else {
@@ -397,7 +411,7 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
         break;
 
     case SEND_EX_HEADER:
-        ExHeaderStartInBuffer_p = Out_p->Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH;
+        ExHeaderStartInBuffer_p = Out_p->Packet_p->Buffer_p + ALIGNED_HEADER_LENGTH;
 
         if (Out_p->Packet_p->Header.ExtendedHeaderLength == COMMAND_EXTENDED_HEADER_LENGTH) {
             ExtHdrLen = ALIGNED_COMMAND_EXTENDED_HEADER_LENGTH;
@@ -451,13 +465,32 @@ ErrorCode_e R15_Network_TransmiterHandler(Communication_t *Communication_p)
     }
 
     if (RegisterRetransmission) {
-        if (NULL != Out_p->Packet_p->Timer_p) {
+        if (0 != Out_p->Packet_p->Timer.Time) {
             C_(printf("r15_network_layer.c (%d) Register retransmission\n", __LINE__);)
             (void)R15_Network_RegisterRetransmission(Communication_p, Out_p->Packet_p);
         }
     }
 
     Do_CriticalSection_Leave(Out_p->TxCriticalSection);
+
+#ifdef CFG_ENABLE_LOADER_TYPE
+
+    if (TRUE == ReRun) {
+        ReRun = FALSE;
+        Out_p->State = SavedState;
+
+        ExHeaderStartInBuffer_p = NULL;
+        HeaderStartInBuffer_p = NULL;
+        IsBufferContinuous = FALSE;
+        ContinuousBufferLength = 0;
+        RegisterRetransmission = FALSE;
+        ExtHdrLen = 0;
+        Aligned_Length = 0;
+
+        goto StartTramsmitter;
+    }
+
+#endif // CFG_ENABLE_LOADER_TYPE
 
     return ReturnValue;
 }
@@ -477,27 +510,26 @@ ErrorCode_e R15_Network_CancelRetransmission(const Communication_t *const Commun
     uint32 Index = 0;
 
     do {
-        if ((R15_NETWORK(Communication_p)->RetransmissionList[Index] != NULL) && (R15_NETWORK(Communication_p)->RetransmissionList[Index]->Key == UniqueKey)) {
-            (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_NETWORK(Communication_p)->RetransmissionList[Index]->TimerKey);
+        if ((TRUE == R15_NETWORK(Communication_p)->RetransmissionList[Index].InUse) && (R15_NETWORK(Communication_p)->RetransmissionList[Index].Key == UniqueKey)) {
+            R15_NETWORK(Communication_p)->RetransmissionList[Index].InUse = FALSE;
 
-            free(R15_NETWORK(Communication_p)->RetransmissionList[Index]->Packet_p->Timer_p);
-            R15_NETWORK(Communication_p)->RetransmissionList[Index]->Packet_p->Timer_p = NULL;
-            ReturnValue = R15_Network_PacketRelease(Communication_p, R15_NETWORK(Communication_p)->RetransmissionList[Index]->Packet_p);
+            (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_NETWORK(Communication_p)->RetransmissionList[Index].TimerKey);
+
+            memset(&(R15_NETWORK(Communication_p)->RetransmissionList[Index].Packet_p->Timer), 0, sizeof(Timer_t));
+
+            ReturnValue = R15_Network_PacketRelease(Communication_p, R15_NETWORK(Communication_p)->RetransmissionList[Index].Packet_p);
 
             if (E_SUCCESS != ReturnValue) {
                 A_(printf("r15_network_layer.c(%d): Packet release failed!\n", __LINE__);)
                 return ReturnValue;
             }
 
-            free(R15_NETWORK(Communication_p)->RetransmissionList[Index]);
-            R15_NETWORK(Communication_p)->RetransmissionList[Index] = NULL;
             R15_NETWORK(Communication_p)->RetransmissionListCount--;
 
             for (; Index < R15_NETWORK(Communication_p)->RetransmissionListCount; Index++) {
                 R15_NETWORK(Communication_p)->RetransmissionList[Index] = R15_NETWORK(Communication_p)->RetransmissionList[Index + 1];
             }
 
-            R15_NETWORK(Communication_p)->RetransmissionList[Index] = NULL;
             ReturnValue = E_SUCCESS;
             break;
         }
@@ -661,6 +693,10 @@ void R15_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Pa
     Communication_t *Communication_p = (Communication_t *)(((CommunicationDevice_t *)Param_p)->Object_p);
     R15_Outbound_t *Out_p = &(R15_NETWORK(Communication_p)->Outbound);
     BulkExtendedHeader_t ExtendedHeader = {0};
+#ifdef CFG_ENABLE_LOADER_TYPE
+    ErrorCode_e ReturnValue = E_GENERAL_COMMUNICATION_ERROR;
+    R15_OutboundState_t SavedState = Out_p->State;
+#endif // CFG_ENABLE_LOADER_TYPE
     B_(printf("r15_network_layer.c (%d): Device write finished!! \n", __LINE__);)
 
     if (SENDING_HEADER == Out_p->State) {
@@ -668,7 +704,7 @@ void R15_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Pa
     } else if (SENDING_EX_HEADER == Out_p->State) {
         Out_p->State = SEND_PAYLOAD;
     } else if (SENDING_PAYLOAD == Out_p->State) {
-        if (NULL == Out_p->Packet_p->Timer_p) {
+        if (0 == Out_p->Packet_p->Timer.Time) {
             if (Out_p->Packet_p->Header.Protocol == BULK_PROTOCOL) {
                 R15_DeserializeBulkExtendedHeader(&ExtendedHeader, Out_p->Packet_p->ExtendedHeader_p);
             }
@@ -684,7 +720,11 @@ void R15_Network_WriteCallback(const void *Data_p, const uint32 Length, void *Pa
 
 #ifdef CFG_ENABLE_LOADER_TYPE
 
-    if (E_SUCCESS != R15_Network_TransmiterHandler(Communication_p)) {
+    ReturnValue = R15_Network_TransmiterHandler(Communication_p);
+
+    if (E_CS_LOCK_FAILED == ReturnValue) {
+        Out_p->State = SavedState;
+    } else if (E_SUCCESS != ReturnValue) {
         R15_NETWORK(Communication_p)->Outbound.LCM_Error = E_GENERAL_COMMUNICATION_ERROR;
     }
 
@@ -773,7 +813,7 @@ static ErrorCode_e R15_Network_ReceiveExtendedHeader(Communication_t *Communicat
         VERIFY(NULL != In_p->Packet_p, E_FAILED_TO_FIND_COMM_BUFFER);
 
         In_p->Packet_p->Header = R15Header;
-        In_p->Packet_p->ExtendedHeader_p = In_p->Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH;
+        In_p->Packet_p->ExtendedHeader_p = In_p->Packet_p->Buffer_p + ALIGNED_HEADER_LENGTH;
         SET_PACKET_FLAGS(In_p->Packet_p, PACKET_RX_STATE_MASK, BUF_HDR_CRC_OK);
 
         if (In_p->Packet_p->Header.ExtendedHeaderLength == COMMAND_EXTENDED_HEADER_LENGTH) {
@@ -782,7 +822,7 @@ static ErrorCode_e R15_Network_ReceiveExtendedHeader(Communication_t *Communicat
             In_p->Packet_p->Payload_p = In_p->Packet_p->ExtendedHeader_p + ALIGNED_BULK_EXTENDED_HEADER_LENGTH;
         }
 
-        memcpy(In_p->Packet_p->Buffer_p + HEADER_OFFSET_IN_BUFFER, &In_p->Packet_p->Header, HEADER_LENGTH);
+        memcpy(In_p->Packet_p->Buffer_p, &In_p->Packet_p->Header, HEADER_LENGTH);
         memcpy(In_p->Packet_p->ExtendedHeader_p, In_p->Target_p, In_p->Header.ExtendedHeaderLength);
 
         In_p->Target_p = In_p->Packet_p->Payload_p;
@@ -877,54 +917,46 @@ static ErrorCode_e R15_Network_ReceivePayload(Communication_t *Communication_p)
 
 static ErrorCode_e R15_Network_RegisterRetransmission(Communication_t *Communication_p, PacketMeta_t *Packet_p)
 {
-    int i;
-    int Index;
-    ErrorCode_e ReturnValue = E_SUCCESS;
-    static RetransmissionContext_t *R_Ctx_p = NULL;
+    int i = 0;
+    int Index = 0;
+    ErrorCode_e ReturnValue = E_RETRANSMISSION_LIST_FULL;
 
     if (R15_NETWORK(Communication_p)->RetransmissionListCount < MAX_SIZE_RETRANSMISSION_LIST) {
-        if (NULL == Packet_p->Timer_p->HandleFunction_p) {
-            Packet_p->Timer_p->HandleFunction_p = (HandleFunction_t)R15_Network_RetransmissionCallback;
-            Packet_p->Timer_p->Param_p = Communication_p;
+        if (NULL == Packet_p->Timer.HandleFunction_p) {
+            Packet_p->Timer.HandleFunction_p = (HandleFunction_t)R15_Network_RetransmissionCallback;
+            Packet_p->Timer.Param_p = Communication_p;
         }
-
-        R_Ctx_p = (RetransmissionContext_t *)malloc(sizeof(RetransmissionContext_t));
-
-        if (NULL == R_Ctx_p) {
-            return E_ALLOCATE_FAILED;
-        }
-
-        R_Ctx_p->TimerKey = TIMER(Communication_p, TimerGet_Fn)(OBJECT_TIMER(Communication_p), Packet_p->Timer_p);
-        R_Ctx_p->Timeout = Packet_p->Timer_p->Time;
-        R_Ctx_p->Packet_p = Packet_p;
-        R_Ctx_p->Key = R15_Network_CreateUniqueKey(Packet_p, (uint8)(*(R_Ctx_p->Packet_p->ExtendedHeader_p + sizeof(uint16))));
-
-        Index = 0;
-        C_(printf("r15_network_layer.c (%d) Key(%d) TKey(%d) \n", __LINE__, R_Ctx_p->Key, R_Ctx_p->TimerKey);)
 
         do {
-            if (NULL != R15_NETWORK(Communication_p)->RetransmissionList[Index]) {
-                if (R_Ctx_p->Timeout < TIMER(Communication_p, ReadTime_Fn)(OBJECT_TIMER(Communication_p), R15_NETWORK(Communication_p)->RetransmissionList[Index]->TimerKey)) {
+            if (TRUE == R15_NETWORK(Communication_p)->RetransmissionList[Index].InUse) {
+                if (Packet_p->Timer.Time < TIMER(Communication_p, ReadTime_Fn)(OBJECT_TIMER(Communication_p), R15_NETWORK(Communication_p)->RetransmissionList[Index].TimerKey)) {
                     i = R15_NETWORK(Communication_p)->RetransmissionListCount;
 
                     for (; Index < i; i--) {
                         R15_NETWORK(Communication_p)->RetransmissionList[i] = R15_NETWORK(Communication_p)->RetransmissionList[i - 1];
                     }
 
-                    R15_NETWORK(Communication_p)->RetransmissionList[Index] = R_Ctx_p;
-                    R_Ctx_p = NULL;
-                    R15_NETWORK(Communication_p)->RetransmissionListCount++;
                     break;
                 }
 
                 Index++;
             } else {
-                R15_NETWORK(Communication_p)->RetransmissionList[Index] = R_Ctx_p;
-                R_Ctx_p = NULL;
-                R15_NETWORK(Communication_p)->RetransmissionListCount++;
                 break;
             }
         } while (Index < MAX_SIZE_RETRANSMISSION_LIST);
+
+        if (Index != MAX_SIZE_RETRANSMISSION_LIST) {
+            R15_NETWORK(Communication_p)->RetransmissionList[Index].TimerKey = TIMER(Communication_p, TimerGet_Fn)(OBJECT_TIMER(Communication_p), &(Packet_p->Timer));
+            R15_NETWORK(Communication_p)->RetransmissionList[Index].Timeout = Packet_p->Timer.Time;
+            R15_NETWORK(Communication_p)->RetransmissionList[Index].Packet_p = Packet_p;
+            R15_NETWORK(Communication_p)->RetransmissionList[Index].Key = R15_Network_CreateUniqueKey(Packet_p, (uint8)(*(Packet_p->ExtendedHeader_p + sizeof(uint16))));
+            R15_NETWORK(Communication_p)->RetransmissionList[Index].InUse = TRUE;
+            R15_NETWORK(Communication_p)->RetransmissionListCount++;
+            C_(printf("r15_network_layer.c (%d) Key(%d) TKey(%d) \n", __LINE__, (R15_NETWORK(Communication_p)->RetransmissionList[Index].Key), (R15_NETWORK(Communication_p)->RetransmissionList[Index].TimerKey));)
+        }
+
+        ReturnValue = E_SUCCESS;
+
     } else {
         A_(printf("r15_network_layer.c (%d) ** Err: Retransmission List is full! ** \n", __LINE__);)
     }
@@ -938,9 +970,8 @@ static void R15_Network_RetransmissionCallback(Communication_t *Communication_p,
     uint32 Index = 0;
 
     /* get first in list of packets for retransmission and remove */
-    if (NULL != R15_NETWORK(Communication_p)->RetransmissionList[Index]) {
-        free(R15_NETWORK(Communication_p)->RetransmissionList[Index]);
-        R15_NETWORK(Communication_p)->RetransmissionList[Index] = NULL;
+    if (TRUE == R15_NETWORK(Communication_p)->RetransmissionList[Index].InUse) {
+        R15_NETWORK(Communication_p)->RetransmissionList[Index].InUse = FALSE;
     }
 
     if (R15_NETWORK(Communication_p)->RetransmissionListCount > 0) {
@@ -951,7 +982,7 @@ static void R15_Network_RetransmissionCallback(Communication_t *Communication_p,
             R15_NETWORK(Communication_p)->RetransmissionList[Index] = R15_NETWORK(Communication_p)->RetransmissionList[Index + 1];
         }
 
-        R15_NETWORK(Communication_p)->RetransmissionList[Index] = NULL;
+        R15_NETWORK(Communication_p)->RetransmissionList[Index].InUse = FALSE;
 
         /* enqueue the packet for retransmission */
         (void)QUEUE(Communication_p, FifoEnqueue_Fn)(OBJECT_QUEUE(Communication_p), Communication_p->Outbound_p, Packet_p);

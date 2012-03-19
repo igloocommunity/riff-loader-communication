@@ -81,9 +81,9 @@
   </when>
   <when test="@type='buffer' and @length!='*'">put_block(&amp;Data_p, <value-of select="@name" />, <value-of select="@length" />);
   </when>
-  <when test="@type='SupportedCommand' and @length!='*'">if (<value-of select="@name" /> != NULL) {
-    put_block(&amp;Data_p, <value-of select="@name" />, PLSize<value-of select="@name" />);
-  }
+  <when test="@type='SupportedCommand' and @length!='*'">  if (<value-of select="@name" /> != NULL) {
+        put_block(&amp;Data_p, <value-of select="@name" />, PLSize<value-of select="@name" />);
+    }
   </when>
   <when test="@type='ListDevice' and @length!='*'">serialize_device_entries(&amp;Data_p, <value-of select="@name" />, <value-of select="@length" />);<!--put_block(&amp;Data_p, <value-of select="@name" />, PLSize<value-of select="@name" />);-->
   </when>
@@ -106,7 +106,7 @@
   </when>
   <when test="@type='buffer' and @length!='*'">PLSize += <value-of select="@length" />;
   </when>
-  <when test="@type='SupportedCommand' and @length!='*'">PLSize += PLSize<value-of select="@name" /> = <value-of select="@length" /> * sizeof(SupportedCommand_t);
+  <when test="@type='SupportedCommand' and @length!='*'">  PLSize += PLSize<value-of select="@name" /> = <value-of select="@length" /> * sizeof(SupportedCommand_t);
   </when>
   <when test="@type='ListDevice' and @length!='*'">PLSize += get_device_entries_len(<value-of select="@name" />, <value-of select="@length" />); <!--PLSize<value-of select="@name" /> = <value-of select="@length" /> * sizeof(DirEntry_t);-->
   </when>

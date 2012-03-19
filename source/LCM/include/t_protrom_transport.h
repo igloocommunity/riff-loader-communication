@@ -17,7 +17,7 @@
  * Includes
  ******************************************************************************/
 #include "t_basicdefinitions.h"
-#include "t_protrom_network.h"
+#include "t_protrom_header.h"
 
 /*******************************************************************************
  * Types, constants and external variables

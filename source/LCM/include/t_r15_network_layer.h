@@ -50,7 +50,7 @@
 /** Acknowledge packet time(mS) out value */
 #define ACK_TIMEOUT_IN_MS       10000
 /** Default time(mS) out for receiving bulk command */
-#define BULK_COMMAND_RECEIVING_TIMEOUT  10000
+#define BULK_COMMAND_RECEIVING_TIMEOUT  20000
 /** Default time(mS) out for receiving bulk data. This value is set for UART on 115200kbps! */
 #define BULK_DATA_RECEIVING_TIMEOUT   120000
 
@@ -71,8 +71,8 @@
 /** Size of a buffer used for commands. */
 #define COMMAND_BUFFER_SIZE 0x00010000
 
-/** Size of a buffer used for bulk transfer,
- * must be biger than buffer for commands. */
+/** Size of a payload buffer used for bulk transfer,
+ * must be larger than buffer for commands. */
 #define BULK_BUFFER_SIZE 0x00100000
 
 
@@ -86,7 +86,7 @@
 #define SESSION_MASK 0xFFFC
 
 /**
- * Defines all posible types of buffers that can be created (allocated).
+ * Defines all possible types of buffers that can be created (allocated).
  *
  * It is used to specified the type of the buffer
  * when allocating a new buffer. Also it is used when
@@ -108,7 +108,7 @@ TYPEDEF_ENUM {
     BUF_TX_SENT         = 0x00000008,        /**< The buffer is sent and wait ACK. */
     BUF_TX_DONE         = 0x00000010,        /**< The buffer has been sent and can
                                                 be deallocated. */
-    BUF_TX_TIMEOUT      = 0x00000020,        /**< The timeout ocure when buffer is
+    BUF_TX_TIMEOUT      = 0x00000020,        /**< The timeout occur when buffer is
                                                 sending. */
     BUF_RX_READY        = 0x00000040,        /**< The buffer is filled with
                                                 received data and is ready for
@@ -145,7 +145,7 @@ TYPEDEF_ENUM {
     (packet)->Flags |= (mask & flags); \
   } while (0)
 
-#define CHECK_PACKET_FLAGS(packet, flags) (((flags) == ((packet)->Flags & (flags))) ? TRUE : FALSE)
+#define CHECK_PACKET_FLAGS(packet, flags) ((0 != ((packet)->Flags & (flags))) ? TRUE : FALSE)
 
 /** Defined state of the receiver */
 typedef enum {
@@ -158,11 +158,13 @@ typedef enum {
 
 /** Defined state of the transmitter */
 typedef enum {
-    SEND_IDLE,       /**< Transmiter idle state.*/
-    SEND_HEADER,     /**< Transmiter send header and extended header. */
-    SENDING_HEADER,  /**< Transmiter is in process sending the header and extended header. */
-    SEND_PAYLOAD,    /**< Transmiter send payload. */
-    SENDING_PAYLOAD  /**< Transmiter is in process sending payload.*/
+    SEND_IDLE,         /**< Transmitter idle state.*/
+    SEND_HEADER,       /**< Transmitter send header. */
+    SENDING_HEADER,    /**< Transmitter is in process sending header. */
+    SEND_EX_HEADER,    /**< Transmitter send extended header. */
+    SENDING_EX_HEADER, /**< Transmitter is in process sending extended header. */
+    SEND_PAYLOAD,      /**< Transmitter send payload. */
+    SENDING_PAYLOAD    /**< Transmitter is in process sending payload.*/
 } R15_OutboundState_t;
 
 /**
@@ -199,7 +201,7 @@ typedef void (*PacketCallBack_t)(Communication_t *Communication_p, const void *D
 
 /** Structure for the packet meta data. */
 typedef struct PacketMeta {
-    PacketCallBack_t CallBack_p;                  /**< Cllback function used after
+    PacketCallBack_t CallBack_p;                  /**< Callback function used after
                                                    sending packet.*/
     uint32           Flags;                       /**< Field is a bit-field. Flags
                                                    for the Packet state. */
@@ -207,9 +209,9 @@ typedef struct PacketMeta {
                                                    corresponding buffer used in
                                                    the packet. */
     R15_Header_t     Header;                      /**< Structure of the header. */
-    uint32           Resend;                      /**< Resend counter. */
-    Timer_t          *Timer_p;                    /**< Timer data used for
-                                                   sending/reciving packet. */
+    uint32           Resend;                      /**< Resent counter. */
+    Timer_t          Timer;                       /**< Timer data used for
+                                                   sending/receiving packet. */
     uint8            *ExtendedHeader_p;           /**< Pointer to the extended
                                                    header located in the packet. */
     uint8            *Payload_p;                  /**< Pointer to the payload data
@@ -232,9 +234,9 @@ typedef struct {
     uint32       Timeout;   /**< Defined timeout for retransmission. */
     uint32       TimerKey;  /**< Timer identification number.*/
     uint32       Key;       /**< Generated unique key, used for marking packet for
-                               retransmission or removing from
-                              retransmission list. */
+                                 retransmission or removing from retransmission list. */
     PacketMeta_t *Packet_p; /**< Pointer to the packet for retransmission. */
+    boolean      InUse;     /**< Determine if the entry in retransmission list is currently allocated. */
 } RetransmissionContext_t;
 
 
@@ -244,9 +246,9 @@ typedef struct {
     R15_InboundState_t State;
     /**< Number of requested data for receiving from communication device. */
     uint32             ReqData;
-    /**< Number of receivied data from communication device. */
+    /**< Number of received data from communication device. */
     uint32             RecData;
-    /**< Number of receivied data from backup buffer used for switching the
+    /**< Number of received data from backup buffer used for switching the
      * protocol family. */
     uint32             RecBackupData;
     /**< Offset in the buffer for next data that should be received. */
@@ -257,9 +259,9 @@ typedef struct {
     uint8              Scratch[ALIGNED_HEADER_LENGTH + ALIGNED_BULK_EXTENDED_HEADER_LENGTH];
     /** Temporary structure for handling R15 packet.*/
     R15_Header_t       Header;
-    /** Poiter to meta data for allocated buffer for handling R15 packet.*/
+    /** Pointer to meta data for allocated buffer for handling R15 packet.*/
     PacketMeta_t       *Packet_p;
-    /** Number of packets before receiver is stoped. */
+    /** Number of packets before receiver is stopped. */
     uint8               PacketsBeforeReceiverStop;
     /** Indicator for stopping the receiver. */
     boolean             StopTransfer;
@@ -283,9 +285,9 @@ typedef struct {
 
 /** R15 Network context */
 typedef struct {
-    PacketMeta_t            *MetaInfoList[COMMAND_BUFFER_COUNT + BULK_BUFFER_COUNT];
+    PacketMeta_t             *MetaInfoList[COMMAND_BUFFER_COUNT + BULK_BUFFER_COUNT];
     /**< List of meta data for used packets. */
-    RetransmissionContext_t *RetransmissionList[MAX_SIZE_RETRANSMISSION_LIST];
+    RetransmissionContext_t  RetransmissionList[MAX_SIZE_RETRANSMISSION_LIST];
     /**< List of packet for retransmission */
     uint32                   RetransmissionListCount;
     /**< Counter for packets retransmission */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) ST-Ericsson SA 2011
+ * Copyright (C) ST-Ericsson SA 2012
  * License terms: 3-clause BSD license
  ******************************************************************************/
 /* NOTE: This is an automatically generated file. DO NOT EDIT! */
@@ -43,8 +43,8 @@
  * Authentication Fatal 400-450
  * Authentication non-fatal 451-499
  *
- * COPS General Fatal 500-550
- * COPS General non-fatal 551-599
+ * Zip Parser Fatal 500-550
+ * Zip Parser non-fatal 551-599
  *
  * System Fatal 600-650
  * System non-fatal 651-699
@@ -52,8 +52,6 @@
  * Flash Fatal 700-750
  * Flash non-fatal 751-799
  *
- * Parameters Fatal 800-850
- * Parameters non-fatal 851-899
  *
  * File management Fatal 900-950
  * File management non-fatal 951-999
@@ -61,35 +59,73 @@
  * Command Auditing and execution Fatal 1000-1050
  * Command Auditing and execution non-fatal 1051-1099
  *
- * Emulation Fatal 1100-1150
- * Emulation non-fatal 1151-1199
  *
  * Timers Fatal 1200-1250
  * Timers non-fatal 1251-1299
  *
- * CABS Fatal 1300-1350
- * CABS non-fatal 1351-1399
+ * Parameter Fatal 1300-1350
+ * Parameter non-fatal 1351-1399
  *
- * GDFS Fatal 1400-1450
- * GDFS non-fatal 1451-1499
+ * Block device Fatal 1400-1450
+ * Block device non-fatal 1451-1499
  *
- * Antirollback Fatal 1500-1550
- * Antirollback non-fatal 1551-1599
+ * Boot area Fatal 1500-1550
+ * Boot area non-fatal 1551-1599
  *
- * Memory and Boot Fatal 1600-1650
- * Memory and Boot non-fatal 1651-1699
+ * Cops data Fatal 1600-1650
+ * Cops data non-fatal 1651-1699
  *
- * @todo this should be removed and error codes should be remaped.
- * The same applies to Emulator errors.
+ * PD NAND Fatal 1700-1750
+ * PD NAND non-fatal 1751-1799
  *
- * Job Handler Fatal 1700-1750
- * Job Handler non-fatal 1751-1799
- *
- * Emulator Fatal 1800-1850
- * Emulator non-fatal 1851-1899
+ * Trim Area non-fatal 1851-1899
  *
  * Loader utilities Fatal 1900-1950
  * Loader utilities non-fatal 1951-1999
+ *
+ * Loader ADBG Fatal 2000-2050
+ * Loader ADBG non-fatal 2051-2099
+ *
+ * OTP applications Fatal 2100-2150
+ * OTP applications non-fatal 2151-2199
+ *
+ * Security applications Fatal 2200-2250
+ * Security applications non-fatal 2251-2299
+ *
+ * Trim Area Fatal 2300-2350
+ * Trim Area non-fatal 2351-2499
+ *
+ * Recovery applications Fatal 2500-2550
+ * Recovery applications non-fatal 2551-2599
+ *
+ * PD CFI Flash Fatal 2600-2650
+ * PD CFI Flash non-fatal 2651-2699
+ *
+ * HSI Driver Fatal 2700-2724
+ * HSI Driver Non-Fatal 2725-2749
+ *
+ * HSI Driver Error Callback Fatal 2750-2774
+ * HSI Driver Error Callback Non-Fatal 2775-2799
+ *
+ * Communication Relay Fatal 2800-2849
+ * Communication Relay Non-Fatal 2850-2899
+ *
+ * SDIO Driver Fatal 2900-2924
+ * SDIO Driver Non-Fatal 2925-2949
+ *
+ * SDIO Driver Error Callback Fatal 2950-2974
+ * SDIO Driver Error Callback Non-Fatal 2975-2999
+ *
+ * External BAM Interface Fatal 3000-3049
+ * External BAM Interface non-fatal 3050-3099
+ *
+ * Security Library Fatal 4000-4050
+ * Security Library non-fatal 4051-4250
+ *
+ * Emulator Fatal 4300-4350
+ * Emulator non-fatal 4351-4399
+ *
+ * A2 and lower versions error codes translation 5000+
  */
 
 
@@ -100,6 +136,8 @@ typedef enum {
     E_INVALID_INPUT_PARAMETERS = 51, /**<  The expected value into the function was incorrect. */
     E_INVALID_CURRDATE_STRING_LENGTH = 52, /**<  Indicate that the currdate string array variable has invalid length. */
     E_UNALIGNED_DATA = 53, /**<  Indicate that a variable is not aligned. */
+    E_COPS_DEAUTHENTICATION_FAILED = 54, /**<  Indicate that ME De-Authentication failed. */
+    E_CS_LOCK_FAILED = 55, /**<  Failed to lock code region protected with critical section. */
     E_VECTOR_CREATE_FAIL = 100, /**<  Failed to create vector in IO Layer. */
     E_VECTOR_DESTROY_FAIL = 101, /**<  Failed to destroy vector in IO Layer. */
     E_GENERAL_IO_ERROR = 151, /**<  Unknown IO error. */
@@ -147,6 +185,8 @@ typedef enum {
     E_INVALID_BULK_SESSION_ID = 260, /**<  Invalid bulk session ID is used. */
     E_PREVIOUS_BULK_SESSION_IS_NOT_CLOSED = 261, /**<  Previous bulk session not closed. */
     E_INVALID_BULK_PROTOCOL_STATE = 262, /**<  Invalid bulk protocol state. */
+    E_UNSUPPORTED_USB_TRANSFER_TYPE = 263, /**<  Type of transfer is unsupported. */
+    E_RETRANSMISSION_LIST_FULL = 264, /**<  Packet can't be registered for retransmission because retransmission list is full. */
     E_UNKNWON_PROPERTY = 351, /**<  Unknown property id. */
     E_CYCLIC_GRAPH = 451, /**<  Cyclic graph in services detected. */
     E_SERVICE_NOT_SUPPORTED = 452, /**<  The service is not supported. */
@@ -165,19 +205,22 @@ typedef enum {
     E_NO_FILESYSTEM_PROPERTY = 601, /**<  Failed to start file system. */
     E_UNDEFINED_AUTHENTICATION_TYPE = 602, /**<  Undefined authentication type. */
     E_RTC_TIME_NOT_ACCURATE = 651, /**<  System Time is not properly set. */
-    E_RTC_INTIALIZATION_FAILED = 652, /**<  Hardware error ocure during initialization of RTC. */
+    E_RTC_INTIALIZATION_FAILED = 652, /**<  Hardware error occurred during initialization of RTC. */
+    E_UNDEFINED_DEAUTHENTICATION_TYPE = 653, /**<  Undefined deauthentication type. */
+    E_COPS_DEVICE_STATE_FULL = 654, /**<  Indicate that ME is in full security mode,Full authentication is needed prior to use COPS functionalities. */
+    E_COPS_DEVICE_STATE_RELAXED = 655, /**<  Indicate that ME is in authenticate security mode, Permanent type authentication is needed prior to use COPS functionalities. */
     E_DIFFERENT_FLASHLAYOUT = 751, /**<  Different flashlayout. */
     E_EMPTY_FILE_IN_ARCHIVE = 752, /**<  Archive contain empty file. */
     E_UNKNOWN_COMM_DEVICE = 753, /**<  Unknown communication device was detected. */
     E_FLASH_APP_INTERNAL_ERROR = 754, /**<  Internal during execution of flash commands. */
     E_DEVICE_NAME_TOO_LONG = 755, /**<  Device name is too long. */
-    E_FLASH_ARCHIVE_MISMATCH = 756, /**<  Mismatch between archieve that is flashed and previosly flashed one. */
+    E_FLASH_ARCHIVE_MISMATCH = 756, /**<  Mismatch between archive that is flashed and previously flashed one. */
     E_UNSUPPORTED_FLASH_TYPE = 757, /**<  Flash memory device type is not supported. */
     E_FPD_NOT_CONFIGURED = 758, /**<  Flash physical driver is not configured. */
     E_INVALID_SIZE_IN_MEMCONF = 759, /**<  MEMCONF boot record contain invalid TotalSize field. */
     E_ARCHIVE_TO_LARGE = 760, /**<  Flash archive larger than available space in BDM. */
     E_ENTRY_NOT_FOUND_IN_FLASHLAYOUT = 761, /**<  Entry not found in flashlayout file. */
-    E_MISMATCH_MANIFEST_FLASHLAYOUT = 762, /**<  Mismatch between manifest and flashlayout. */
+    E_MISMATCH_MANIFEST_FLASHLAYOUT = 762, /**<  Mismatch between manifest and flash layout. */
     E_INVALID_SUBTOC_PARAMETERS = 763, /**<  SUBTOC is invalid. */
     E_FAILED_TO_READ_SUBTOC = 764, /**<  Reading SUBTOC from flash failed. */
     E_OVERLAPPING_PARTITIONS_FOUND = 765, /**<  Overlapping partitions found in the archive. */
@@ -193,6 +236,10 @@ typedef enum {
     E_FILE_TOO_LARGE = 775, /**<  File too large. */
     E_FILE_OUT_OF_BOOT_AREA = 776, /**<  File outside of boot area */
     E_DUMP_OUT_OF_FLASH_RANGE = 777, /**<  Dump outside of flash range */
+    E_ERASING_BAM_AREA_FAILED = 778, /**<  Boot area is not empty. Erasing boot area on a logical level is not allowed. */
+    E_ENHANCED_AREA_NOT_SET = 779, /**<  Enhanced area is not set */
+    E_ENHANCED_IMAGE_OUT_OF_ENHANCED_AREA = 780, /**<  Image out of enhanced area */
+    E_SET_ENHANCED_AREA_FAILED = 781, /**<  Setting of enhanced area failed */
     E_PATH_NOT_EXISTS = 951, /**<  Path not exist. */
     E_CLOSE_FILE = 952, /**<  Failed to close a file in the file system. */
     E_INSUFFICENT_SPACE = 953, /**<  Not enough memory space for desired operation. */
@@ -258,7 +305,7 @@ typedef enum {
     E_GD_FG_UNIT_SIZE_MISMATCH = 1360, /**<  GD/GDFS: Attempt to access a unit outside its beyond its end. */
     E_GD_FG_ILLEGAL_LOG_BLK_NR = 1361, /**<  GD/GDFS: Attempt to access a logical block that does not exist. (Hardware, fatal). */
     E_GD_FG_ILLEGAL_PHYS_BLK_NR = 1362, /**<  GD/GDFS: Attempt to access a physical block that does not exist (internal error). */
-    E_GD_FG_BLK_FULL = 1363, /**<  GD/GDFS: Attempted to write more data to a block than could be fitted into one FLASH block. */
+    E_GD_FG_BLK_FULL = 1363, /**<  GD/GDFS: Attempted to write more data to a block than could be placed into one FLASH block. */
     E_GD_FG_NO_BLK_FREE = 1364, /**<  GD/GDFS: Internal error (no free blocks are available). */
     E_GD_FG_UNIT_CHECKSUM = 1365, /**<  GD/GDFS: The checksum or a unit being read is wrong. */
     E_GD_FG_NOT_DIRECT_BLOCK = 1366, /**<  GD/GDFS: Block is not direct. */
@@ -376,16 +423,40 @@ typedef enum {
     E_BAM_ERR_BLOCK_NOT_ERASED = 1593, /**<  BAM: Block not erased. */
     E_BAM_ONLD_CRITICAL_ERROR = 1601, /**<  BAM ONLD: Critical error. */
     E_BAM_ONLD_INVALID_PARAMS = 1602, /**<  BAM ONLD: Invalid parameters. */
-    E_BAM_ONLD_INITIALISATION_ERROR = 1603, /**<  BAM ONLD: Initialisation error. */
+    E_BAM_ONLD_INITIALISATION_ERROR = 1603, /**<  BAM ONLD: Initialization error. */
     E_BAM_ONLD_READ_ERROR = 1604, /**<  BAM ONLD: An error occurred while reading. */
     E_BAM_ONLD_WRITE_ERROR = 1605, /**<  BAM ONLD: An error occurred while writing. */
     E_BAM_ONLD_ERASE_ERROR = 1606, /**<  BAM ONLD: An error occurred while erasing. */
     E_BAM_ONLD_DEVICE_ERROR = 1607, /**<  BAM ONLD: Device error. */
     E_BAM_ONLD_GOODBLOCK = 1608, /**<  BAM ONLD: Good block. */
     E_BAM_ONLD_BADBLOCK = 1609, /**<  BAM ONLD: Bad block. */
+    E_COPS_RC_ASYNC_CALL = 1621, /**<  COPS: Asynchronous call initiated. */
+    E_COPS_RC_IPC_ERROR = 1622, /**<  COPS: IPC failed. */
+    E_COPS_RC_INTERNAL_IPC_ERROR = 1623, /**<  COPS: Internal IPC lib error. */
+    E_COPS_RC_ASYNC_IPC_ERROR = 1624, /**<  COPS: Asynchronous IPC is not supported/setup for this function. */
+    E_COPS_RC_ARGUMENT_ERROR = 1625, /**<  COPS: Incorrect arguments for function. */
+    E_COPS_RC_STORAGE_ERROR = 1626, /**<  COPS: Storage error (read/write flash failed). */
+    E_COPS_RC_MEMORY_ALLOCATION_ERROR = 1627, /**<  COPS: Failed to allocate memory. */
+    E_COPS_RC_UNSPECIFIC_ERROR = 1628, /**<  COPS: Unspecified error. */
+    E_COPS_RC_SERVICE_NOT_AVAILABLE_ERROR = 1629, /**<  COPS: Service not available error. */
+    E_COPS_RC_SERVICE_ERROR = 1630, /**<  COPS: Error in a service. */
+    E_COPS_RC_NOT_AUTHENTICATED_ERROR = 1631, /**<  COPS: Not authenticated error. */
+    E_COPS_RC_CHALLENGE_MISSING_ERROR = 1632, /**<  COPS: No challenge found. */
+    E_COPS_RC_SIGNATURE_VERIFICATION_ERROR = 1633, /**<  COPS: Signature validation failed. */
+    E_COPS_RC_DATA_TAMPERED_ERROR = 1634, /**<  COPS: Data tampered. */
+    E_COPS_RC_DATA_CONFIGURATION_ERROR = 1635, /**<  COPS: Data configuration error. */
+    E_COPS_RC_INCORRECT_SIM = 1636, /**<  COPS: SIM card is not OK with SIMLock settings. */
+    E_COPS_RC_TIMER_RUNNING = 1637, /**<  COPS: A simlock unlock timer is currently running. */
+    E_COPS_RC_NO_UNLOCK_ATTEMPTS_LEFT = 1638, /**<  COPS: No simlock unlock attempts left. */
+    E_COPS_RC_INVALID_SIMLOCK_KEY = 1639, /**<  COPS: The key is invalid. */
+    E_COPS_RC_INTERNAL_ERROR = 1640, /**<  COPS: Internal error. */
+    E_COPS_RC_LOCKING_ERROR = 1641, /**<  COPS: Not allowed to lock a simlock. */
+    E_COPS_RC_UNLOCK_ATTEMPTS_STILL_LEFT = 1642, /**<  COPS: Still unlock attempts left for the lock. */
+    E_COPS_RC_ROUTED = 1643, /**<  COPS: Message should be routed. */
+    E_COPS_RC_AUTOLOCK_NOT_ALLOWED = 1644, /**<  COPS: Autolock only allowed during first boot. */
     E_COPS_MEMORY_ALLOC_FAILED = 1651, /**<  COPS: Memory allocation failed. */
     E_COPS_DATA_TAMPERED = 1652, /**<  COPS: Data is tempered. */
-    E_COPS_IMEI_MISSMATCH = 1653, /**<  COPS: IMEI missmatch. */
+    E_COPS_IMEI_MISSMATCH = 1653, /**<  COPS: IMEI mismatch. */
     E_COPS_OTP_LOCKED = 1654, /**<  COPS: OTP is locked. */
     E_COPS_MAC_FUNCTION_LOCKED_DOWN = 1655, /**<  COPS: Function for calculating MAC is locked down. */
     E_COPS_AUTHENTICATION_FAILED = 1656, /**<  COPS: Authentication failed. */
@@ -405,7 +476,7 @@ typedef enum {
     E_COPS_PARAMETER_ERROR = 1670, /**<  COPS: Parameter error. */
     E_COPS_BUFFER_TOO_SMALL = 1671, /**<  COPS: Memory buffer is too small. */
     E_COPS_FORBIDDEN_PARAMETER_ID = 1672, /**<  COPS: Parameter is not allowed. */
-    E_COPS_UNKNOWN_PARAMETER_ID = 1673, /**<  COPS: Parameter can not be recognised. */
+    E_COPS_UNKNOWN_PARAMETER_ID = 1673, /**<  COPS: Parameter can not be recognized. */
     E_COPS_ARGUMENT_ERROR = 1674, /**<  COPS: Argument error! */
     E_COPS_VERIFY_FAILED = 1698, /**<  COPS: Failed to verify internal data. */
     E_COPS_UNDEFINED_ERROR = 1699, /**<  COPS: Undefined error. */
@@ -421,12 +492,12 @@ typedef enum {
     E_GD_TA_BASE = 1851, /**<  GD/TA: TA base. */
     E_GD_TA_UNKNOWN_PARTITION = 1852, /**<  GD/TA: Unknown partition. */
     E_GD_TA_UNKNOWN_CONFIG = 1853, /**<  GD/TA: Unknown configuration. */
-    E_GD_TA_ILLOGICAL_CONFIGURATION = 1854, /**<  GD/TA: Ilogical configuration. */
+    E_GD_TA_ILLOGICAL_CONFIGURATION = 1854, /**<  GD/TA: Illogical configuration. */
     E_GD_TA_UNKNOWN_MEMORY_TYPE = 1855, /**<  GD/TA: Unknown memory type. */
     E_GD_TA_WRONG_PARAMETER = 1856, /**<  GD/TA: Wrong parameter. */
     E_GD_TA_OUT_OF_MEMORY = 1857, /**<  GD/TA: Out of memory. */
-    E_GD_TA_INVALID_ADRESS = 1858, /**<  GD/TA: Invalid adress. */
-    E_GD_TA_UNUSED_ADRESS = 1859, /**<  GD/TA: Unused adress. */
+    E_GD_TA_INVALID_ADRESS = 1858, /**<  GD/TA: Invalid address. */
+    E_GD_TA_UNUSED_ADRESS = 1859, /**<  GD/TA: Unused address. */
     E_GD_TA_UNIT_NOT_FOUND = 1860, /**<  GD/TA: Unit not found. */
     E_GD_TA_NOT_IMPLEMENTED = 1861, /**<  GD/TA: TA is not supported. */
     E_GD_TA_FAIL = 1862, /**<  GD/TA: TA fail. */
@@ -511,7 +582,7 @@ typedef enum {
     E_HSI_BSC_ERROR_BREAK = 2753, /**<  Break received. */
     E_HSI_BSC_ERROR_RECEIVE = 2754, /**<  Receive buffer is not provided. */
     E_HSI_BSC_ERROR_TRANSMIT = 2755, /**<  Transmit buffer is not provided. */
-    E_CR_INVALID_STATE = 2850, /**<  Invalid state for commnication relay detected. */
+    E_CR_INVALID_STATE = 2850, /**<  Invalid state for communication relay detected. */
     E_CR_NOT_RUNNING = 2851, /**<  Communication Relay is not running. */
     E_SDIO_BSC_RESULT_FAILED = 2901, /**<  General Error. */
     E_SDIO_BSC_RESULT_FAILED_INVALIDARGS = 2902, /**<  Invalid arguments. */
@@ -522,6 +593,29 @@ typedef enum {
     E_SDIO_BSC_ERROR_BREAK = 2952, /**<  Break received. */
     E_SDIO_BSC_ERROR_RECEIVE = 2953, /**<  Receive buffer is not provided. */
     E_SDIO_BSC_ERROR_TRANSMIT = 2954, /**<  Transmit buffer is not provided. */
+    E_BAM_INVALID_HANDLE = 3051, /**<  The handle supplied to BAM is invalid. */
+    E_BAM_ALREADY_INITIALIZED = 3052, /**<  The instance if BAM has already been initialized. */
+    E_BAM_INVALID_CONF = 3053, /**<  BAM configuration is invalid. */
+    E_BAM_BAD_PARAM = 3054, /**<  One of the parameter passed to BAM makes no sense. */
+    E_BAM_ENOMEM = 3055, /**<  BAM could not allocate enough memory to complete the operation. */
+    E_BAM_ENOENT = 3056, /**<  BAM could not locate the requested image/partition. */
+    E_BAM_EEXIST = 3057, /**<  An image with the same ID has already been written. */
+    E_BAM_ENOSPACE = 3058, /**<  BAM could not complete the operation due to insufficient storage space. */
+    E_BAM_ERANGE = 3059, /**<  A TOC entry specifies a location outside the area. */
+    E_BAM_INVALID_TOC = 3060, /**<  The TOC passed to BAM was detected as corrupt. */
+    E_BAM_INVALID_AREA = 3061, /**<  An area found in the TOC or passed to BAM is invalid. */
+    E_BAM_NOT_INITIALIZED = 3062, /**<  The instance or update mode of BAM has not been initialized. */
+    E_BAM_HW_ERR = 3063, /**<  BAM was unable to perform the operation due to failure in HW. */
+    E_BAM_STATE_CORRUPT = 3064, /**<  The BAM state is corrupt. */
+    E_BAM_NOT_ALLOWED = 3065, /**<  The operation is not allowed. */
+    E_BAM_FS_ERROR = 3066, /**<  An Operation towards the FileSystem return an unexpected result. */
+    E_BAM_BAD_FS_STATE = 3067, /**<  BAM state files in the FS is not in the expected state. */
+    E_BAM_HASH_ERROR = 3068, /**<  The hash callback function failed unexpectedly. */
+    E_BAM_UPDATE_IN_PROGRESS = 3069, /**<  An update is already in progress. */
+    E_BAM_BUF_TOO_SMALL = 3070, /**<  The supplied buffer is to small.The image will not be written. */
+    E_BAM_EXTERNAL_ERROR = 3071, /**<  An external error occurred. */
+    E_BAM_NOT_INSTANTIATED = 3072, /**<  The requested function is not compiled into the loadmodule that supplies the service. */
+    E_BAM_UPDATE_NOT_POSSIBLE = 3073, /**<  The state in the flash prevents BAM from performing any updates. */
     E_LOADER_SEC_LIB_CHIP_ID_INVALID = 4000, /**<  Invalid input parameters. */
     E_LOADER_SEC_LIB_INVALID_PARAMETER_TO_FUNC = 4096, /**<  Invalid input parameters. */
     E_LOADER_SEC_LIB_FAILURE = 4120, /**<  Failure. */
@@ -560,7 +654,7 @@ typedef enum {
     E_LOADER_SEC_LIB_UNSUPPORTED_NO_DEBUG_HW = 4207, /**<  No debug hardware detected. */
     E_LOADER_SEC_LIB_CHANGE_OPERATION_NOT_SUPPORTED = 4208, /**<  Requested change operation is not supported or not allowed. */
     E_LOADER_SEC_LIB_INVALID_CHANGE_OPERATION = 4209, /**<  Invalid change operation. */
-    E_LOADER_SEC_LIB_RWIMEI_NOT_ALLOWED = 4210, /**<  Rewriteable IMEI is not allowed to change. */
+    E_LOADER_SEC_LIB_RWIMEI_NOT_ALLOWED = 4210, /**<  Re-writable IMEI is not allowed to change. */
     E_LOADER_SEC_LIB_REQUEST_DENIED = 4211, /**<  Request for change operation is denied. */
     E_LOADER_SEC_LIB_BOOT_BLOCK_DO_NOT_EXIST = 4212, /**<  Boot record do not exist. */
     E_LOADER_SEC_LIB_CORRUPTED_DOMAIN_DATA = 4213, /**<  Corrupted or do not exist domain data in boot block. */
@@ -613,7 +707,7 @@ typedef enum {
     A2_E_BOOTIMAGE_SIGNATURE_FAILED = 5033, /**<  Boot image signature failed. */
     A2_E_BOOTIMAGE_FAILED_TO_READ_IMAGE = 5034, /**<  Failed to read image. */
     A2_E_BOOTIMAGE_FAILED_ALLOCATE_MEM = 5035, /**<  Failed to allocate memory. */
-    A2_E_BOOTIMAGE_INVALID_PARAM = 5036, /**<  Boot image invalid parametars. */
+    A2_E_BOOTIMAGE_INVALID_PARAM = 5036, /**<  Boot image invalid parameters. */
     A2_E_BOOTIMAGE_INVALID_LENGTH = 5037, /**<  Boot image has invalid length. */
     A2_E_BOOTIMAGE_MACED_HEADER_SIZE_ZERO = 5038, /**<  Header size is zero. */
     A2_E_FLASH_RESULT_DEVICE_PROTECTED = 5039, /**<  The flash device was protected. */
@@ -702,11 +796,11 @@ typedef enum {
     A2_E_PMC_OVERFLOWN = 5122, /**<  All steps of the PMC are destroyed. */
     A2_E_PMC_ONCE_REQUIRED = 5123, /**<  New version of once protected module attempted to be loaded without ARB flag set. */
     A2_E_PMC_BAD_N_OF_STEPS = 5124, /**<  Unsuitable number of steps within PMC. */
-    A2_E_UNIT_MISSING = 5125, /**<  Dynamyc variable is missing. */
-    A2_E_UNIT_TO_BIG = 5126, /**<  Dynamyc variable found is to big. */
+    A2_E_UNIT_MISSING = 5125, /**<  Dynamic variable is missing. */
+    A2_E_UNIT_TO_BIG = 5126, /**<  Dynamic variable found is to big. */
     A2_E_PARTMAN_READ_ERROR = 5127, /**<  Error reading partition manger status. */
     A2_E_PARTMAN_INIT_ERROR = 5128, /**<  Error initializing partition manger. */
-    A2_E_BOOTIMAGE_INVALID_ALLIGNMENT = 5129, /**<  Boot container size is not word alligned. */
+    A2_E_BOOTIMAGE_INVALID_ALLIGNMENT = 5129, /**<  Boot container size is not word aligned. */
     A2_E_BOOTIMAGE_INSUFFICIENT_CONTAINERS = 5130, /**<  Not enough boot containers are allocated. */
     A2_E_BOOTIMAGE_INVALID_CONTAINER_TYPE = 5131, /**<  Invalid boot container type. At this position other type of container is expected. */
     A2_E_DATA_LENGTH_IS_NOT_ALIGNED = 5132, /**<  The data size must be aligned to 512 bytes when reading or writing pages to/from the NAND. */

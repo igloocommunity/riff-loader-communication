@@ -243,7 +243,11 @@ ErrorCode_e Do_Communication_Shutdown(Communication_t **Communication_pp)
     DestroyBufferInterface(Communication_p);
     DestroyTimerInterface(Communication_p);
     DestroyQueueInterface(Communication_p);
-    free(Communication_p->Functions_p);
+
+    if (NULL != Communication_p->Functions_p) {
+        free(Communication_p->Functions_p);
+        Communication_p->Functions_p = NULL;
+    }
 
     memset(Communication_p, 0, sizeof(Communication_t));
 

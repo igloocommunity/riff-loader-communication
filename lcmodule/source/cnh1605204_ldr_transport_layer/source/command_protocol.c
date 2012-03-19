@@ -259,25 +259,18 @@ static ErrorCode_e DispatchCommand(Communication_t *Communication_p, PacketMeta_
     CmdData.ApplicationNr = ExtendedHeader.CommandGroup;
     CmdData.SessionNr = ExtendedHeader.SessionState >> 2;
     CmdData.Payload.Size = Packet_p->Header.PayloadLength;
-    CmdData.Payload.Data_p = NULL;
-
-    if (0 != CmdData.Payload.Size) {
-        CmdData.Payload.Data_p = (uint8 *)malloc(Packet_p->Header.PayloadLength);
-
-        if (NULL == CmdData.Payload.Data_p) {
-            return E_ALLOCATE_FAILED;
-        }
-
-        memcpy(CmdData.Payload.Data_p, Packet_p->Payload_p, Packet_p->Header.PayloadLength);
-    }
-
-    ReturnValue = R15_Network_PacketRelease(Communication_p, Packet_p);
+    CmdData.Payload.Data_p = Packet_p->Payload_p;
 
     ReturnValue = Communication_p->Do_CEH_Call_Fn(OBJECT_CEH_CALL(Communication_p), &CmdData);
 
-    if (NULL != CmdData.Payload.Data_p) {
-        free(CmdData.Payload.Data_p);
-        CmdData.Payload.Data_p = NULL;
+    if (E_SUCCESS == ReturnValue) {
+        ReturnValue = R15_Network_PacketRelease(Communication_p, Packet_p);
+    } else {
+        ErrorCode_e PacketReleaseRet = R15_Network_PacketRelease(Communication_p, Packet_p);
+
+        if (E_SUCCESS != PacketReleaseRet) {
+            A_(printf("command_protocol.c (%d): Failed to release Network packet! Error: %d\n", __LINE__, PacketReleaseRet);)
+        }
     }
 
     return ReturnValue;

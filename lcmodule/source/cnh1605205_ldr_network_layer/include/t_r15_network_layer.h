@@ -210,7 +210,7 @@ typedef struct PacketMeta {
                                                    the packet. */
     R15_Header_t     Header;                      /**< Structure of the header. */
     uint32           Resend;                      /**< Resent counter. */
-    Timer_t          *Timer_p;                    /**< Timer data used for
+    Timer_t          Timer;                       /**< Timer data used for
                                                    sending/receiving packet. */
     uint8            *ExtendedHeader_p;           /**< Pointer to the extended
                                                    header located in the packet. */
@@ -236,6 +236,7 @@ typedef struct {
     uint32       Key;       /**< Generated unique key, used for marking packet for
                                  retransmission or removing from retransmission list. */
     PacketMeta_t *Packet_p; /**< Pointer to the packet for retransmission. */
+    boolean      InUse;     /**< Determine if the entry in retransmission list is currently allocated. */
 } RetransmissionContext_t;
 
 
@@ -284,9 +285,9 @@ typedef struct {
 
 /** R15 Network context */
 typedef struct {
-    PacketMeta_t            *MetaInfoList[COMMAND_BUFFER_COUNT + BULK_BUFFER_COUNT];
+    PacketMeta_t             *MetaInfoList[COMMAND_BUFFER_COUNT + BULK_BUFFER_COUNT];
     /**< List of meta data for used packets. */
-    RetransmissionContext_t *RetransmissionList[MAX_SIZE_RETRANSMISSION_LIST];
+    RetransmissionContext_t  RetransmissionList[MAX_SIZE_RETRANSMISSION_LIST];
     /**< List of packet for retransmission */
     uint32                   RetransmissionListCount;
     /**< Counter for packets retransmission */

@@ -197,6 +197,7 @@ ErrorCode_e Do_CEH_Call(void *Object_p, CommandData_t *CmdData_p)
         ErrorCode_e AuditResponse = CommandAudit(CmdData_p);
         CommandData_t CmdData = {0};
         uint32 PLSize = sizeof(ErrorCode_e);
+        uint8 AuditResponseData[PLSize];
 
         if (E_SUCCESS != AuditResponse) {
 
@@ -207,31 +208,18 @@ ErrorCode_e Do_CEH_Call(void *Object_p, CommandData_t *CmdData_p)
             CmdData.ApplicationNr  = CmdData_p-&gt;ApplicationNr;
             CmdData.SessionNr      = CmdData_p-&gt;SessionNr;
             CmdData.Payload.Size   = PLSize;
-            CmdData.Payload.Data_p = NULL;
-            CmdData.Payload.Data_p = (uint8 *)malloc(PLSize);
-
-            if (NULL == CmdData.Payload.Data_p) {
-                A_(printf("command_marshal.c (%d): ** memory allocation failed! **\n", __LINE__);)
-                return  E_ALLOCATE_FAILED;
-            }
+            CmdData.Payload.Data_p = AuditResponseData;
 
             Data_p = CmdData.Payload.Data_p;
             put_uint32(&amp;Data_p, AuditResponse);
 
             Status = Do_R15_Command_Send(GlobalCommunication_p, &amp;CmdData);
 
-            if (NULL != CmdData.Payload.Data_p) {
-
-                free(CmdData.Payload.Data_p);
-            }
-
             if (E_SUCCESS != Status) {
-
                 return Status;
             }
 
             if (E_UNSUPPORTED_CMD == AuditResponse) {
-
                 Status = Do_System_ShutDownImpl(CmdData.SessionNr);
             }
 

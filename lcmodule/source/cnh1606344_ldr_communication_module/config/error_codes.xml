@@ -17,6 +17,7 @@
     <value number="52" name="E_INVALID_CURRDATE_STRING_LENGTH" fatal="false" short="Indicate that the currdate string array variable has invalid length."> Try to reset the loader and if problem still exist, report this error.</value>
     <value number="53" name="E_UNALIGNED_DATA" fatal="false" short="Indicate that a variable is not aligned."> Try to reset the loader and if still exist the problem, report this error.</value>
     <value number="54" name="E_COPS_DEAUTHENTICATION_FAILED" fatal="false" short="Indicate that ME De-Authentication failed."> Try to reset the loader and if still exist the problem, report this error.</value>
+    <value number="55" name="E_CS_LOCK_FAILED" fatal="false" short="Failed to lock code region protected with critical section."> Loader internal error which should be handled in place where code is executed. Try to reset the loader and if still exist the problem, report this error.</value>
 
     <!--
     * IO Fatal 100-150
@@ -75,6 +76,7 @@
     <value number="261" name="E_PREVIOUS_BULK_SESSION_IS_NOT_CLOSED" fatal="false" short="Previous bulk session not closed.">Try to reset the loader. If the problem still exist, report this error.</value>
     <value number="262" name="E_INVALID_BULK_PROTOCOL_STATE" fatal="false" short="Invalid bulk protocol state.">Try to reset the loader. If the problem still exist, report this error.</value>
     <value number="263" name="E_UNSUPPORTED_USB_TRANSFER_TYPE" fatal="false" short="Type of transfer is unsupported.">USB bulk transfer in DMA mode 1 is only supported.</value>
+    <value number="264" name="E_RETRANSMISSION_LIST_FULL" fatal="false" short="Packet can't be registered for retransmission because retransmission list is full.">All entries in the retransmission list are allocated. No place for new packet to be registered in the retransmission list.</value>
 
     <!--
     * Signature Fatal 300-350

@@ -166,7 +166,7 @@ int Buffers::AllocateBulkVector(TL_BulkVectorList_t *BulkVector_p, uint32 iChunk
     CLockCS CsLock(m_BulkFile->csBulkVectors);
     int ReturnValue = E_SUCCESS;
 
-    int HeaderBufferSize = HEADER_OFFSET_IN_BUFFER + ALIGNED_HEADER_LENGTH + ALIGNED_BULK_EXTENDED_HEADER_LENGTH;
+    int HeaderBufferSize = ALIGNED_HEADER_LENGTH + ALIGNED_BULK_EXTENDED_HEADER_LENGTH;
     int CurrentHeaderBufferSize = (BulkVector_p->Buffers) * HeaderBufferSize;
 
     TBulkVector *currentVector = NULL;

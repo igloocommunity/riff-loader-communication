@@ -30,9 +30,9 @@
  */
 typedef enum {
     COMMAND_TYPE,         /**< Command type of the packet.*/
-    COMMAND_ACK,          /**< Acknwoledge type of the packet.*/
+    COMMAND_ACK,          /**< Acknowledge type of the packet.*/
     GENERAL_RESPONSE,     /**< General response type of the packet.*/
-    GENERAL_RESPONSE_ACK  /**< General response acknwoledge type of the packet.*/
+    GENERAL_RESPONSE_ACK  /**< General response acknowledge type of the packet.*/
 } CommandType_t;
 
 
@@ -52,7 +52,7 @@ typedef struct Buffer_s {
 typedef struct Result_s {
     ErrorCode_e     Status;       /**< Status send by the general response. */
     Buffer_t       *Response_p;   /**< Buffer holding data that should be
-                                    returned trough the general response */
+                                       returned trough the general response */
 } Result_t;
 
 /**
@@ -62,7 +62,7 @@ typedef struct CommandData_s {
     uint8           CommandNr;    /**< Number of the command. */
     uint8           ApplicationNr;/**< Number of the application (command) group. */
     uint16          SessionNr;    /**< Number of the session in which this command
-                                     was received.*/
+                                       was received.*/
     CommandType_t   Type;         /**< Command type. */
     Buffer_t        Payload;      /**< Holds the data received with the command.*/
 } CommandData_t;
