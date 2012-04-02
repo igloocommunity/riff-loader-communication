@@ -52,6 +52,9 @@
     <value number="64" name="AdvanceServiceModeLevel">AdvanceServiceModeLevel</value>
     <value number="65" name="LimitedProductionModeLevel">LimitedProductionModeLevel</value>
     <value number="66" name="VeryLimitedProductionModeLevel">VeryLimitedProductionModeLevel</value>
+    <value number="70" name="ChangeSimLockLevel">ChangeSimLockLevel</value>
+    <value number="71" name="ChangeSimLockImeiLevel">ChangeSimLockImeiLevel</value>
+    <value number="72" name="ChangeSimLockImeiDomainLevel">ChangeSimLockImeiDomainLevel</value>
     <value number="127" name="ProductionModeLevel">ProductionModeLevel</value>
   </PermissionList>
 
@@ -100,6 +103,9 @@
         <value ref="ProductionModeLevel"/>
         <value ref="LimitedProductionModeLevel"/>
         <value ref="VeryLimitedProductionModeLevel"/>
+        <value ref="ChangeSimLockImeiDomainLevel"/>
+        <value ref="ChangeSimLockImeiLevel"/>
+        <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -122,6 +128,9 @@
        <value ref="FlashModeLevel"/>
        <value ref="AdvanceServiceModeLevel"/>
        <value ref="ProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -145,6 +154,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -170,6 +182,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -216,6 +231,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -300,6 +318,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>  
     
@@ -344,6 +365,9 @@
         <value ref="ProductionModeLevel"/>
         <value ref="LimitedProductionModeLevel"/>
         <value ref="VeryLimitedProductionModeLevel"/>
+        <value ref="ChangeSimLockImeiDomainLevel"/>
+        <value ref="ChangeSimLockImeiLevel"/>
+        <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -383,6 +407,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -714,6 +741,9 @@
         <value ref="ProductionModeLevel"/>
         <value ref="LimitedProductionModeLevel"/>
         <value ref="VeryLimitedProductionModeLevel"/>
+        <value ref="ChangeSimLockImeiDomainLevel"/>
+        <value ref="ChangeSimLockImeiLevel"/>
+        <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -794,6 +824,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -1000,6 +1033,7 @@
       </authentication>
       <permissions>
        <value ref="ProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
       </permissions>
     </command>
 
@@ -1024,6 +1058,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -1050,6 +1087,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -1072,6 +1112,9 @@
       <permissions>
        <value ref="AdvanceServiceModeLevel"/>
        <value ref="ProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -1091,6 +1134,9 @@
       <permissions>
        <value ref="AdvanceServiceModeLevel"/>
        <value ref="ProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -1147,6 +1193,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -1172,6 +1221,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -1203,6 +1255,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -1231,6 +1286,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 
@@ -1260,6 +1318,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
     
@@ -1286,6 +1347,9 @@
        <value ref="ProductionModeLevel"/>
        <value ref="LimitedProductionModeLevel"/>
        <value ref="VeryLimitedProductionModeLevel"/>
+       <value ref="ChangeSimLockImeiDomainLevel"/>
+       <value ref="ChangeSimLockImeiLevel"/>
+       <value ref="ChangeSimLockLevel"/>
       </permissions>
     </command>
 

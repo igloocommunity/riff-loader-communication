@@ -137,6 +137,7 @@
  */
 
 <apply-templates select="status"/>
+/** @} */
 #endif /* _ERRORCODE_H */
 </template>
 

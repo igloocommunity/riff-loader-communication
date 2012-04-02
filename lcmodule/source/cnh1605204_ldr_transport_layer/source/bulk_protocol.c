@@ -936,7 +936,7 @@ ErrorCode_e R15_Bulk_Process_Write(Communication_t *Communication_p, TL_BulkVect
             if (R15_Bulk_CheckTransmitedChunks(BulkVector_p)) {
                 /* save the current bulk vector before bulk session is closed */
                 memcpy(&(R15_TRANSPORT(Communication_p))->PreviousBulkVector, BulkVector_p, sizeof(TL_BulkVectorList_t));
-                R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = R15_Bulk_GetTimerChunkRetransmision(Communication_p, R15_TIMEOUTS(Communication_p)->TBCR, (HandleFunction_t)R15_Bulk_RetransmitChunks_CallBack);
+                R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = R15_Bulk_GetTimerChunkRetransmision(Communication_p, R15_TIMEOUTS(Communication_p)->TBDR, (HandleFunction_t)R15_Bulk_RetransmitChunks_CallBack);
                 BulkVector_p->State = WAIT_BULK_ACK;
                 C_(printf("bulk_protocol.c(%d) Wait BULK ACK for session (%d)!\n", __LINE__, BulkVector_p->SessionId);)
             } else if (CHECK_PACKET_FLAGS(BulkVector_p->Entries[BulkVector_p->SendingChunkId].Buffer_p, BUF_TX_SENT)) {

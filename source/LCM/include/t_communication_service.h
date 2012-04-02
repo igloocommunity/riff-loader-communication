@@ -243,8 +243,6 @@ typedef struct {
                                        communication device. */
     DeviceCancel_fn      Cancel;         /**< Pointer to function for canceling current
                                        communication with communication device. */
-    DeviceSetTimeouts_fn SetTimeouts;    /**< Pointer to function for setting timeouts
-                                       for the communication device*/
     void                 *Context_p;     /**< Pointer to Device description data. */
     void                 *Object_p;      /**< Pointer to Object associated with the device. */
 } CommunicationDevice_t;
