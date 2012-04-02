@@ -34,6 +34,7 @@ typedef unsigned int uint32;
 #error "Unknown platform"
 #endif
 
+typedef unsigned char uint8;
 typedef struct CLCDriverInterface *LCDContext;
 
 /// <summary>
@@ -280,6 +281,17 @@ extern "C"
     /// <param name="Context">LCD context on which to execute the operation.</param>
     /// <returns>0 if OK, otherwise non-zero.</returns>
     LCDRIVER_API int __cdecl CancelCurrentLoaderCommand(LCDContext Context);
+
+    /// <summary>
+    /// Provides short and long description for given error code number.
+    /// </summary>
+    /// <param name="ErrorNr">Number of error code.</param>
+    /// <param name="ShortDescription">Buffer for the short description of the error.</param>
+    /// <param name="LongDescription">Buffer for the long description of the error.</param>
+    /// <param name="ShorDescrBufLen">Maximum size of ShortDescription buffer.</param>
+    /// <param name="ShorDescrBufLen">Maximum size of LongDescription buffer.</param>
+    /// <returns>Void.</returns>
+    LCDRIVER_API void __cdecl GetLoaderErrorDescription(uint32 ErrorNr, uint8 *ShortDescription, uint8 *LongDescription, uint32 ShorDescrBufLen, uint32 LongDescrBufLen);
 
     /// <summary>
     /// The Loader Start-up Status command is sent by the ME to notify the host that it has started. The Status parameter indicates in what mode the loader started.

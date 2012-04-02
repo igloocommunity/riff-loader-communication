@@ -7,6 +7,7 @@
 #include "lcdriver_error_codes.h"
 #include "LCDriverInterface.h"
 #include "Error.h"
+#include "error_codes_desc.h"
 
 #define VERIFY_CONTEXT(c) \
     do { \
@@ -193,6 +194,11 @@ LCDRIVER_API int __cdecl CancelCurrentLoaderCommand(LCDContext Context)
     Context->m_pObject->CancelCurrentLoaderCommand();
 
     return 0;
+}
+
+LCDRIVER_API void __cdecl GetLoaderErrorDescription(uint32 ErrorNr, uint8 *ShortDescription, uint8 *LongDescription, uint32 ShorDescrBufLen, uint32 LongDescrBufLen)
+{
+    GetLoaderErrorDescription_Call(ErrorNr, ShortDescription, LongDescription, ShorDescrBufLen, LongDescrBufLen);
 }
 
 /************************************************************************************************

@@ -119,7 +119,7 @@ ifeq ($(BUILD_WIN),)
 CFLAGS := -g -O2 -Wall -fPIC -fvisibility=hidden -DUINT64_SUPPORTED -DSINT64_SUPPORTED -DINT64_BASE_TYPE="long long" -DCFG_ENABLE_A2_FAMILY -DLCM_EXPORTS
 else
 # For Windows x32 and x64 version compile flags
-CFLAGS := -Wall -D__WIN32__ -mthreads -mwindows -DWIN32 -DNDEBUG -D_WINDOWS -D_USRDLL -DLCM_EXPORTS
+CFLAGS := -Wall -O2 -D__WIN32__ -mthreads -mwindows -DWIN32 -DNDEBUG -D_WINDOWS -D_USRDLL -DLCM_EXPORTS
 endif
 
 build:

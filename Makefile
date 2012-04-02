@@ -10,6 +10,7 @@ MINGW_X64_CC:=amd64-mingw32msvc-
 XALAN_PATH:=./lcmodule/tools/xalan-j_2_7_1/
 LCD_CONFIG:=./source/config/
 LCD_DIR:=./
+LCM_ERR_DESC_PATH:=../../lcmodule/source/cnh1606344_ldr_communication_module/config/error_codes.xml
 
 ifneq ($(shell which $(MINGW_X32_CC)g++), )
 USE_MINGW_X32 := 1
@@ -55,7 +56,8 @@ LIBSRC := \
 	source/security_algorithms/SecurityAlgorithms.cpp\
 	source/security_algorithms/sha/sha2.cpp\
 	$(AUTO_DIR_LIB)/commands_marshal.cpp\
-	$(AUTO_DIR_LIB)/a2_commands_marshal.cpp
+	$(AUTO_DIR_LIB)/a2_commands_marshal.cpp\
+	$(AUTO_DIR_LIB)/error_codes_desc.cpp
 ifeq ($(BUILD_WIN),)
 LIBSRC += \
 	source/api_wrappers/linux/CThreadWrapper.cpp\
@@ -85,7 +87,8 @@ AUTOGEN_FILES := $(AUTO_DIR_LIB)/command_ids.h\
 		$(AUTO_DIR_LIB)/a2_command_ids.h\
 		$(AUTO_DIR_LIB)/a2_commands.h\
 		$(AUTO_DIR_LIB)/a2_commands_impl.h\
-		$(AUTO_DIR_LIB)/a2_commands_marshal.cpp
+		$(AUTO_DIR_LIB)/a2_commands_marshal.cpp\
+		$(AUTO_DIR_LIB)/error_codes_desc.cpp
 
 
 #include directories
@@ -113,7 +116,7 @@ ifeq ($(BUILD_WIN),)
 CXXFLAGS := -c -O2 -Wall -fPIC -fvisibility=hidden -fno-strict-aliasing -DLCDRIVER_EXPORTS -D_FILE_OFFSET_BITS=64
 else
 # For Windows x32 and x64 version compile flags
-CXXFLAGS := -D__WIN32__ -mwindows -mthreads -fno-strict-aliasing -Wall $(BYTE_ORDER) -DWIN32 -DWIN32_LEAN_AND_MEAN -DNDEBUG -D_WINDOWS -D_USRDLL -DLCDRIVER_EXPORTS -D_FILE_OFFSET_BITS=64
+CXXFLAGS := -D__WIN32__ -O2 -mwindows -mthreads -fno-strict-aliasing -Wall $(BYTE_ORDER) -DWIN32 -DWIN32_LEAN_AND_MEAN -DNDEBUG -D_WINDOWS -D_USRDLL -DLCDRIVER_EXPORTS -D_FILE_OFFSET_BITS=64
 endif
 
 ifeq ($(BUILD_WIN),)
@@ -308,6 +311,10 @@ $(AUTO_DIR_LIB)/a2_commands_impl.h: $(LCD_CONFIG)a2_commands.xml $(LCD_CONFIG)a2
 $(AUTO_DIR_LIB)/a2_commands_marshal.cpp: $(LCD_CONFIG)a2_commands.xml $(LCD_CONFIG)a2_commands_marshal_cpp.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/a2_commands_marshal.cpp..."
 	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)a2_commands.xml -xsl $(LCD_CONFIG)a2_commands_marshal_cpp.xsl -out $(AUTO_DIR_LIB)/a2_commands_marshal.cpp
+
+$(AUTO_DIR_LIB)/error_codes_desc.cpp: $(LCD_CONFIG)lcdriver_error_codes.xml $(LCD_CONFIG)error_codes_desc_cpp.xsl | setup_folders
+	@echo "Generating autogen $(AUTO_DIR_LIB)/error_codes_desc.cpp..."
+	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)lcdriver_error_codes.xml -xsl $(LCD_CONFIG)error_codes_desc_cpp.xsl -out $@ -PARAM errorCodesLcmXml $(LCM_ERR_DESC_PATH)
 
 #setting up needed folders
 $(BUILDFOLDER): | configfile

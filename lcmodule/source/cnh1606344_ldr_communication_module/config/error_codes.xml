@@ -222,7 +222,7 @@
     <value number="1251" name="E_NONEXIST_TIMER" fatal="false" short="Timer with the specified index does not exist.">Internal error.Report this problem</value>
     <value number="1252" name="E_FAILED_TO_SET_TIMER" fatal="false" short="Failed to start the timer.">Internal error. Report this problem</value>
     <value number="1253" name="E_TIMER_INIT_FAILED" fatal="false" short="Timer initialization failed.">Internal error. Report this problem</value>
-    <value number="1254" name="E_TIMER_IRQ_CONF_FAILED" fatal="false"> short="Timer interrupt configure failed.">Internal error. Report this problem</value>
+    <value number="1254" name="E_TIMER_IRQ_CONF_FAILED" fatal="false" short="Timer interrupt configure failed.">Internal error. Report this problem</value>
 
     <!--
     * Parameter Fatal 1300-1350
