@@ -20,9 +20,11 @@
 #include &lt;string&gt;
 #include &lt;map&gt;
 
-#include "String_s.h"
 #include "LCDriver.h"
 #include "error_codes_desc.h"
+#if defined(__MINGW32__) || defined(__linux__) || defined(__APPLE__)
+#include "String_s.h"
+#endif // __MINGW32__ || __linux__ || __APPLE__)
 
 /*******************************************************************************
  * Types, constants

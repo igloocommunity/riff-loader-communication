@@ -556,6 +556,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\error_codes_desc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LCDriver.h"
 				>
 			</File>
@@ -613,6 +617,10 @@
 			</File>
 			<File
 				RelativePath=".\autogen\commands_marshal.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\autogen\error_codes_desc.cpp"
 				>
 			</File>
 			<File
@@ -1198,6 +1206,32 @@
 			<File
 				RelativePath=".\config\common.xsl"
 				>
+			</File>
+			<File
+				RelativePath=".\config\error_codes_desc_cpp.xsl"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating error_codes_desc.cpp..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)lcdriver_error_codes.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\error_codes_desc.cpp&quot; -PARAM errorCodesLcmXml ../../lcmodule/source/cnh1606344_ldr_communication_module/config/error_codes.xml&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)lcdriver_error_codes.xml&quot;"
+						Outputs="autogen\error_codes_desc.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating error_codes_desc.cpp..."
+						CommandLine="java -classpath ..\lcmodule\tools\xalan-j_2_7_1\xalan.jar org.apache.xalan.xslt.Process -in &quot;$(InputDir)lcdriver_error_codes.xml&quot; -xsl &quot;$(InputPath)&quot; -out &quot;$(ProjectDir)\autogen\error_codes_desc.cpp&quot; -PARAM errorCodesLcmXml ../../lcmodule/source/cnh1606344_ldr_communication_module/config/error_codes.xml&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(InputDir)lcdriver_error_codes.xml&quot;"
+						Outputs="autogen\error_codes_desc.cpp"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\config\lcdriver_error_codes.xml"

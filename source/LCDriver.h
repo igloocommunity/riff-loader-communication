@@ -9,6 +9,8 @@
 #if defined(_WIN32)
 #ifdef LCDRIVER_EXPORTS
 #define LCDRIVER_API __declspec(dllexport)
+#elif defined LCDRIVER_LOCALDEFINES
+#define LCDRIVER_API
 #else
 #define LCDRIVER_API __declspec(dllimport)
 #endif //LCDRIVER_EXPORTS
@@ -22,6 +24,8 @@ typedef unsigned long uint32;
 #elif (defined(__linux__) || defined(__APPLE__))
 #ifdef LCDRIVER_EXPORTS
 #define LCDRIVER_API __attribute__((visibility("default")))
+#elif defined LCDRIVER_LOCALDEFINES
+#define LCDRIVER_API
 #else
 #define LCDRIVER_API
 #endif
