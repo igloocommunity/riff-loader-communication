@@ -45,7 +45,6 @@ LIBSRC := \
 	source/LcmInterface.cpp\
 	source/LCDriverThread.cpp\
 	source/LCDriverMethods.cpp\
-	source/LcdVersion.cpp\
 	source/LCDriverEntry.cpp\
 	source/LCDriver.cpp\
 	source/LCM/Buffers.cpp\
@@ -57,6 +56,7 @@ LIBSRC := \
 	source/security_algorithms/sha/sha2.cpp\
 	$(AUTO_DIR_LIB)/commands_marshal.cpp\
 	$(AUTO_DIR_LIB)/a2_commands_marshal.cpp\
+	$(AUTO_DIR_LIB)/LcdVersion.cpp\
 	$(AUTO_DIR_LIB)/error_codes_desc.cpp
 ifeq ($(BUILD_WIN),)
 LIBSRC += \
@@ -88,6 +88,7 @@ AUTOGEN_FILES := $(AUTO_DIR_LIB)/command_ids.h\
 		$(AUTO_DIR_LIB)/a2_commands.h\
 		$(AUTO_DIR_LIB)/a2_commands_impl.h\
 		$(AUTO_DIR_LIB)/a2_commands_marshal.cpp\
+		$(AUTO_DIR_LIB)/LcdVersion.cpp\
 		$(AUTO_DIR_LIB)/error_codes_desc.cpp
 
 
@@ -315,6 +316,9 @@ $(AUTO_DIR_LIB)/a2_commands_marshal.cpp: $(LCD_CONFIG)a2_commands.xml $(LCD_CONF
 $(AUTO_DIR_LIB)/error_codes_desc.cpp: $(LCD_CONFIG)lcdriver_error_codes.xml $(LCD_CONFIG)error_codes_desc_cpp.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/error_codes_desc.cpp..."
 	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)lcdriver_error_codes.xml -xsl $(LCD_CONFIG)error_codes_desc_cpp.xsl -out $@ -PARAM errorCodesLcmXml $(LCM_ERR_DESC_PATH)
+
+$(AUTO_DIR_LIB)/LcdVersion.cpp: setup_folders
+	bash $(LCD_DIR)source/gen_version_files.sh --lcd $(abspath $(AUTO_DIR_LIB)) $(abspath $(LCD_DIR))
 
 #setting up needed folders
 $(BUILDFOLDER): | configfile

@@ -108,14 +108,15 @@ LOCAL_MODULE_CLASS := SHARED_LIBRARIES
 # Automatic Code Generation
 LOCAL_AUTO_DIR := $(local-intermediates-dir)/source/autogen
 LOCAL_CONFIG_PATH := $(LOCAL_PATH)/source/config
+SCRIPT_PATH := $(LOCAL_PATH)/source
 
-# Generate lcdriver_error_codes.h
-GEN := $(LOCAL_AUTO_DIR)/lcdriver_error_codes.h
+# Generate lcdriver_error_codes.h, error_codes_desc.cpp
+GEN := $(LOCAL_AUTO_DIR)/lcdriver_error_codes.h $(LOCAL_AUTO_DIR)/error_codes_desc.cpp
 $(GEN) : $(shell mkdir -p $(LOCAL_AUTO_DIR))
 $(GEN) : PRIVATE_INPUT_XML := $(LOCAL_CONFIG_PATH)/lcdriver_error_codes.xml
 $(GEN) : PRIVATE_INPUT_XSL = $(XSL_LOCAL_PATH)/source/config/$(patsubst %.h,%_h.xsl,$(patsubst %.cpp,%_cpp.xsl,$(@F)))
 $(GEN) : $(PRIVATE_INPUT_XML) $(PRIVATE_INPUT_XSL)
-$(GEN) : PRIVATE_CUSTOM_TOOL = java -classpath $(PRIVATE_CLASSPATH) -in $(PRIVATE_INPUT_XML) -xsl $(PRIVATE_INPUT_XSL) -out $@ -PARAM target lcm
+$(GEN) : PRIVATE_CUSTOM_TOOL = java -classpath $(PRIVATE_CLASSPATH) -in $(PRIVATE_INPUT_XML) -xsl $(PRIVATE_INPUT_XSL) -out $@ -PARAM target lcm -PARAM errorCodesLcmXml $(PRIVATE_LC_LCD_DIR)../../lcmodule/source/cnh1606344_ldr_communication_module/config/error_codes.xml
 $(GEN) :
 	$(transform-generated-source)
 	@echo $@
@@ -148,6 +149,16 @@ $(GEN) :
 
 LOCAL_GENERATED_SOURCES += $(GEN)
 
+# Generate LcdVersion.cpp
+GEN := $(LOCAL_AUTO_DIR)/LcdVersion.cpp
+$(GEN) : $(shell mkdir -p $(LOCAL_AUTO_DIR))
+$(GEN) : $(shell bash $(SCRIPT_PATH)/gen_version_files.sh --lcd $(abspath $(LOCAL_AUTO_DIR)) $(abspath $(LOCAL_PATH)))
+$(GEN) :
+	$(transform-generated-source)
+	@echo $@
+
+LOCAL_GENERATED_SOURCES += $(GEN)
+
 LOCAL_SRC_FILES := \
 	source/utilities/Serialization.cpp\
 	source/utilities/Logger.cpp\
@@ -163,7 +174,6 @@ LOCAL_SRC_FILES := \
 	source/LcmInterface.cpp\
 	source/LCDriverThread.cpp\
 	source/LCDriverMethods.cpp\
-	source/LcdVersion.cpp\
 	source/LCDriverEntry.cpp\
 	source/LCDriver.cpp\
 	source/LCM/Hash.cpp\
@@ -238,6 +248,16 @@ $(GEN) :
 
 LOCAL_GENERATED_SOURCES += $(GEN)
 
+# Generate lcm_version.c
+GEN := $(LOCAL_AUTO_DIR)/lcm_version.c
+$(GEN) : $(shell mkdir -p $(LOCAL_AUTO_DIR))
+$(GEN) : $(shell bash $(SCRIPT_PATH)/gen_version_files.sh --lcm $(abspath $(LOCAL_AUTO_DIR)) $(abspath $(LOCAL_PATH)))
+$(GEN) :
+	$(transform-generated-source)
+	@echo $@
+
+LOCAL_GENERATED_SOURCES += $(GEN)
+
 LOCAL_SRC_FILES := \
 	lcmodule/source/cnh1605204_ldr_transport_layer/source/bulk_protocol.c\
 	lcmodule/source/cnh1605204_ldr_transport_layer/source/command_protocol.c\
@@ -256,7 +276,6 @@ LOCAL_SRC_FILES := \
 	lcmodule/source/cnh1605205_ldr_network_layer/source/protrom_header.c\
 	lcmodule/source/cnh1605205_ldr_network_layer/source/protrom_network.c\
 	lcmodule/source/cnh1606344_ldr_communication_module/source/communication_service.c\
-	lcmodule/source/cnh1606344_ldr_communication_module/source/lcm_version.c\
 	lcmodule/source/cnh1606344_ldr_communication_module/source/protrom_family.c\
 	lcmodule/source/cnh1606344_ldr_communication_module/source/z_family.c\
 	lcmodule/source/cnh1606344_ldr_communication_module/source/r15_family.c\

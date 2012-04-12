@@ -55,7 +55,8 @@ AUTOGEN_FILES := $(AUTO_DIR_LIB)/commands.h\
 		$(AUTO_DIR_LOADER)/custom_commands.h\
 		$(AUTO_DIR_LOADER)/custom_command_marshal.c\
 		$(AUTO_DIR_LOADER)/ces_commands.c\
-		$(AUTO_DIR_LOADER)/ces_commands.h
+		$(AUTO_DIR_LOADER)/ces_commands.h\
+		$(LCM_AUTO_DIR)/lcm_version.c
 
 
 LIBSRC :=${TRANSPORT_PATH}/source/bulk_protocol.c\
@@ -75,11 +76,11 @@ LIBSRC :=${TRANSPORT_PATH}/source/bulk_protocol.c\
 	${NETWORK_PATH}/source/protrom_header.c\
 	${NETWORK_PATH}/source/protrom_network.c\
 	${LCM_CNH_PATH}/source/communication_service.c\
-	${LCM_CNH_PATH}/source/lcm_version.c\
 	${LCM_CNH_PATH}/source/protrom_family.c\
 	${LCM_CNH_PATH}/source/z_family.c\
 	${LCM_CNH_PATH}/source/r15_family.c\
 	${LCM_CNH_PATH}/source/a2_family.c\
+	$(LCM_AUTO_DIR)/lcm_version.c\
 	${LCM_PATH}/source/serialization.c
 ifeq ($(BUILD_WIN),)
 LIBSRC +=  ${LCM_PATH}/source/cnh1605551_ldr_utilities/critical_section/critical_section_linux.c
@@ -199,6 +200,10 @@ $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: ${LCM_PATH}/source/%.c  $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CC) $(INCLUDES) $(CFLAGS) -c -m32 $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
 
+$(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/lcm_version.o: $(LCM_AUTO_DIR)/lcm_version.c  $(AUTOGEN_FILES)
+	@mkdir -p $(dir $@)
+	$(CC) $(INCLUDES) $(CFLAGS) -c -m32 $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
+
 ifeq ($(BUILD_WIN),1)
 $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: out/autogen/outLCM.rc $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
@@ -225,6 +230,10 @@ $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: ${LCM_PATH}/source/cnh1605551_ldr_utiliti
 	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
 
 $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: ${LCM_PATH}/source/%.c  $(AUTOGEN_FILES)
+	@mkdir -p $(dir $@)
+	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
+
+$(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/lcm_version.o: $(LCM_AUTO_DIR)/lcm_version.c  $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
 	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
 
@@ -285,6 +294,9 @@ $(AUTO_DIR_LOADER)/custom_commands.h: $(LCM_CUST_CONFIG)/custom_commands.xml $(L
 
 $(AUTO_DIR_LOADER)/custom_command_marshal.c: $(LCM_CUST_CONFIG)/custom_commands.xml $(LCM_CUST_CONFIG)/custom_command_marshal.xsl | setup_folders
 	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CUST_CONFIG)/custom_commands.xml -xsl $(LCM_CUST_CONFIG)/custom_command_marshal.xsl -out $@
+
+$(LCM_AUTO_DIR)/lcm_version.c: setup_folders
+	bash ${LCM_PATH}/../source/gen_version_files.sh --lcm $(abspath $(LCM_AUTO_DIR)) $(abspath $(LCM_PATH))
 
 #setting up needed folders
 $(BUILDFOLDER): | configfile

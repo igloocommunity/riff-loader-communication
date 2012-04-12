@@ -16,7 +16,7 @@
 #endif
 
 char *LcmInterface::m_pchLCMLibPath = 0;
-extern const char *LCD_LCM_CompatibilityList[];
+extern const char LCD_LCM_Compatibility[];
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -203,20 +203,14 @@ ErrorCode_e LcmInterface::CommunicationCheckVersion(char *LCMVersion_p, LCM_t LC
 {
 
     int ReturnValue = LCM_LOAD_INCOMPATIBLE_PC_VERSION;
-    int i = 0;
 
     if (LCMType == LDR_LCM) {
         ReturnValue = LCM_LOAD_INCOMPATIBLE_LDR_VERSION;
     }
 
-    do {
-        if (strcmp(LCMVersion_p, LCD_LCM_CompatibilityList[i]) == 0) {
+        if (strcmp(LCMVersion_p, LCD_LCM_Compatibility) == 0) {
             ReturnValue = E_SUCCESS;
-            break;
         }
-
-        i++;
-    } while (LCD_LCM_CompatibilityList[i] != NULL);
 
     return static_cast<ErrorCode_e>(ReturnValue);
 }
