@@ -353,6 +353,7 @@ ErrorCode_e Do_R15_Bulk_StartSession(Communication_t *Communication_p, TL_BulkVe
 
     BulkVector_p->Status = BULK_SESSION_PROCESSING;
     BulkVector_p->Offset = Offset;
+    BulkVector_p->BulkRetransmissionNo = 0;
 
     /* set the handle for the current bulk vector */
     R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p = BulkVector_p;
@@ -433,6 +434,9 @@ ErrorCode_e Do_R15_Bulk_CloseSession(Communication_t *Communication_p, TL_BulkVe
 
     /* Verify that the requested bulk session is started. */
     VERIFY(NULL != BulkVector_p, E_FAILED_TO_CLOSE_BULK_SESSION);
+
+    /* Reset Bulk retransmission counter */
+    BulkVector_p->BulkRetransmissionNo = 0;
 
     /* Try to release the timer for the bulk read request */
     if (R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey > 0) {
@@ -1205,6 +1209,14 @@ static void R15_Bulk_ReadChunkCallBack(Communication_t *Communication_p, const v
         return;
     }
 
+    BulkVector_p->BulkRetransmissionNo ++;
+
+    if (BulkVector_p->BulkRetransmissionNo > MAX_RESENDS) {
+        A_(printf("bulk_protocol.c(%d) Bulk Retransmission Failed, loader will stop with execution!\n", __LINE__);)
+        R15_NETWORK(Communication_p)->Outbound.LCM_Error = E_RETRANSMITION_FAILED;
+        return;
+    }
+
     if (BULK_SESSION_FINISHED != BulkVector_p->Status) {
         uint32 ChunkId = 0;
         uint8 ChunksList[MAX_BULK_TL_PROCESSES] = {0};
@@ -1212,7 +1224,9 @@ static void R15_Bulk_ReadChunkCallBack(Communication_t *Communication_p, const v
         R15_Bulk_GetListOfReceivedChunks(BulkVector_p, &ChunkId, ChunksList);
         BulkVector_p->State = WAIT_CHUNKS;
 
-        A_(printf("bulk_protocol.c(%d) Timer Retransmission \n", __LINE__);)
+        A_(printf("bulk_protocol.c(%d) Number Of Timer Retransmissions %d \n", __LINE__, BulkVector_p->BulkRetransmissionNo);)
+
+        R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = R15_Bulk_GetTimerChunkRetransmision(Communication_p, R15_TIMEOUTS(Communication_p)->TBDR, (HandleFunction_t)R15_Bulk_ReadChunkCallBack);
 
         (void)R15_Bulk_SendReadRequest(Communication_p, BulkVector_p, ChunkId, ChunksList, NULL);
     }

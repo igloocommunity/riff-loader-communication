@@ -121,6 +121,8 @@ typedef struct {
     TL_BulkProtocolState_t State;
     /** Current bulk session ID. */
     uint16                 SessionId;
+    /** Counter for Bulk Timer Retransmissions. */
+    uint16                 BulkRetransmissionNo;
     /** Length of the file transfered with bulk transfer. */
     uint64                 TotalLength;
     /** Length of payload data transfered with bulk transfer. */
