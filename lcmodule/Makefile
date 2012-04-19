@@ -295,7 +295,7 @@ $(AUTO_DIR_LOADER)/custom_commands.h: $(LCM_CUST_CONFIG)/custom_commands.xml $(L
 $(AUTO_DIR_LOADER)/custom_command_marshal.c: $(LCM_CUST_CONFIG)/custom_commands.xml $(LCM_CUST_CONFIG)/custom_command_marshal.xsl | setup_folders
 	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CUST_CONFIG)/custom_commands.xml -xsl $(LCM_CUST_CONFIG)/custom_command_marshal.xsl -out $@
 
-$(LCM_AUTO_DIR)/lcm_version.c: setup_folders
+$(LCM_AUTO_DIR)/lcm_version.c: ${LCM_PATH}/../source/gen_version_files.sh | setup_folders
 	bash ${LCM_PATH}/../source/gen_version_files.sh --lcm $(abspath $(LCM_AUTO_DIR)) $(abspath $(LCM_PATH))
 
 #setting up needed folders
@@ -303,12 +303,6 @@ $(BUILDFOLDER): | configfile
 	@mkdir -p $@ 2> /dev/null
 
 $(BUILDFOLDER)/.builddummy: | $(BUILDFOLDER)
-	@touch $@
-
-$(LCMLDR_INSTALLDIR): | configfile
-	@mkdir -p $@ 2> /dev/null
-
-$(LCMLDR_INSTALLDIR)/.ldrinstalldummy: | $(LCMLDR_INSTALLDIR)
 	@touch $@
 
 $(LCMLIB_INSTALLDIR): | configfile
@@ -337,7 +331,6 @@ $(LCM_AUTO_DIR)/.autodirdummy : | $(LCM_AUTO_DIR)
 
 .PHONY: setup_folders
 setup_folders: validatevariables
-setup_folders: $(BUILDFOLDER)/.builddummy $(LCMLDR_INSTALLDIR)/.ldrinstalldummy $(LCMLIB_INSTALLDIR)/.libinstalldummy
 setup_folders: $(AUTO_DIR_LOADER)/.autodirldrdummy $(AUTO_DIR_LIB)/.autodirlibdummy $(LCM_AUTO_DIR)/.autodirdummy 
 	@echo $< > /dev/null
 
@@ -353,7 +346,6 @@ validatevariables: configfile
 	$(if $(LCM_AUTO_DIR),, $(error "LCM_AUTO_DIR not set"))
 	$(if $(AUTO_DIR_LOADER),, $(error "AUTO_DIR_LOADER not set"))
 	$(if $(LCMLIB_INSTALLDIR),, $(error "LCMLIB_INSTALLDIR not set"))
-	$(if $(LCMLDR_INSTALLDIR),, $(error "LCMLDR_INSTALLDIR not set"))
 	$(if $(LIB_x32),, $(error "LIB_x32 not set"))
 	$(if $(LIB_x64),, $(error "LIB_x64 not set"))
 	$(if $(LIB_x32_OBJ_DIR),, $(error "LIB_x32_OBJ_DIR not set"))
@@ -373,8 +365,6 @@ configfile: $(if $(wildcard $(config_file)),,config)
 	@echo $< > /dev/null
 
 .PHONY: config
-config: LCMLIB_INSTALLDIR := /tmp/
-config: LCMLDR_INSTALLDIR := /tmp/
 config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
 config: LOADER_DIR := ./
@@ -415,21 +405,33 @@ config:
 	@echo "AUTO_DIR_LOADER := \$$(LCM_AUTO_DIR)/loader" >> $(config_file)
 	@echo "LOADER_DIR := $(LOADER_DIR)" >> $(config_file)
 	@echo "LCMLIB_INSTALLDIR := $(LCMLIB_INSTALLDIR)" >> $(config_file)
-	@echo "LCMLDR_INSTALLDIR := $(LCMLDR_INSTALLDIR)" >> $(config_file)
 	@echo "LIB_x32_OBJ_DIR := $(LIB_x32_OBJ_DIR)" >> $(config_file)
 	@echo "LIB_x64_OBJ_DIR := $(LIB_x64_OBJ_DIR)" >> $(config_file)
 	@echo CONFIG_DIR : $(CONFIG_DIR)
 
 install:
-	install -p -m 0555 ${AUTO_DIR_LOADER}/* ${LCMLDR_INSTALLDIR}
-	install -p -m 0555 ${TRANSPORT_PATH}/source/*.c ${LCMLDR_INSTALLDIR}
-	install -p -m 0555 ${NETWORK_PATH}/source/*.c ${LCMLDR_INSTALLDIR}
-	install -p -m 0555 ${LCM_CNH_PATH}/source/*.c ${LCMLDR_INSTALLDIR}
-	install -p -m 0555 ${TRANSPORT_PATH}/include/*.h ${LCMLDR_INSTALLDIR}
-	install -p -m 0555 ${NETWORK_PATH}/include/*.h ${LCMLDR_INSTALLDIR}
-	install -p -m 0555 ${LCM_CNH_PATH}/include/*.h ${LCMLDR_INSTALLDIR}
-	install -p -m 0555 ${LCM_PATH}/source/serialization.c ${LCMLDR_INSTALLDIR}
+	$(MAKE) -C . start-install
+ifeq ($(USE_MINGW_X32),1)
+	$(MAKE) -C . start-install BUILD_WIN=1
+endif
+ifeq ($(USE_MINGW_X64),1)
+	$(MAKE) -C . start-install BUILD_WIN=2
+endif
 
+start-install: start-build
+ifeq ($(BUILD_WIN),)
+	install -p -m 0755 $(LIB_x32) ${LCMLIB_INSTALLDIR}
+ifeq ($(LBITS),64)
+	install -p -m 0755 $(LIB_x64) ${LCMLIB_INSTALLDIR}
+endif
+else
+ifeq ($(BUILD_WIN),1)
+	install -p -m 0755 $(LIB_x32) ${LCMLIB_INSTALLDIR}
+endif
+ifeq ($(BUILD_WIN),2)
+	install -p -m 0755 $(LIB_x64) ${LCMLIB_INSTALLDIR}
+endif
+endif
 	$(MAKE) -C . start-install
 ifeq ($(USE_MINGW_X32),1)
 	$(MAKE) -C . start-install BUILD_WIN=1
@@ -480,106 +482,9 @@ endif
 		@rm -rf ${BUILDOUT},)
 
 distclean: clean
-	$(if ${LCMLDR_INSTALLDIR}, \
-		@rm -f ${LCMLDR_INSTALLDIR}/a2_family.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_a2_family.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_a2_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/a2_header.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_a2_header.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_a2_transport.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/a2_network.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_a2_network.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_bulk_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/a2_protocol.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_a2_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_command_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/a2_transport.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_a2_transport.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_communication_service.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/audit.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_bulk_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/ti_family.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/audit.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_command_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/ti_header.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/bulk_protocol.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_communication_service.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/ti_network.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/command_ids.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_measurement_tool.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/ti_protocol.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/command_marshal.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/ces_commands.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/ces_commands.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_protrom_family.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/ti_transport.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/command_protocol.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_protrom_header.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_measurement_tool.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/commands.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_protrom_network.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_protrom_header.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/commands_impl.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_protrom_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_protrom_network.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/communication_service.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/lcm_version.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_protrom_transport.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_protrom_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/custom_command_ids.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_r15_family.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_protrom_transport.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/custom_command_marshal.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_r15_header.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_r15_family.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/custom_commands.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_r15_network_layer.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_r15_header.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/custom_commands_impl.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_r15_transport_layer.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_r15_network_layer.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/error_codes.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_ti_family.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_r15_transport_layer.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/measurement_tool.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_ti_header.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_ti_header.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/memmap.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_ti_network.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_ti_network.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/protrom_family.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_ti_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_ti_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/protrom_header.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_ti_transport.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_ti_transport.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/protrom_network.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_z_family.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_z_header.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/protrom_protocol.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_z_network.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_z_network.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/protrom_transport.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_z_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_z_protocol.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/r15_family.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r_z_transport.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/z_family.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r15_header.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/serialization.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/z_network.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r15_network_layer.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_a2_header.h \
-		@rm -f ${LCMLDR_INSTALLDIR}/z_transport.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/r15_transport_layer.c \
-		@rm -f ${LCMLDR_INSTALLDIR}/t_a2_network.h \
+
 		@rm -f ${LCMLIB_INSTALLDIR}/LCM.dll \
 		@rm -f $(LCMLIB_INSTALLDIR)/LCM_x64.dll \
-		@rm -f ${LCMLIB_INSTALLDIR}/liblcm.$(LIB_EXTENSION),)
-ifeq ($(LBITS),64)
-	$(if ${LCMLDR_INSTALLDIR}, \
-		@rm -f ${LCMLIB_INSTALLDIR}/liblcm_x64.$(LIB_EXTENSION),)
-endif
 	$(if ${LCM_AUTO_DIR}, \
 		@rm -rf ${LCM_AUTO_DIR},)
 	$(if $(config_file), \

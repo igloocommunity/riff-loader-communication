@@ -317,7 +317,8 @@ $(AUTO_DIR_LIB)/error_codes_desc.cpp: $(LCD_CONFIG)lcdriver_error_codes.xml $(LC
 	@echo "Generating autogen $(AUTO_DIR_LIB)/error_codes_desc.cpp..."
 	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)lcdriver_error_codes.xml -xsl $(LCD_CONFIG)error_codes_desc_cpp.xsl -out $@ -PARAM errorCodesLcmXml $(LCM_ERR_DESC_PATH)
 
-$(AUTO_DIR_LIB)/LcdVersion.cpp: setup_folders
+$(AUTO_DIR_LIB)/LcdVersion.cpp: $(LCD_DIR)source/gen_version_files.sh | setup_folders
+	@echo "Generating autogen $(AUTO_DIR_LIB)/LcdVersion.cpp..."
 	bash $(LCD_DIR)source/gen_version_files.sh --lcd $(abspath $(AUTO_DIR_LIB)) $(abspath $(LCD_DIR))
 
 #setting up needed folders

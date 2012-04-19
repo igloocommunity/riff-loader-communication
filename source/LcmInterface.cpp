@@ -208,9 +208,9 @@ ErrorCode_e LcmInterface::CommunicationCheckVersion(char *LCMVersion_p, LCM_t LC
         ReturnValue = LCM_LOAD_INCOMPATIBLE_LDR_VERSION;
     }
 
-        if (strcmp(LCMVersion_p, LCD_LCM_Compatibility) == 0) {
-            ReturnValue = E_SUCCESS;
-        }
+    if (strcmp(LCMVersion_p, LCD_LCM_Compatibility) == 0) {
+        ReturnValue = E_SUCCESS;
+    }
 
     return static_cast<ErrorCode_e>(ReturnValue);
 }
