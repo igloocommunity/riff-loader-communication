@@ -2321,6 +2321,8 @@ int CLCDriverMethods::Do_PROTROM_DownloadLoader(const char *pchPath, int iPLOffs
     size_t NumberOfPackets;
     uint32 PayloadOffset;
     uint32 LeftToSend;
+    uint8 *Header_p;
+    uint32 HeaderIdentifier           = 0;
 
     VERIFY_SUCCESS(IsMainThreadAlive());
 
@@ -2328,6 +2330,13 @@ int CLCDriverMethods::Do_PROTROM_DownloadLoader(const char *pchPath, int iPLOffs
     /* coverity[tainted_data_return] */
     loaderData = loaderFile.AllocateFileData(0, loaderFile.GetFileSize());
     VERIFY(0 != loaderData, loaderFile.GetError());
+
+    Header_p = loaderData;
+    // Only version A2 type headers is supported. This is identfied with
+    // HEADER_A2_IDENTIFIER.
+    HeaderIdentifier = (Header_p[0] | (Header_p[1] << 8) | (Header_p[2] << 16) | (Header_p[3] << 24));
+
+    VERIFY((HeaderIdentifier == HEADER_A2_IDENTIFIER), E_LOADER_SEC_LIB_HEADER_VERIFICATION_FAILURE);
 
     //Get header length.
     temp = loaderData + iHLOffset;
@@ -2337,6 +2346,8 @@ int CLCDriverMethods::Do_PROTROM_DownloadLoader(const char *pchPath, int iPLOffs
     //Get payload length.
     temp = loaderData + iPLOffset;
     PL = m_pSerialization->get_uint32_le(&temp);
+
+    VERIFY(((PL + HL_Real) == loaderFile.GetFileSize()), E_LOADER_SEC_LIB_HEADER_VERIFICATION_FAILURE);
 
     VERIFY_SUCCESS(m_pProtromRpcFunctions->DoRPC_PROTROM_SendLoaderHeader(loaderData, HL_Real));
 

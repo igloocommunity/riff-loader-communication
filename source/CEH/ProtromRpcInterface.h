@@ -17,6 +17,9 @@
 /// <summary>
 /// PROTROM command definitions.
 /// </summary>
+
+#define HEADER_A2_IDENTIFIER        (0x0003BEBA)
+
 typedef enum {
     PROTROM_PDU_HEADER = 1,
     PROTROM_PDU_PAYLOAD = 2,
