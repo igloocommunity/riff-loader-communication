@@ -19,7 +19,12 @@ public:
     DWORD Wait(DWORD timeout = INFINITE);
 
 private:
+#if defined(__APPLE__)
     sem_t *m_semaphore;
+#elif defined(__linux__)
+    sem_t m_semaphore;
+#endif
+
 };
 
 #endif /* _CSEMAPHORE_H */

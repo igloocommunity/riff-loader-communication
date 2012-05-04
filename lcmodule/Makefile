@@ -331,7 +331,7 @@ $(LCM_AUTO_DIR)/.autodirdummy : | $(LCM_AUTO_DIR)
 
 .PHONY: setup_folders
 setup_folders: validatevariables
-setup_folders: $(AUTO_DIR_LOADER)/.autodirldrdummy $(AUTO_DIR_LIB)/.autodirlibdummy $(LCM_AUTO_DIR)/.autodirdummy 
+setup_folders: $(AUTO_DIR_LOADER)/.autodirldrdummy $(AUTO_DIR_LIB)/.autodirlibdummy $(LCM_AUTO_DIR)/.autodirdummy $(LCMLIB_INSTALLDIR)/.libinstalldummy
 	@echo $< > /dev/null
 
 

@@ -14,6 +14,7 @@
 
 CSemaphore::CSemaphore(unsigned int initial_count)
 {
+#if defined(__APPLE__)
     char sem_name[SEM_NAME_MAX_LENGTH];
     int sem_nr = 1;
 
@@ -29,11 +30,18 @@ CSemaphore::CSemaphore(unsigned int initial_count)
 
         sem_nr++;
     }
+#elif defined(__linux__)
+    sem_init(&m_semaphore, 0, initial_count);
+#endif
 }
 
 CSemaphore::~CSemaphore()
 {
+#if defined(__APPLE__)
     sem_close(m_semaphore);
+#elif defined(__linux__)
+    sem_destroy(&m_semaphore);
+#endif
 }
 
 bool CSemaphore::Release(unsigned int count)
@@ -43,7 +51,11 @@ bool CSemaphore::Release(unsigned int count)
     }
 
     for (unsigned int i = 0; i < count; ++i) {
+#if defined(__APPLE__)
         if (sem_post(m_semaphore)) {
+#elif defined(__linux__)
+        if (sem_post(&m_semaphore)) {
+#endif
             return false;
         }
     }
@@ -53,6 +65,7 @@ bool CSemaphore::Release(unsigned int count)
 
 DWORD CSemaphore::Wait(DWORD timeout)
 {
+#if defined(__APPLE__)
     if (INFINITE == timeout) {
         sem_wait(m_semaphore);
     } else {
@@ -88,4 +101,21 @@ DWORD CSemaphore::Wait(DWORD timeout)
     }
 
     return WAIT_OBJECT_0;
+#elif defined(__linux__)
+    if (INFINITE == timeout) {
+        sem_wait(&m_semaphore);
+    } else {
+        timespec absoulute_time = OS::GetAbsoluteTime(timeout);
+        int ret;
+
+        /* coverity[returned_null] */
+        while (-1 == (ret = sem_timedwait(&m_semaphore, &absoulute_time)) && errno == EINTR);
+
+        if (0 != ret) {
+            return WAIT_TIMEOUT;
+        }
+    }
+
+    return WAIT_OBJECT_0;
+#endif
 }

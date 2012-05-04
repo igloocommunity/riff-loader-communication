@@ -18,6 +18,7 @@
 // ******************************************************************************
 CEventObject::CEventObject()
 {
+#if defined(__APPLE__)
     char sem_name[SEM_NAME_MAX_LENGTH];
     int sem_nr = 1;
 
@@ -33,6 +34,9 @@ CEventObject::CEventObject()
 
         sem_nr++;
     }
+#elif defined(__linux__)
+    sem_init(&m_sem, 0, 0);
+#endif
 }
 
 // ******************************************************************************
@@ -42,7 +46,11 @@ CEventObject::CEventObject()
 // ******************************************************************************
 CEventObject::~CEventObject()
 {
+#if defined(__APPLE__)
     sem_close(m_sem);
+#elif defined(__linux__)
+    sem_destroy(&m_sem);
+#endif
 }
 
 // ******************************************************************************
@@ -52,7 +60,11 @@ CEventObject::~CEventObject()
 // ******************************************************************************
 void CEventObject::SetEvent()
 {
+#if defined(__APPLE__)
     sem_post(m_sem);
+#elif defined(__linux__)
+    sem_post(&m_sem);
+#endif
 }
 
 // ******************************************************************************
@@ -62,6 +74,7 @@ void CEventObject::SetEvent()
 // ******************************************************************************
 DWORD CEventObject::Wait(DWORD dwTimeout)
 {
+#if defined(__APPLE__)
     if (INFINITE == dwTimeout) {
         sem_wait(m_sem);
     } else {
@@ -97,4 +110,23 @@ DWORD CEventObject::Wait(DWORD dwTimeout)
     }
 
     return WAIT_OBJECT_0;
+
+#elif defined(__linux__)
+    if (INFINITE == dwTimeout) {
+        sem_wait(&m_sem);
+        return WAIT_OBJECT_0;
+    } else {
+        timespec absolute_time = OS::GetAbsoluteTime(dwTimeout);
+        int ret;
+
+        /* coverity[returned_null] */
+        while (-1 == (ret = sem_timedwait(&m_sem, &absolute_time)) && errno == EINTR);
+
+        if (0 == ret) {
+            return WAIT_OBJECT_0;
+        } else {
+            return WAIT_TIMEOUT;
+        }
+    }
+#endif
 }

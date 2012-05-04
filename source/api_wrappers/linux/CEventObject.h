@@ -33,7 +33,11 @@ public:
     void UnsetEvent();
     DWORD Wait(DWORD dwTimeout = INFINITE);
 private:
+#if defined(__APPLE__)
     sem_t *m_sem;
+#elif defined(__linux__)
+    sem_t m_sem;
+#endif
 };
 
 #endif /* _CEVENTOBJECT_H */

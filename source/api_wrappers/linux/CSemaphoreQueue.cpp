@@ -13,7 +13,11 @@
 CSemaphoreQueue::CSemaphoreQueue(unsigned int MaxCount) : m_MaximumCount(MaxCount)
 {
     m_pEventObject = new CEventObject();
+#if defined(__APPLE__)
     m_pSemaphore = new CSemaphore(0);
+#elif defined(__linux__)
+    m_pSemaphore = new CSemaphore();
+#endif
 
     m_ObjectCollection.Add(m_pEventObject);
     m_ObjectCollection.Add(m_pSemaphore);
