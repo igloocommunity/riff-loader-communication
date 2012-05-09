@@ -20,6 +20,7 @@ LCM_CONFIG:=$(LCM_CNH_PATH)/config
 LCM_CUST_CONFIG:=$(LCM_PATH)/customer_config
 SUPPORTED_CMDS_PATH:=$(LOADER_DIR)/src/platform_support/stn8500/config/supported_commands.xml
 
+
 ifneq ($(shell which $(MINGW_X32_CC)gcc), )
 USE_MINGW_X32 := 1
 else
@@ -126,13 +127,11 @@ endif
 build:
 	$(MAKE) -C . start-build
 ifeq ($(USE_MINGW_X32),1)
-	bash ${LCM_PATH}/../source/gen_rc.sh --lcm
 	$(MAKE) -C . start-build BUILD_WIN=1
 else
 	@echo "*** warning: No Cross Compiler $(MINGW_X32_CC)gcc found ***"
 endif
 ifeq ($(USE_MINGW_X64),1)
-	bash ${LCM_PATH}/../source/gen_rc.sh --lcm
 	$(MAKE) -C . start-build BUILD_WIN=2
 else
 	@echo "*** warning: No Cross Compiler $(MINGW_X64_CC)gcc found ***"
@@ -205,9 +204,9 @@ $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/lcm_version.o: $(LCM_AUTO_DIR)/lcm_version.c  
 	$(CC) $(INCLUDES) $(CFLAGS) -c -m32 $< -o $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
 
 ifeq ($(BUILD_WIN),1)
-$(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: out/autogen/outLCM.rc $(AUTOGEN_FILES)
+$(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: $(LCM_AUTO_DIR)/outLCM.rc $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
-	$(MINGW_X32_CC)windres out/autogen/outLCM.rc $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
+	$(MINGW_X32_CC)windres $(LCM_AUTO_DIR)/outLCM.rc $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
 endif
 
 #
@@ -238,9 +237,9 @@ $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/lcm_version.o: $(LCM_AUTO_DIR)/lcm_version.c  
 	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
 
 ifeq ($(BUILD_WIN),2)
-$(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: out/autogen/outLCM.rc $(AUTOGEN_FILES)
+$(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: $(LCM_AUTO_DIR)/outLCM.rc $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
-	$(MINGW_X64_CC)windres out/autogen/outLCM.rc $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
+	$(MINGW_X64_CC)windres $(LCM_AUTO_DIR)/outLCM.rc $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
 endif
 
 #Autogen files
@@ -298,6 +297,9 @@ $(AUTO_DIR_LOADER)/custom_command_marshal.c: $(LCM_CUST_CONFIG)/custom_commands.
 $(LCM_AUTO_DIR)/lcm_version.c: ${LCM_PATH}/../source/gen_version_files.sh | setup_folders
 	bash ${LCM_PATH}/../source/gen_version_files.sh --lcm $(abspath $(LCM_AUTO_DIR)) $(abspath $(LCM_PATH))
 
+$(LCM_AUTO_DIR)/outLCM.rc: ${LCM_PATH}/../source/gen_rc.sh | setup_folders
+	bash ${LCM_PATH}/../source/gen_rc.sh --lcm $(abspath $(LCM_AUTO_DIR))
+
 #setting up needed folders
 $(BUILDFOLDER): | configfile
 	@mkdir -p $@ 2> /dev/null
@@ -331,7 +333,8 @@ $(LCM_AUTO_DIR)/.autodirdummy : | $(LCM_AUTO_DIR)
 
 .PHONY: setup_folders
 setup_folders: validatevariables
-setup_folders: $(AUTO_DIR_LOADER)/.autodirldrdummy $(AUTO_DIR_LIB)/.autodirlibdummy $(LCM_AUTO_DIR)/.autodirdummy $(LCMLIB_INSTALLDIR)/.libinstalldummy
+setup_folders: $(BUILDFOLDER)/.builddummy $(LCMLIB_INSTALLDIR)/.libinstalldummy
+setup_folders: $(AUTO_DIR_LOADER)/.autodirldrdummy $(AUTO_DIR_LIB)/.autodirlibdummy $(LCM_AUTO_DIR)/.autodirdummy
 	@echo $< > /dev/null
 
 
@@ -369,11 +372,17 @@ config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
 config: LOADER_DIR := ./
 config:
+ifeq ($(CONFIG_DIR),)
+    BUILDOUT := $(LCM_PATH)/out
+else
+    BUILDOUT := $(CONFIG_DIR)/out
+endif
+config:
 	@echo Generating config file...
 	@echo config_file : $(config_file)
 	@rm -f $(config_file)
 	@touch $(config_file)
-	@echo "BUILDOUT := \$$(LCM_PATH)/out" >> $(config_file)
+	@echo "BUILDOUT := $(BUILDOUT)" >> $(config_file)
 
 	@echo "ifeq (\$$(BUILD_WIN),)" >> $(config_file)
 	@echo "BUILDFOLDER := \$$(BUILDOUT)/out_linux" >> $(config_file)
@@ -461,16 +470,15 @@ clean:
 	$(MAKE) -C . start-clean BUILD_WIN=2
 
 start-clean:
-	@rm -f $(LCM_PATH)out/autogen/outLCM.rc
 	$(if ${BUILDFOLDER}, \
 		$(if ${LIB_x32_OBJ_DIR}, \
-			@rm -rf ${BUILDFOLDER}/${LIB_x32_OBJ_DIR}/*.o \
+			@rm -f ${BUILDFOLDER}/${LIB_x32_OBJ_DIR}/*.o \
 			@rm -rf ${BUILDFOLDER}/${LIB_x32_OBJ_DIR} \
 			@rm -rf ${BUILDFOLDER},),)
 ifeq ($(LBITS),64)
 	$(if ${BUILDFOLDER}, \
 		$(if ${LIB_x64_OBJ_DIR}, \
-			@rm -rf ${BUILDFOLDER}/${LIB_x64_OBJ_DIR}/*.o \
+			@rm -f ${BUILDFOLDER}/${LIB_x64_OBJ_DIR}/*.o \
 			@rm -rf ${BUILDFOLDER}/${LIB_x64_OBJ_DIR} \
 			@rm -rf ${BUILDFOLDER},),)
 endif
@@ -482,9 +490,11 @@ endif
 		@rm -rf ${BUILDOUT},)
 
 distclean: clean
-
+	$(if ${LCMLIB_INSTALLDIR}, \
 		@rm -f ${LCMLIB_INSTALLDIR}/LCM.dll \
 		@rm -f $(LCMLIB_INSTALLDIR)/LCM_x64.dll \
+		@rm -f ${LCMLIB_INSTALLDIR}/liblcm.$(LIB_EXTENSION) \
+		@rm -f ${LCMLIB_INSTALLDIR}/liblcm_x64.$(LIB_EXTENSION),)
 	$(if ${LCM_AUTO_DIR}, \
 		@rm -rf ${LCM_AUTO_DIR},)
 	$(if $(config_file), \

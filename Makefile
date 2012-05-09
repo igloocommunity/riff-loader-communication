@@ -137,14 +137,12 @@ build: $(SCRIPT)
 	$(MAKE) -C . start-build
 # Start Win x32 Build
 ifeq ($(USE_MINGW_X32),1)
-	bash $(LCD_DIR)source/gen_rc.sh --lcd
 	$(MAKE) -C . start-build BUILD_WIN=1
 else
 	@echo "*** warning: No Cross Compiler $(MINGW_X32_CC)g++ found ***"
 endif
 # Start Win x64 Build
 ifeq ($(USE_MINGW_X64),1)
-	bash $(LCD_DIR)source/gen_rc.sh --lcd
 	$(MAKE) -C . start-build BUILD_WIN=2
 else
 	@echo "*** warning: No Cross Compiler $(MINGW_X64_CC)g++ found ***"
@@ -228,9 +226,9 @@ $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: source/api_wrappers/linux/%.cpp $(AUTOGEN
 endif
 
 ifeq ($(BUILD_WIN),1)
-$(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: out/autogen/outLCDriver.rc $(AUTOGEN_FILES)
+$(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/%.o: $(AUTO_DIR_LIB)/outLCDriver.rc $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
-	$(MINGW_X32_CC)windres out/autogen/outLCDriver.rc $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
+	$(MINGW_X32_CC)windres $(AUTO_DIR_LIB)/outLCDriver.rc $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/$(@F)
 endif
 
 #
@@ -271,9 +269,9 @@ $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: source/api_wrappers/linux/%.cpp $(AUTOGEN
 endif
 
 ifeq ($(BUILD_WIN),2)
-$(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: out/autogen/outLCDriver.rc $(AUTOGEN_FILES)
+$(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: $(AUTO_DIR_LIB)/outLCDriver.rc $(AUTOGEN_FILES)
 	@mkdir -p $(dir $@)
-	$(MINGW_X64_CC)windres out/autogen/outLCDriver.rc $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
+	$(MINGW_X64_CC)windres $(AUTO_DIR_LIB)/outLCDriver.rc $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/$(@F)
 endif
 
 #Autogen files
@@ -320,6 +318,10 @@ $(AUTO_DIR_LIB)/error_codes_desc.cpp: $(LCD_CONFIG)lcdriver_error_codes.xml $(LC
 $(AUTO_DIR_LIB)/LcdVersion.cpp: $(LCD_DIR)source/gen_version_files.sh | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/LcdVersion.cpp..."
 	bash $(LCD_DIR)source/gen_version_files.sh --lcd $(abspath $(AUTO_DIR_LIB)) $(abspath $(LCD_DIR))
+
+$(AUTO_DIR_LIB)/outLCDriver.rc: $(LCD_DIR)source/gen_rc.sh | setup_folders
+	@echo "Generating autogen $(AUTO_DIR_LIB)/outLCDriver.rc..."
+	bash $(LCD_DIR)source/gen_rc.sh --lcd $(AUTO_DIR_LIB)
 
 #setting up needed folders
 $(BUILDFOLDER): | configfile
@@ -374,10 +376,16 @@ config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
 config: LCD_INSTALLDIR := /tmp/
 config:
+ifeq ($(CONFIG_DIR),)
+    BUILDOUT := $(LCD_DIR)out
+else
+    BUILDOUT := $(CONFIG_DIR)/out
+endif
+config:
 	@echo Generating config file...
 	@rm -f $(config_file)
 	@touch $(config_file)
-	@echo "BUILDOUT := \$$(LCD_DIR)out" >> $(config_file)
+	@echo "BUILDOUT := $(BUILDOUT)" >> $(config_file)
 
 	@echo "ifeq (\$$(BUILD_WIN),)" >> $(config_file)
 	@echo "BUILDFOLDER := \$$(BUILDOUT)/out_linux" >> $(config_file)
@@ -440,7 +448,6 @@ clean:
 	$(MAKE) -C . start-clean BUILD_WIN=2
 
 start-clean:
-	@rm -f $(LCD_DIR)out/autogen/outLCDriver.rc
 	$(if $(BUILDFOLDER), \
 		$(if $(LIB_x32_OBJ_DIR), \
 			@rm -rf $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR) \

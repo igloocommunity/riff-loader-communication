@@ -54,11 +54,11 @@ install-lcm: build-lcm
 	$(MAKE) -C $(PRIVATE_LC_LCM_DIR) $(PRIVATE_LC_LCM_FLAGS) CONFIG_DIR=$(PRIVATE_LC_LCM_OUT_DIR) install
 
 .PHONY: clean-lcm
-clean-lcm:
+clean-lcm: config-lcm
 	$(MAKE) -C $(PRIVATE_LC_LCM_DIR) $(PRIVATE_LC_LCM_FLAGS) CONFIG_DIR=$(PRIVATE_LC_LCM_OUT_DIR) clean
 
 .PHONY: distclean-lcm
-distclean-lcm:
+distclean-lcm: config-lcm
 	$(MAKE) -C $(PRIVATE_LC_LCM_DIR) $(PRIVATE_LC_LCM_FLAGS) CONFIG_DIR=$(PRIVATE_LC_LCM_OUT_DIR) distclean
 
 #LCD TARGETS
@@ -77,11 +77,11 @@ install-lcd: build-lcd
 	$(MAKE) -C $(PRIVATE_LC_LCD_DIR) $(PRIVATE_LC_LCD_FLAGS) CONFIG_DIR=$(PRIVATE_LC_LCD_OUT_DIR) install
 
 .PHONY: clean-lcd
-clean-lcd:
+clean-lcd: config-lcd
 	$(MAKE) -C $(PRIVATE_LC_LCD_DIR) $(PRIVATE_LC_LCD_FLAGS) CONFIG_DIR=$(PRIVATE_LC_LCD_OUT_DIR) clean
 
 .PHONY: distclean-lcd
-distclean-lcd:
+distclean-lcd: config-lcd
 	$(MAKE) -C $(PRIVATE_LC_LCD_DIR) $(PRIVATE_LC_LCD_FLAGS) CONFIG_DIR=$(PRIVATE_LC_LCD_OUT_DIR) distclean
 
 clean clobber: clean-lcm clean-lcd

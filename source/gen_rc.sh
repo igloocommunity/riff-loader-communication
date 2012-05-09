@@ -20,8 +20,9 @@ DATE=""
 #git revision info
 VERSION=""
 
-LCD_RC_PATH=out/autogen/outLCDriver.rc
-LCM_RC_PATH=out/autogen/outLCM.rc
+path=$2
+LCD_RC_PATH=$path/outLCDriver.rc
+LCM_RC_PATH=$path/outLCM.rc
 
 # ------------------------------INTERNAL FUNCTIONS ----------------------------
 
