@@ -230,6 +230,7 @@ ErrorCode_e R15_Network_ReceiverHandler(Communication_t *Communication_p)
                     ReqData - In_p->RecBackupData, R15_Network_ReadCallback,
                     Communication_p->CommunicationDevice_p)) {
                     /* Read failed! Return to previous state. */
+                    A_(printf("r15_network_layer.c (%d) R15_Network_ReceiverHandler() Read Failed!\n", __LINE__);)
                     In_p->ReqData = ReqData;
                     In_p->ReqBuffOffset = ReqBufferOffset;
                     Communication_p->BackupCommBufferSize = In_p->RecBackupData;
@@ -274,6 +275,7 @@ ErrorCode_e R15_Network_ReceiverHandler(Communication_t *Communication_p)
                 In_p->Target_p + ReqBufferOffset, ReqData, R15_Network_ReadCallback,
                 Communication_p->CommunicationDevice_p)) {
                 /* Read failed! Return to previous state. */
+                A_(printf("r15_network_layer.c (%d) R15_Network_ReceiverHandler() Read Failed!\n", __LINE__);)
                 In_p->ReqData = ReqData;
                 In_p->ReqBuffOffset = ReqBufferOffset;
             }
@@ -292,6 +294,8 @@ ErrorCode_e R15_Network_ReceiverHandler(Communication_t *Communication_p)
         In_p->RecData = 0;
         In_p->ReqBuffOffset = 0;
 #ifdef CFG_ENABLE_LOADER_TYPE
+
+        A_(printf("r15_network_layer.c (%d) R15_Network_ReceiverHandler() Receive Error ! \n\n", __LINE__);)
 
         if (E_SUCCESS == Communication_p->CommunicationDevice_p->Read(In_p->Target_p,
         ALIGNED_HEADER_LENGTH, R15_Network_ReadCallback,
@@ -354,6 +358,7 @@ StartTramsmitter:
             Out_p->State = SEND_HEADER;
         } else {
             //Do_CommunicationInternalErrorHandler(E_RETRANSMITION_FAILED);
+            A_(printf("r15_network_layer.c (%d) Packet Retransmission Failed! Polling will stop!\n", __LINE__);)
             ReturnValue = E_RETRANSMITION_FAILED;
             break;
         }
@@ -742,6 +747,7 @@ static ErrorCode_e R15_Network_ReceiveHeader(const Communication_t *const Commun
     A_(static uint8 print_header = 1;)
 
     if (In_p->RecData == 0) {
+        A_(printf("r15_network_layer.c (%d) Synchronize for Receiving Header!\n", __LINE__);)
         In_p->ReqData = ALIGNED_HEADER_LENGTH;
         In_p->Target_p = In_p->Scratch;
         In_p->ReqBuffOffset = 0;

@@ -58,6 +58,7 @@ extern Communication_t *GlobalCommunication_p;
 
 extern Communication_t DebugCommunication;
 
+extern char LCM_CurrentVersion[];
 
 /*******************************************************************************
  * Declaration of functions

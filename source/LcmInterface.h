@@ -17,6 +17,8 @@
 typedef void *HMODULE;
 #endif
 
+extern char LCD_LCM_Compatibility[];
+
 typedef ErrorCode_e(*CommunicationInitialize_t)(void *Object_p, Communication_t **Communication_pp, Family_t Family, HashDevice_t *HashDevice_p, CommunicationDevice_t *CommunicationDevice_p, Do_CEH_Call_t CommandCallback_p, BuffersInterface_t *Buffers_p, TimersInterface_t *Timers_p, QueueInterface_t *Queue_p);
 typedef ErrorCode_e(*CommunicationShutdown_t)(Communication_t **Communication_pp);
 typedef ErrorCode_e(*CommunicationPoll_t)(Communication_t *Communication_p);

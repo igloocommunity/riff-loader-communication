@@ -374,10 +374,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\cnh1606344_ldr_communication_module\source\lcm_version.c"
-					>
-				</File>
-				<File
 					RelativePath=".\cnh1606344_ldr_communication_module\source\protrom_family.c"
 					>
 				</File>

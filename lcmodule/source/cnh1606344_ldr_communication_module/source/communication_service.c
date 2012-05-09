@@ -34,10 +34,6 @@
 #include "r_z_transport.h"
 #endif
 
-
-extern char LCM_CurrentVersion[];
-
-
 /*******************************************************************************
  * File scope types, constants and variables
  ******************************************************************************/
@@ -45,6 +41,16 @@ extern char LCM_CurrentVersion[];
 
 Communication_t GlobalCommunication = {0};
 Communication_t *GlobalCommunication_p = &GlobalCommunication;
+
+#if !(defined(__MINGW32__) || defined(__linux__) || defined(__APPLE__))
+#ifdef CFG_ENABLE_LOADER_TYPE
+#ifndef MACH_TYPE_STN8500
+char LCM_CurrentVersion[] = ""; // Generate Empty String for Loader Builds on ClearCase
+#endif // MACH_TYPE_STN8500
+#else
+char LCM_CurrentVersion[] = "TestBuild"; // Generate Test String for unofficial builds in Windows environment
+#endif // CFG_ENABLE_LOADER_TYPE
+#endif // __MINGW32__ || __linux__ || __APPLE__
 
 static FamilyDescriptor_t ProtocolFamilies[] = {
     {

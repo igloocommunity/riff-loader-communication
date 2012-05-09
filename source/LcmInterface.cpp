@@ -16,7 +16,9 @@
 #endif
 
 char *LcmInterface::m_pchLCMLibPath = 0;
-extern const char LCD_LCM_Compatibility[];
+#if !(defined(__MINGW32__) || defined(__linux__) || defined(__APPLE__))
+char LCD_LCM_Compatibility[] = "TestBuild"; // Generate Test String for unofficial builds in Windows environment
+#endif // __MINGW32__ || __linux__ || __APPLE__
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////

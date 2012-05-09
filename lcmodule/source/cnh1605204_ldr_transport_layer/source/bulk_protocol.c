@@ -468,8 +468,8 @@ ErrorCode_e R15_Bulk_Process(Communication_t *Communication_p, PacketMeta_t *Pac
 {
     ErrorCode_e ReturnValue = E_SUCCESS;
     BulkExtendedHeader_t ExtendedHeader = {0};
-#ifdef  CFG_ENABLE_LOADER_TYPE
     TL_BulkVectorList_t *BulkVector_p = R15_TRANSPORT(Communication_p)->BulkHandle.BulkVector_p;
+#ifdef  CFG_ENABLE_LOADER_TYPE
     TL_BulkVectorList_t *PreviousBulkVector_p = &(R15_TRANSPORT(Communication_p)->PreviousBulkVector);
     uint32 ChunksCount = 0;
     uint8 ChunksList[MAX_BULK_TL_PROCESSES];
@@ -520,11 +520,45 @@ ErrorCode_e R15_Bulk_Process(Communication_t *Communication_p, PacketMeta_t *Pac
     case CMD_BULK_WRITE:
 
         if (NULL != R15_TRANSPORT(Communication_p)->BulkCommandCallback_p) {
-            BulkCommandReqCallback_t pcbf = (BulkCommandReqCallback_t)R15_TRANSPORT(Communication_p)->BulkCommandCallback_p;
-            pcbf(Communication_p->Object_p, ExtendedHeader.Session, ExtendedHeader.ChunkSize, ExtendedHeader.Offset, ExtendedHeader.Length, FALSE);
+            if ((NULL != BulkVector_p) && (ExtendedHeader.Session <= BulkVector_p->SessionId)) {
+                if (WAIT_CHUNKS == BulkVector_p->State) {
+                    /* Read Request already sent to the loader, but probably it was not received correctly,
+                       or the timeout in the loader for the Write Request Packet is too short. */
+                    uint32 ChunkId = 0;
+                    uint8 ChunksList[MAX_BULK_TL_PROCESSES] = {0};
+
+                    A_(printf("bulk_protocol.c (%d): Write Request packet Received. Session %d already started! Read Request ignored in Loader!\n", __LINE__, ExtendedHeader.Session);)
+
+                    /* Try to release the timer for the bulk read request */
+                    if (R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey > 0) {
+                        (void)TIMER(Communication_p, TimerRelease_Fn)(OBJECT_TIMER(Communication_p), R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey);
+                        R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = 0;
+                    }
+
+                    R15_Bulk_GetListOfReceivedChunks(BulkVector_p, &ChunkId, ChunksList);
+                    R15_TRANSPORT(Communication_p)->BulkHandle.TimerKey = R15_Bulk_GetTimerChunkRetransmision(Communication_p, R15_TIMEOUTS(Communication_p)->TBDR, (HandleFunction_t)R15_Bulk_ReadChunkCallBack);
+
+                    if (0 != ChunkId) {
+                        ReturnValue = R15_Bulk_SendReadRequest(Communication_p, BulkVector_p, ChunkId, ChunksList, NULL);
+                    } else {
+                        ReturnValue = R15_Bulk_SendReadRequest(Communication_p, BulkVector_p, 0, NULL, (void *)R15_Bulk_ReadChunkCallBack);
+                    }
+                } else if (SEND_READ_REQUEST == BulkVector_p->State) {
+                    /* Write Request received from the loader and the LCM is in process of sending of Read Request packet.
+                       Probably the timeout in the loader for the Write Request Packet is too short. Packet will be ignored! */
+                    A_(printf("bulk_protocol.c (%d): Write Request packet will be Ignored. Session %d already started! ReadRequest in process of sending!\n", __LINE__, ExtendedHeader.Session);)
+                } else {
+                    /* Write Request received from the loader and it is still being processed by LCM.
+                       Probably the timeout in the loader for the Write Request Packet is too short. Packet will be ignored! */
+                    A_(printf("bulk_protocol.c (%d): Write Request packet will be Ignored. Session %d already started! Problem Undefined!\n", __LINE__, ExtendedHeader.Session);)
+                }
+            } else {
+                BulkCommandReqCallback_t pcbf = (BulkCommandReqCallback_t)R15_TRANSPORT(Communication_p)->BulkCommandCallback_p;
+                pcbf(Communication_p->Object_p, ExtendedHeader.Session, ExtendedHeader.ChunkSize, ExtendedHeader.Offset, ExtendedHeader.Length, FALSE);
+            }
         }
 
-        /* release the buffer for undefined command */
+        /* release the buffer for Bulk Write command */
         ReturnValue = R15_Network_PacketRelease(Communication_p, Packet_p);
         break;
 #endif
@@ -532,13 +566,13 @@ ErrorCode_e R15_Bulk_Process(Communication_t *Communication_p, PacketMeta_t *Pac
     case CMD_BULK_STATUS:
         // not implemented.
         A_(printf("bulk_protocol.c (%d): ** Not implemented bulk command! **\n", __LINE__);)
-        /* release the buffer for unimplemented command */
+        /* release the buffer for Bulk Status command */
         ReturnValue = R15_Network_PacketRelease(Communication_p, Packet_p);
         break;
 
     default:
         A_(printf("bulk_protocol.c (%d): ** Undefined bulk command! **\n", __LINE__);)
-        /* release the buffer for undefined command */
+        /* Undefined Bulk command!!! Release the buffer.  */
         ReturnValue = R15_Network_PacketRelease(Communication_p, Packet_p);
         break;
     }
