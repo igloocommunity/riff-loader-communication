@@ -276,44 +276,45 @@ endif
 
 #Autogen files
 $(AUTO_DIR_LIB)/command_ids.h: $(LCD_CONFIG)commands.xml $(LCD_CONFIG)command_ids_h.xsl | setup_folders
+	@echo "xalan: $(XALAN)"
 	@echo "Generating autogen $(AUTO_DIR_LIB)/command_ids.h..."
-	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)commands.xml -xsl $(LCD_CONFIG)command_ids_h.xsl -out $(AUTO_DIR_LIB)/command_ids.h
+	@java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCD_CONFIG)commands.xml -xsl $(LCD_CONFIG)command_ids_h.xsl -out $(AUTO_DIR_LIB)/command_ids.h
 
 $(AUTO_DIR_LIB)/commands.h: $(LCD_CONFIG)commands.xml $(LCD_CONFIG)commands_h.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/commands.h..."
-	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)commands.xml -xsl $(LCD_CONFIG)commands_h.xsl -out $(AUTO_DIR_LIB)/commands.h
+	@java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCD_CONFIG)commands.xml -xsl $(LCD_CONFIG)commands_h.xsl -out $(AUTO_DIR_LIB)/commands.h
 
 $(AUTO_DIR_LIB)/commands_impl.h: $(LCD_CONFIG)commands.xml $(LCD_CONFIG)commands_impl_h.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/commands_impl.h..."
-	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)commands.xml -xsl $(LCD_CONFIG)commands_impl_h.xsl -out $(AUTO_DIR_LIB)/commands_impl.h
+	@java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCD_CONFIG)commands.xml -xsl $(LCD_CONFIG)commands_impl_h.xsl -out $(AUTO_DIR_LIB)/commands_impl.h
 
 $(AUTO_DIR_LIB)/commands_marshal.cpp: $(LCD_CONFIG)commands.xml $(LCD_CONFIG)commands_marshal_cpp.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/commands_marshal.cpp..."
-	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)commands.xml -xsl $(LCD_CONFIG)commands_marshal_cpp.xsl -out $(AUTO_DIR_LIB)/commands_marshal.cpp
+	@java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCD_CONFIG)commands.xml -xsl $(LCD_CONFIG)commands_marshal_cpp.xsl -out $(AUTO_DIR_LIB)/commands_marshal.cpp
 
 $(AUTO_DIR_LIB)/lcdriver_error_codes.h: $(LCD_CONFIG)lcdriver_error_codes.xml $(LCD_CONFIG)lcdriver_error_codes_h.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/lcdriver_error_codes.h..."
-	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)lcdriver_error_codes.xml -xsl $(LCD_CONFIG)lcdriver_error_codes_h.xsl -out $(AUTO_DIR_LIB)/lcdriver_error_codes.h
+	@java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCD_CONFIG)lcdriver_error_codes.xml -xsl $(LCD_CONFIG)lcdriver_error_codes_h.xsl -out $(AUTO_DIR_LIB)/lcdriver_error_codes.h
 
 $(AUTO_DIR_LIB)/a2_command_ids.h: $(LCD_CONFIG)a2_commands.xml $(LCD_CONFIG)a2_command_ids_h.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/a2_command_ids.h..."
-	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)a2_commands.xml -xsl $(LCD_CONFIG)a2_command_ids_h.xsl -out $(AUTO_DIR_LIB)/a2_command_ids.h
+	@java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCD_CONFIG)a2_commands.xml -xsl $(LCD_CONFIG)a2_command_ids_h.xsl -out $(AUTO_DIR_LIB)/a2_command_ids.h
 
 $(AUTO_DIR_LIB)/a2_commands.h: $(LCD_CONFIG)a2_commands.xml $(LCD_CONFIG)a2_commands_h.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/a2_commands.h..."
-	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)a2_commands.xml -xsl $(LCD_CONFIG)a2_commands_h.xsl -out $(AUTO_DIR_LIB)/a2_commands.h
+	@java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCD_CONFIG)a2_commands.xml -xsl $(LCD_CONFIG)a2_commands_h.xsl -out $(AUTO_DIR_LIB)/a2_commands.h
 
 $(AUTO_DIR_LIB)/a2_commands_impl.h: $(LCD_CONFIG)a2_commands.xml $(LCD_CONFIG)a2_commands_impl_h.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/a2_commands_impl.h..."
-	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)a2_commands.xml -xsl $(LCD_CONFIG)a2_commands_impl_h.xsl -out $(AUTO_DIR_LIB)/a2_commands_impl.h
+	@java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCD_CONFIG)a2_commands.xml -xsl $(LCD_CONFIG)a2_commands_impl_h.xsl -out $(AUTO_DIR_LIB)/a2_commands_impl.h
 
 $(AUTO_DIR_LIB)/a2_commands_marshal.cpp: $(LCD_CONFIG)a2_commands.xml $(LCD_CONFIG)a2_commands_marshal_cpp.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/a2_commands_marshal.cpp..."
-	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)a2_commands.xml -xsl $(LCD_CONFIG)a2_commands_marshal_cpp.xsl -out $(AUTO_DIR_LIB)/a2_commands_marshal.cpp
+	@java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCD_CONFIG)a2_commands.xml -xsl $(LCD_CONFIG)a2_commands_marshal_cpp.xsl -out $(AUTO_DIR_LIB)/a2_commands_marshal.cpp
 
 $(AUTO_DIR_LIB)/error_codes_desc.cpp: $(LCD_CONFIG)lcdriver_error_codes.xml $(LCD_CONFIG)error_codes_desc_cpp.xsl | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/error_codes_desc.cpp..."
-	@java -classpath $(XALAN_PATH)xalan.jar org.apache.xalan.xslt.Process -in $(LCD_CONFIG)lcdriver_error_codes.xml -xsl $(LCD_CONFIG)error_codes_desc_cpp.xsl -out $@ -PARAM errorCodesLcmXml $(LCM_ERR_DESC_PATH)
+	@java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCD_CONFIG)lcdriver_error_codes.xml -xsl $(LCD_CONFIG)error_codes_desc_cpp.xsl -out $@ -PARAM errorCodesLcmXml $(LCM_ERR_DESC_PATH)
 
 $(AUTO_DIR_LIB)/LcdVersion.cpp: $(LCD_DIR)source/gen_version_files.sh | setup_folders
 	@echo "Generating autogen $(AUTO_DIR_LIB)/LcdVersion.cpp..."
@@ -375,6 +376,7 @@ configfile: $(if $(wildcard $(config_file)),,config)
 config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
 config: LCD_INSTALLDIR := /tmp/
+config: XALAN := $(XALAN_PATH)xalan.jar
 config:
 ifeq ($(CONFIG_DIR),)
     BUILDOUT := $(LCD_DIR)out
@@ -413,6 +415,7 @@ config:
 	@echo "LIB_x32_OBJ_DIR := $(LIB_x32_OBJ_DIR)" >> $(config_file)
 	@echo "LIB_x64_OBJ_DIR := $(LIB_x64_OBJ_DIR)" >> $(config_file)
 	@echo "LCD_INSTALLDIR := $(LCD_INSTALLDIR)" >> $(config_file)
+	@echo "XALAN := $(XALAN)" >> $(config_file)
 
 install:
 	$(MAKE) -C . start-install

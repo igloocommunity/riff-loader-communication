@@ -243,56 +243,57 @@ $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: $(LCM_AUTO_DIR)/outLCM.rc $(AUTOGEN_FILES
 endif
 
 #Autogen files
+XALAN := $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar
 $(AUTO_DIR_LIB)/commands.h: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/commands_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/commands_h.xsl -out $@ -PARAM target lcm
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/commands_h.xsl -out $@ -PARAM target lcm
 
 $(AUTO_DIR_LIB)/command_ids.h: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/command_ids_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/command_ids_h.xsl -out $@ -PARAM target lcm
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/command_ids_h.xsl -out $@ -PARAM target lcm
 
 $(AUTO_DIR_LIB)/error_codes.h: $(LCM_CONFIG)/error_codes.xml $(LCM_CONFIG)/errorcode_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/error_codes.xml -xsl $(LCM_CONFIG)/errorcode_h.xsl -out $@
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/error_codes.xml -xsl $(LCM_CONFIG)/errorcode_h.xsl -out $@
 
 $(AUTO_DIR_LIB)/command_marshal.c: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/command_marshal.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/command_marshal.xsl -out $@ -PARAM target lcm
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/command_marshal.xsl -out $@ -PARAM target lcm
 
 $(AUTO_DIR_LOADER)/error_codes.h: $(LCM_CONFIG)/error_codes.xml $(LCM_CONFIG)/errorcode_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/error_codes.xml -xsl $(LCM_CONFIG)/errorcode_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/error_codes.xml -xsl $(LCM_CONFIG)/errorcode_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
 
 $(AUTO_DIR_LOADER)/audit.h: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/audit_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/audit_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/audit_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
 
 $(AUTO_DIR_LOADER)/audit.c: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/audit_c.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/audit_c.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/audit_c.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
 
 $(AUTO_DIR_LOADER)/command_ids.h: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/command_ids_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/command_ids_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/command_ids_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
 
 $(AUTO_DIR_LOADER)/commands_impl.h: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/commands_impl_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/commands_impl_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/commands_impl_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
 
 $(AUTO_DIR_LOADER)/commands.h: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/commands_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/commands_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/commands_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
 
 $(AUTO_DIR_LOADER)/command_marshal.c: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/command_marshal.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/command_marshal.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/command_marshal.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
 
 $(AUTO_DIR_LOADER)/ces_commands.c: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/ces_commands_c.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/ces_commands_c.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/ces_commands_c.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
 
 $(AUTO_DIR_LOADER)/ces_commands.h: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/ces_commands_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/ces_commands_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/ces_commands_h.xsl -out $@ -param supportedCommands $(SUPPORTED_CMDS_PATH)
 
 $(AUTO_DIR_LOADER)/custom_command_ids.h: $(LCM_CUST_CONFIG)/custom_commands.xml $(LCM_CUST_CONFIG)/custom_command_ids_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CUST_CONFIG)/custom_commands.xml -xsl $(LCM_CUST_CONFIG)/custom_command_ids_h.xsl -out $@
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CUST_CONFIG)/custom_commands.xml -xsl $(LCM_CUST_CONFIG)/custom_command_ids_h.xsl -out $@
 
 $(AUTO_DIR_LOADER)/custom_commands_impl.h: $(LCM_CUST_CONFIG)/custom_commands.xml $(LCM_CUST_CONFIG)/custom_commands_impl_h.xsl  | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CUST_CONFIG)/custom_commands.xml -xsl $(LCM_CUST_CONFIG)/custom_commands_impl_h.xsl -out $@
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CUST_CONFIG)/custom_commands.xml -xsl $(LCM_CUST_CONFIG)/custom_commands_impl_h.xsl -out $@
 
 $(AUTO_DIR_LOADER)/custom_commands.h: $(LCM_CUST_CONFIG)/custom_commands.xml $(LCM_CUST_CONFIG)/custom_commands_h.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CUST_CONFIG)/custom_commands.xml -xsl $(LCM_CUST_CONFIG)/custom_commands_h.xsl -out $@
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CUST_CONFIG)/custom_commands.xml -xsl $(LCM_CUST_CONFIG)/custom_commands_h.xsl -out $@
 
 $(AUTO_DIR_LOADER)/custom_command_marshal.c: $(LCM_CUST_CONFIG)/custom_commands.xml $(LCM_CUST_CONFIG)/custom_command_marshal.xsl | setup_folders
-	java -classpath $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar org.apache.xalan.xslt.Process -in $(LCM_CUST_CONFIG)/custom_commands.xml -xsl $(LCM_CUST_CONFIG)/custom_command_marshal.xsl -out $@
+	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CUST_CONFIG)/custom_commands.xml -xsl $(LCM_CUST_CONFIG)/custom_command_marshal.xsl -out $@
 
 $(LCM_AUTO_DIR)/lcm_version.c: ${LCM_PATH}/../source/gen_version_files.sh | setup_folders
 	bash ${LCM_PATH}/../source/gen_version_files.sh --lcm $(abspath $(LCM_AUTO_DIR)) $(abspath $(LCM_PATH))
