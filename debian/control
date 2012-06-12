@@ -1,0 +1,25 @@
+Source: libloadercomm
+Priority: extra
+Maintainer: Kalle Vahlman <kalle.vahlman@movial.com>
+Build-Depends: debhelper (>= 8.0.0), libxalan2-java
+Standards-Version: 3.9.2
+Section: libs
+Homepage: http://igloocommunity.org
+
+Package: libloadercomm-dev
+Section: libdevel
+Architecture: any
+Depends: libloadercomm1 (= ${binary:Version})
+Description: Riff Loader Communication headers
+ Riff Loader Communication is a support library for
+ the riff flashing tool.
+
+Package: libloadercomm1
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Replaces: riff-loadercomm
+Conflicts:  riff-loadercomm
+Description: Riff Loader Communication library
+ Riff Loader Communication is a support library for
+ the riff flashing tool.
