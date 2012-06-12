@@ -121,7 +121,8 @@ CXXFLAGS := -D__WIN32__ -O2 -mwindows -mthreads -fno-strict-aliasing -Wall $(BYT
 endif
 
 ifeq ($(BUILD_WIN),)
-LDFLAGS := -fPIC -fvisibility=hidden -lpthread -ldl -shared -Wl -o liblcdriver.$(LIB_EXTENSION)
+LDFLAGS := -fPIC -fvisibility=hidden -shared -Wl -o liblcdriver.$(LIB_EXTENSION)
+LIBS := -lpthread -ldl
 else
 # Win x32 linker flags
 ifeq ($(BUILD_WIN),1)
@@ -183,10 +184,10 @@ endif
 endif
 
 $(LIB_x32): $(LIBOBJ_x32)
-	$(CXX) $(LDFLAGS) -m32 -o $(LIB_x32) $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(^F))
+	$(CXX) $(LDFLAGS) -m32 -o $(LIB_x32) $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(^F)) $(LIBS)
 
 $(LIB_x64): $(LIBOBJ_x64)
-	$(CXX) $(LDFLAGS) -o $(LIB_x64) $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(^F))
+	$(CXX) $(LDFLAGS) -o $(LIB_x64) $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(^F)) $(LIBS)
 
 #
 # Source files build x32
