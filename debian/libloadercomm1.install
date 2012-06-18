@@ -1,1 +1,2 @@
 out/out_linux/liblcdriver.so usr/lib/
+lcmodule/out/out_linux/liblcm.so.1 usr/lib/

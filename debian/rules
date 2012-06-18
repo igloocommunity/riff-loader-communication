@@ -22,6 +22,7 @@ endif
 ifeq ($(DEB_HOST_ARCH),amd64)
 	make LBITS=64
 	cp out/out_linux/liblcdriver_x64.so out/out_linux/liblcdriver.so
+	cp lcmodule/out/out_linux/liblcm_x64.so.1 lcmodule/out/out_linux/liblcm.so.1
 endif
 
 override_dh_auto_install:
