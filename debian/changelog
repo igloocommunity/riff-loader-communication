@@ -1,3 +1,9 @@
+libloadercomm (0.5.1-igloo1) oneiric; urgency=low
+
+  * Fix liblcm build issues
+
+ -- Kalle Vahlman <kalle.vahlman@movial.com>  Mon, 18 Jun 2012 10:56:24 +0300
+
 libloadercomm (0.5.0-igloo1) oneiric; urgency=low
 
   * Re-packaging of riff-loadercomm
