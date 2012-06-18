@@ -161,7 +161,7 @@ ifeq ($(LBITS),64)
 # do 64 bit stuff here, like set some CFLAGS
 #
 CXXFLAGS += -DLINUX_64
-start-build: configfile setup_folders $(LIB_x32) $(LIB_x64) lcmodule
+start-build: configfile setup_folders $(LIB_x64) lcmodule
 else
 #
 # do 32 bit stuff here
@@ -430,9 +430,10 @@ endif
 
 start-install: start-build
 ifeq ($(BUILD_WIN),)
-	install -m 0755 $(BUILDFOLDER)/liblcdriver.$(LIB_EXTENSION) $(LCD_INSTALLDIR)
 ifeq ($(LBITS),64)
 	install -m 0755 $(BUILDFOLDER)/liblcdriver_x64.$(LIB_EXTENSION) $(LCD_INSTALLDIR)
+else
+	install -m 0755 $(BUILDFOLDER)/liblcdriver.$(LIB_EXTENSION) $(LCD_INSTALLDIR)
 endif
 else
 
@@ -453,14 +454,15 @@ clean:
 	$(MAKE) -C . start-clean BUILD_WIN=2
 
 start-clean:
-	$(if $(BUILDFOLDER), \
-		$(if $(LIB_x32_OBJ_DIR), \
-			@rm -rf $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR) \
-			@rm -rf $(BUILDFOLDER),),)
 ifeq ($(LBITS),64)
 	$(if $(BUILDFOLDER), \
 		$(if $(LIB_x64_OBJ_DIR), \
 			@rm -rf $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR) \
+			@rm -rf $(BUILDFOLDER),),)
+else
+	$(if $(BUILDFOLDER), \
+		$(if $(LIB_x32_OBJ_DIR), \
+			@rm -rf $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR) \
 			@rm -rf $(BUILDFOLDER),),)
 endif
 	$(if $(BUILDFOLDER), \
@@ -474,13 +476,14 @@ distclean: clean
 	$(if $(AUTO_DIR_LIB), \
 		@rm -f $(AUTO_DIR_LIB)/*.cpp \
 		@rm -f $(AUTO_DIR_LIB)/*.h,)
-	$(if $(LCD_INSTALLDIR), \
-		@rm -f $(LCD_INSTALLDIR)/LCDriver_CNH1606432.dll \
-		@rm -f $(LCD_INSTALLDIR)/liblcdriver.$(LIB_EXTENSION),)
 ifeq ($(LBITS),64)
 	$(if $(LCD_INSTALLDIR), \
 		@rm -f $(LCD_INSTALLDIR)/LCDriver_CNH1606432_x64.dll \
 		@rm -f $(LCD_INSTALLDIR)/liblcdriver_x64.$(LIB_EXTENSION),)
+else
+	$(if $(LCD_INSTALLDIR), \
+		@rm -f $(LCD_INSTALLDIR)/LCDriver_CNH1606432.dll \
+		@rm -f $(LCD_INSTALLDIR)/liblcdriver.$(LIB_EXTENSION),)
 endif
 	$(if $(config_file), \
 		@rm -f $(config_file),)

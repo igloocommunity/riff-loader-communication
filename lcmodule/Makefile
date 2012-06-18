@@ -148,7 +148,7 @@ ifeq ($(LBITS),64)
 #
 # do 64 bit stuff here, like set some CFLAGS
 #
-start-build: configfile setup_folders $(LIB_x32) $(LIB_x64)
+start-build: configfile setup_folders $(LIB_x64)
 else
 #
 # do 32 bit stuff here
@@ -431,9 +431,10 @@ endif
 
 start-install: start-build
 ifeq ($(BUILD_WIN),)
-	install -p -m 0755 $(LIB_x32) ${LCMLIB_INSTALLDIR}
 ifeq ($(LBITS),64)
 	install -p -m 0755 $(LIB_x64) ${LCMLIB_INSTALLDIR}
+else
+	install -p -m 0755 $(LIB_x32) ${LCMLIB_INSTALLDIR}
 endif
 else
 ifeq ($(BUILD_WIN),1)
@@ -453,9 +454,10 @@ endif
 
 start-install: start-build
 ifeq ($(BUILD_WIN),)
-	install -p -m 0755 $(LIB_x32) ${LCMLIB_INSTALLDIR}
 ifeq ($(LBITS),64)
 	install -p -m 0755 $(LIB_x64) ${LCMLIB_INSTALLDIR}
+else
+	install -p -m 0755 $(LIB_x32) ${LCMLIB_INSTALLDIR}
 endif
 else
 ifeq ($(BUILD_WIN),1)
@@ -472,16 +474,17 @@ clean:
 	$(MAKE) -C . start-clean BUILD_WIN=2
 
 start-clean:
-	$(if ${BUILDFOLDER}, \
-		$(if ${LIB_x32_OBJ_DIR}, \
-			@rm -f ${BUILDFOLDER}/${LIB_x32_OBJ_DIR}/*.o \
-			@rm -rf ${BUILDFOLDER}/${LIB_x32_OBJ_DIR} \
-			@rm -rf ${BUILDFOLDER},),)
 ifeq ($(LBITS),64)
 	$(if ${BUILDFOLDER}, \
 		$(if ${LIB_x64_OBJ_DIR}, \
 			@rm -f ${BUILDFOLDER}/${LIB_x64_OBJ_DIR}/*.o \
 			@rm -rf ${BUILDFOLDER}/${LIB_x64_OBJ_DIR} \
+			@rm -rf ${BUILDFOLDER},),)
+else
+	$(if ${BUILDFOLDER}, \
+		$(if ${LIB_x32_OBJ_DIR}, \
+			@rm -f ${BUILDFOLDER}/${LIB_x32_OBJ_DIR}/*.o \
+			@rm -rf ${BUILDFOLDER}/${LIB_x32_OBJ_DIR} \
 			@rm -rf ${BUILDFOLDER},),)
 endif
 	$(if ${BUILDFOLDER}, \
