@@ -243,7 +243,6 @@ $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/%.o: $(LCM_AUTO_DIR)/outLCM.rc $(AUTOGEN_FILES
 endif
 
 #Autogen files
-XALAN := $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar
 $(AUTO_DIR_LIB)/commands.h: $(LCM_CONFIG)/commands.xml $(LCM_CONFIG)/commands_h.xsl | setup_folders
 	java -classpath $(XALAN) org.apache.xalan.xslt.Process -in $(LCM_CONFIG)/commands.xml -xsl $(LCM_CONFIG)/commands_h.xsl -out $@ -PARAM target lcm
 
@@ -372,6 +371,7 @@ configfile: $(if $(wildcard $(config_file)),,config)
 config: LIB_x32_OBJ_DIR := x32
 config: LIB_x64_OBJ_DIR := x64
 config: LOADER_DIR := ./
+config: XALAN := $(LCM_PATH)/tools/xalan-j_2_7_1/xalan.jar
 config:
 ifeq ($(CONFIG_DIR),)
     BUILDOUT := $(LCM_PATH)/out
@@ -417,6 +417,7 @@ config:
 	@echo "LCMLIB_INSTALLDIR := $(LCMLIB_INSTALLDIR)" >> $(config_file)
 	@echo "LIB_x32_OBJ_DIR := $(LIB_x32_OBJ_DIR)" >> $(config_file)
 	@echo "LIB_x64_OBJ_DIR := $(LIB_x64_OBJ_DIR)" >> $(config_file)
+	@echo "XALAN := $(XALAN)" >> $(config_file)
 	@echo CONFIG_DIR : $(CONFIG_DIR)
 
 install:
