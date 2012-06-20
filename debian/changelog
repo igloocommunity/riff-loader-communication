@@ -1,3 +1,9 @@
+libloadercomm (0.5.2-igloo2) oneiric; urgency=low
+
+  * Fix arch handling in packaging to be based on bits not arch names
+
+ -- Kalle Vahlman <kalle.vahlman@movial.com>  Wed, 20 Jun 2012 10:36:50 +0300
+
 libloadercomm (0.5.2-igloo1) oneiric; urgency=low
 
   * Separate 32 bit and 64 bit builds
