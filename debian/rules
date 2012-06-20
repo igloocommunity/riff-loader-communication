@@ -16,11 +16,9 @@ override_dh_auto_configure:
 	make config XALAN=/usr/share/java/xalan2.jar LCD_INSTALLDIR='dist/'
 
 override_dh_auto_build:
-ifeq ($(DEB_HOST_ARCH),i386)
-	make LBITS=32
-endif
-ifeq ($(DEB_HOST_ARCH),amd64)
-	make LBITS=64
+	make LBITS=$(DEB_HOST_ARCH_BITS)
+
+ifeq ($(DEB_HOST_ARCH_BITS),64)
 	cp out/out_linux/liblcdriver_x64.so out/out_linux/liblcdriver.so
 	cp lcmodule/out/out_linux/liblcm_x64.so.1 lcmodule/out/out_linux/liblcm.so.1
 endif
