@@ -171,10 +171,10 @@ endif
 
 
 $(LIB_x32): $(LIBOBJ_x32)
-	$(CC) -shared -m32 -Wl -o  $(LIB_x32) $(LINKOPTS) $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(^F))
+	$(CC) -shared -m32 -o  $(LIB_x32) $(LINKOPTS) $(addprefix $(BUILDFOLDER)/$(LIB_x32_OBJ_DIR)/, $(^F))
 
 $(LIB_x64): $(LIBOBJ_x64)
-	$(CC) -shared -Wl -o $(LIB_x64) $(LINKOPTS) $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(^F))
+	$(CC) -shared -o $(LIB_x64) $(LINKOPTS) $(addprefix $(BUILDFOLDER)/$(LIB_x64_OBJ_DIR)/, $(^F))
 
 #
 # Source files build x32

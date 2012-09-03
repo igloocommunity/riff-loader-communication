@@ -121,16 +121,16 @@ CXXFLAGS := -D__WIN32__ -O2 -mwindows -mthreads -fno-strict-aliasing -Wall $(BYT
 endif
 
 ifeq ($(BUILD_WIN),)
-LDFLAGS := -fPIC -fvisibility=hidden -shared -Wl -o liblcdriver.$(LIB_EXTENSION)
+LDFLAGS := -fPIC -fvisibility=hidden -shared -o liblcdriver.$(LIB_EXTENSION)
 LIBS := -lpthread -ldl
 else
 # Win x32 linker flags
 ifeq ($(BUILD_WIN),1)
-LDFLAGS := -D__WIN32__ -s -mwindows -mthreads -mdll -Wl -o LCDriver_CNH1606432.dll
+LDFLAGS := -D__WIN32__ -s -mwindows -mthreads -mdll -o LCDriver_CNH1606432.dll
 endif
 # Win x64 linker flags
 ifeq ($(BUILD_WIN),2)
-LDFLAGS := -D__WIN32__ -s -mwindows -mthreads -mdll -Wl -o LCDriver_CNH1606432_x64.dll
+LDFLAGS := -D__WIN32__ -s -mwindows -mthreads -mdll -o LCDriver_CNH1606432_x64.dll
 endif
 endif
 
